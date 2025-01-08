@@ -62,7 +62,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
 |---------------|-----------------------------------------------------------------------------------------------------|---------|
 | **SourceName** | The URL or local filename of the video.                                                             | -       |
 | **Ext**        | File extension for the video, used when loading from local resources. This is optional when a URL is provided and the URL ends with the video file extension. | "mp4"  |
-| **Subtitles**  | The URL or local filename of the WebVTT (.vtt) subtitles file to be merged with the video. With a straightforward AVMutableComposition approach, you cannot directly change the position or size of subtitles. AVFoundation’s built-in handling of “text” tracks simply renders them in a default style, without allowing additional layout options. Take a look the implementation in the example app (Video8.swift)  | -       |
+| **Subtitles**  | The URL or local filename of the WebVTT (.vtt) subtitles file to be merged with the video. With a straightforward AVMutableComposition approach, you cannot directly change the position or size of subtitles. AVFoundation’s built-in handling of “text” tracks simply renders them in a default style, without allowing additional layout options. Take a look on the implementation in the example app (Video8.swift)  | -       |
 | **Gravity** | How the video content should be resized to fit the player's bounds. | .resizeAspect |
 | **TimePublishing** | Specifies the interval at which the player publishes the current playback time. | - |
 | **Loop** | Whether the video should automatically restart when it reaches the end. If not explicitly passed, the video will not loop. | false |
