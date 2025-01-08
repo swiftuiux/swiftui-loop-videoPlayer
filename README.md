@@ -58,10 +58,11 @@ Please note that using videos from URLs requires ensuring that you have the righ
 
 ## Settings
 
-| Name | Description | Default |
-| --- | --- |  --- |
-| **SourceName** | The URL or local filename of the video. | - |
-| **Ext** | File extension for the video, used when loading from local resources. This is optional when a URL is provided and the URL ends with the video file extension. | "mp4" |
+| Name          | Description                                                                                         | Default |
+|---------------|-----------------------------------------------------------------------------------------------------|---------|
+| **SourceName** | The URL or local filename of the video.                                                             | -       |
+| **Ext**        | File extension for the video, used when loading from local resources. This is optional when a URL is provided and the URL ends with the video file extension. | "mp4"  |
+| **Subtitles**  | The URL or local filename of the WebVTT (.vtt) subtitles file to be merged with the video. With a straightforward AVMutableComposition approach, you cannot directly change the position or size of subtitles. AVFoundation’s built-in handling of “text” tracks simply renders them in a default style, without allowing additional layout options.         | -       |
 | **Gravity** | How the video content should be resized to fit the player's bounds. | .resizeAspect |
 | **TimePublishing** | Specifies the interval at which the player publishes the current playback time. | - |
 | **Loop** | Whether the video should automatically restart when it reaches the end. If not explicitly passed, the video will not loop. | false |
@@ -132,7 +133,7 @@ In cases where you need to re-issue a command that might appear redundant but is
 | Command                     | Description                                                                                                                                          |
 |-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `audioTrack(String)`        | Command to select a specific audio track based on language code. The `languageCode` parameter specifies the desired audio track's language (e.g., "en" for English). |
-| `subtitles(String?)`        | Command to set subtitles to a specified language or turn them off. Pass a language code (e.g., "en" for English) to set subtitles, or `nil` to turn them off. |
+| `subtitles(String?)`        | Command to set subtitles to a specified language or turn them off. Pass a language code (e.g., "en" for English) to set subtitles, or `nil` to turn them off. This command works only for embedded subtitles within the video file. |
 
 ## Player Events
 
@@ -180,6 +181,7 @@ or in a declarative way
     ExtVideoPlayer{
             VideoSettings{
                 SourceName("swipe")
+                Subtitles("subtitles_eng")
                 Ext("mp8") // Set default extension here If not provided then mp4 is default
                 Gravity(.resizeAspectFill)
                 TimePublishing()
