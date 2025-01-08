@@ -20,6 +20,9 @@ public struct VideoSettings: Equatable{
     /// Video extension
     public let ext: String
     
+    /// Subtitles
+    public let subtitles: String
+    
     /// Loop video
     public let loop: Bool
     
@@ -69,9 +72,10 @@ public struct VideoSettings: Equatable{
     ///   - errorColor: The color used for error messages.
     ///   - errorFontSize: The font size for error messages.
     ///   - errorWidgetOff: A Boolean indicating whether the error widget should be turned off.
-    public init(name: String, ext: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, errorColor: Color, errorFontSize: CGFloat, errorWidgetOff: Bool) {
+    public init(name: String, ext: String, subtitles: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, errorColor: Color, errorFontSize: CGFloat, errorWidgetOff: Bool) {
         self.name = name
         self.ext = ext
+        self.subtitles = subtitles
         self.loop = loop
         self.mute = mute
         self.notAutoPlay = notAutoPlay
@@ -93,6 +97,8 @@ public struct VideoSettings: Equatable{
         name = settings.fetch(by : "name", defaulted: "")
         
         ext = settings.fetch(by : "ext", defaulted: "mp4")
+        
+        subtitles = settings.fetch(by : "subtitles", defaulted: "")
         
         gravity = settings.fetch(by : "gravity", defaulted: .resizeAspect)
         
@@ -117,21 +123,21 @@ public extension VideoSettings {
    
     /// Returns a new instance of VideoSettings with loop set to false and notAutoPlay set to true, keeping other settings unchanged.
     var GetSettingsWithNotAutoPlay : VideoSettings {
-        VideoSettings(name: self.name, ext: self.ext, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, errorColor: self.errorColor, errorFontSize: self.errorFontSize, errorWidgetOff: self.errorWidgetOff)
+        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, errorColor: self.errorColor, errorFontSize: self.errorFontSize, errorWidgetOff: self.errorWidgetOff)
     }
     
     /// Checks if the asset has changed based on the provided settings and current asset.
     /// - Parameters:
     ///   - asset: The current asset being played.
     /// - Returns: A new `AVURLAsset` if the asset has changed, or `nil` if the asset remains the same.
-    func getAssetIfDifferent(than asset: AVURLAsset?) -> AVURLAsset?{
+    func getAssetIfDifferent(_ settings : VideoSettings?) -> AVURLAsset?{
         let newAsset =  assetFor(self)
         
-        if asset == nil {
-            return newAsset
-        }
+        guard let settings = settings else{ return newAsset }
         
-        if let newUrl = newAsset?.url, let oldUrl = asset?.url, newUrl != oldUrl{
+        let oldAsset = assetFor(settings)
+        
+        if let newUrl = newAsset?.url, let oldUrl = oldAsset?.url, newUrl != oldUrl{
             return newAsset
         }
 

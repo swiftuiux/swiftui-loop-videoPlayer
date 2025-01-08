@@ -37,8 +37,6 @@ public protocol LoopingPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     /// ensuring that all playback errors are managed and reported appropriately.
     var errorObserver: NSKeyValueObservation? { get set }
     
-
-    
     /// An optional observer for monitoring changes to the player's `timeControlStatus` property.
     var timeControlObserver: NSKeyValueObservation? { get set }
     
@@ -139,7 +137,8 @@ internal extension LoopingPlayerProtocol {
         for item in items {
             player?.remove(item)
         }
-    }
+    }    
+
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
     ///
@@ -150,12 +149,14 @@ internal extension LoopingPlayerProtocol {
     ///   - asset: The AVURLAsset to be loaded into the player.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
     ///   - callback: An optional closure to be called when the asset is ready to play.
-    func update(asset: AVURLAsset,  settings: VideoSettings, callback: ((AVPlayerItem.Status) -> Void)? = nil) {
-
+    func update(
+        asset: AVURLAsset,
+        settings: VideoSettings,
+        callback: ((AVPlayerItem.Status) -> Void)? = nil
+    ) {
         guard let player = player else { return }
 
         currentSettings = settings
-        
         player.pause()
 
         if !player.items().isEmpty {
@@ -165,17 +166,31 @@ internal extension LoopingPlayerProtocol {
             removeAllFilters()
         }
 
-        let newItem = AVPlayerItem(asset: asset)
+        let newItem: AVPlayerItem
+        
+        // try to retrieve the .vtt subtitle
+        if let subtitleAsset = subtitlesFor(settings),
+           let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
+            // Create a new AVPlayerItem from the merged asset
+            newItem = AVPlayerItem(asset: mergedAsset)
+        }else{
+            // Create a new AVPlayerItem from the merged asset
+            newItem = AVPlayerItem(asset: asset)
+        }
+
+        // Insert the new item into the player queue
         player.insert(newItem, after: nil)
 
+        // Loop if required
         if settings.loop {
             loop()
         }
 
-        // Set up state item status observer
+        // Observe status changes
         setupStateItemStatusObserver(newItem: newItem, callback: callback)
-      
-        if !settings.notAutoPlay{
+
+        // Autoplay if allowed
+        if !settings.notAutoPlay {
             play()
         }
     }

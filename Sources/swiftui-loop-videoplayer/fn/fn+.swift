@@ -106,3 +106,102 @@ internal func handleVideoComposition(request: AVAsynchronousCIImageFilteringRequ
     request.finish(with: currentImage, context: nil)
 }
 
+/// Retrieves an `AVURLAsset` for the subtitles specified in `VideoSettings`.
+/// - Parameter settings: The `VideoSettings` object containing details about the subtitle file (e.g., name and extension).
+/// - Returns: An optional `AVURLAsset` for the subtitle file, or `nil` if the file does not exist.
+func subtitlesFor(_ settings: VideoSettings) -> AVURLAsset? {
+    let name = settings.subtitles
+    let ext = "vtt"
+    
+    if name.isEmpty { return nil }
+    
+    // Attempt to create a URL directly from the provided video name string
+    if let url = URL.validURLFromString(name) {
+        return AVURLAsset(url: url)
+    // If direct URL creation fails, attempt to locate the video in the main bundle using the name and extension
+    } else if let fileUrl = Bundle.main.url(forResource: name, withExtension: ext) {
+        return AVURLAsset(url: fileUrl)
+    }
+    
+    return nil
+}
+
+/// Merges a video asset with an external WebVTT subtitle file into an AVMutableComposition.
+/// Returns a new AVAsset that has both the video/audio and subtitle tracks.
+///
+/// - Note:
+///   - This method supports embedding external subtitles (e.g., WebVTT) into video files
+///     that can handle text tracks, such as MP4 or QuickTime (.mov).
+///   - Subtitles are added as a separate track within the composition and will not be rendered
+///     (burned-in) directly onto the video frames. Styling, position, and size cannot be customized.
+///
+/// - Parameters:
+///   - videoAsset: The video asset (e.g., an MP4 file) to which the subtitles will be added.
+///   - subtitleAsset: The WebVTT subtitle asset to be merged with the video.
+///
+/// - Returns: A new AVAsset with the video, audio, and subtitle tracks combined.
+///            Returns `nil` if an error occurs during the merging process or if subtitles are unavailable.
+func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) -> AVAsset?  {
+    // Create a new composition
+    let composition = AVMutableComposition()
+
+    // 1) Copy the VIDEO track (and AUDIO track if available) from the original video
+    do {
+        // VIDEO
+        if let videoTrack = videoAsset.tracks(withMediaType: .video).first {
+            let compVideoTrack = composition.addMutableTrack(
+                withMediaType: .video,
+                preferredTrackID: kCMPersistentTrackID_Invalid
+            )
+            try compVideoTrack?.insertTimeRange(
+                CMTimeRange(start: .zero, duration: videoAsset.duration),
+                of: videoTrack,
+                at: .zero
+            )
+        }
+        // AUDIO (if your video has an audio track)
+        if let audioTrack = videoAsset.tracks(withMediaType: .audio).first {
+            let compAudioTrack = composition.addMutableTrack(
+                withMediaType: .audio,
+                preferredTrackID: kCMPersistentTrackID_Invalid
+            )
+            try compAudioTrack?.insertTimeRange(
+                CMTimeRange(start: .zero, duration: videoAsset.duration),
+                of: audioTrack,
+                at: .zero
+            )
+        }
+    } catch {
+        #if DEBUG
+        print("Error adding video/audio tracks: \(error)")
+        #endif
+        return nil
+    }
+    
+    // 2) Find the TEXT track in the subtitle asset
+    guard let textTrack = subtitleAsset.tracks(withMediaType: .text).first else {
+        #if DEBUG
+        print("No text track found in subtitle file.")
+        #endif
+        return composition // Return just the video/audio if no text track
+    }
+    
+    // 3) Insert the subtitle track into the composition
+    do {
+        let compTextTrack = composition.addMutableTrack(
+            withMediaType: .text,
+            preferredTrackID: kCMPersistentTrackID_Invalid
+        )
+        try compTextTrack?.insertTimeRange(
+            CMTimeRange(start: .zero, duration: videoAsset.duration),
+            of: textTrack,
+            at: .zero
+        )
+    } catch {
+        #if DEBUG
+        print("Error adding text track: \(error)")
+        #endif
+    }
+
+    return composition
+}

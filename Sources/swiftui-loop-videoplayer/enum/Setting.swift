@@ -36,6 +36,9 @@ public enum Setting: Equatable, SettingsConvertible{
     /// File extension
     case ext(String)
     
+    /// Subtitles
+    case subtitles(String)
+    
     /// A CMTime value representing the interval at which the player's current time should be published.
     /// If set, the player will publish periodic time updates based on this interval.
     case timePublishing(CMTime)

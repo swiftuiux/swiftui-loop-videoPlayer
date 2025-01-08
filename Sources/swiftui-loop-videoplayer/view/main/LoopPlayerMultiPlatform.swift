@@ -114,8 +114,9 @@ extension LoopPlayerMultiPlatform: UIViewRepresentable{
     ///   - context: The context for the view
     @MainActor func updateUIView(_ uiView: UIView, context: Context) {
         let player = uiView.findFirstSubview(ofType: PlayerView.self)
-        if let player {
-            if let asset = settings.getAssetIfDifferent(than: player.currentAsset) {
+       
+        if let player{
+            if let asset = settings.getAssetIfDifferent(player.currentSettings) {
                 player.update(asset: asset, settings: settings)
             }
             
@@ -163,7 +164,7 @@ extension LoopPlayerMultiPlatform: NSViewRepresentable{
     @MainActor func updateNSView(_ nsView: NSView, context: Context) {
         let player = nsView.findFirstSubview(ofType: PlayerView.self)
         if let player {
-            if let asset = settings.getAssetIfDifferent(than: player.currentAsset){
+            if let asset = settings.getAssetIfDifferent(player.currentSettings){
                 player.update(asset: asset, settings: settings)
             }
             // Check if command changed before applying it
