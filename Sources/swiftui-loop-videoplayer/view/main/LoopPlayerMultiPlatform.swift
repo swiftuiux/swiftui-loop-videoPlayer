@@ -20,7 +20,6 @@ import UIKit
 import AppKit
 #endif
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
 @MainActor
 internal struct LoopPlayerMultiPlatform: LoopPlayerViewProtocol {
         

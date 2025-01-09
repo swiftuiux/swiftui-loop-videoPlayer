@@ -16,7 +16,6 @@ import AppKit
 
 /// A NSView subclass that loops video using AVFoundation on macOS.
 /// This class handles the initialization and management of a looping video player with customizable video gravity.
-@available(macOS 11.0, *)
 @MainActor @preconcurrency
 internal class LoopingPlayerNSView: NSView, LoopingPlayerProtocol {   
     
