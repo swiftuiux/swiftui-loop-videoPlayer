@@ -169,7 +169,7 @@ internal extension LoopingPlayerProtocol {
         let newItem: AVPlayerItem
         
         // try to retrieve the .vtt subtitle
-        if let subtitleAsset = subtitlesFor(settings),
+        if let subtitleAsset = subtitlesAssetFor(settings),
            let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
             // Create a new AVPlayerItem from the merged asset
             newItem = AVPlayerItem(asset: mergedAsset)

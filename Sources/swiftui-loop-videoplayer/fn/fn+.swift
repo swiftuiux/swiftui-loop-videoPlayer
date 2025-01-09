@@ -12,20 +12,49 @@ import CoreImage
 #endif
 
 /// Retrieves an `AVURLAsset` based on specified video settings.
-/// - Parameter settings: The `VideoSettings` object containing details like name and extension of the video.
-/// - Returns: An optional `AVURLAsset`. Returns `nil` if the video cannot be located either by URL or in the app bundle.
+/// - Parameter settings: A `VideoSettings` object containing the video name and extension.
+/// - Returns: An optional `AVURLAsset`. Returns `nil` if a valid URL cannot be created or the file cannot be found in the bundle.
 func assetFor(_ settings: VideoSettings) -> AVURLAsset? {
     let name = settings.name
-    let ext = settings.ext
+    // If the name already includes an extension, use that; otherwise, use `settings.ext`.
+    let ext = extractExtension(from: name) ?? settings.ext
     
-    // Attempt to create a URL directly from the provided video name string
+    // Leverage the common helper to construct the `AVURLAsset`.
+    return assetFrom(name: name, fileExtension: ext)
+}
+
+/// Retrieves an `AVURLAsset` for the subtitles specified in `VideoSettings`.
+/// - Parameter settings: A `VideoSettings` object containing the subtitle file name.
+/// - Returns: An optional `AVURLAsset` for the subtitle file, or `nil` if `subtitles` is empty or cannot be found.
+func subtitlesAssetFor(_ settings: VideoSettings) -> AVURLAsset? {
+    let subtitleName = settings.subtitles
+    // If no subtitle name is provided, early return `nil`.
+    guard !subtitleName.isEmpty else {
+        return nil
+    }
+    
+    // Use a default `.vtt` extension for subtitles.
+    return assetFrom(name: subtitleName, fileExtension: "vtt")
+}
+
+/// A common helper that attempts to build an `AVURLAsset` from a given name and optional file extension.
+/// - Parameters:
+///   - name: The base file name or a URL string.
+///   - fileExtension: An optional file extension to be appended if `name` isn't a valid URL.
+/// - Returns: An optional `AVURLAsset`, or `nil` if neither a valid URL nor a local resource file is found.
+fileprivate func assetFrom(name: String, fileExtension: String?) -> AVURLAsset? {
+    // Attempt to create a valid URL from the provided string.
     if let url = URL.validURLFromString(name) {
         return AVURLAsset(url: url)
-    // If direct URL creation fails, attempt to locate the video in the main bundle using the name and extension
-    } else if let fileUrl = Bundle.main.url(forResource: name, withExtension: extractExtension(from: name) ?? ext) {
+    }
+    
+    // If not a valid URL, try to locate the file in the main bundle with the specified extension.
+    if let fileExtension = fileExtension,
+       let fileUrl = Bundle.main.url(forResource: name, withExtension: fileExtension) {
         return AVURLAsset(url: fileUrl)
     }
     
+    // If all attempts fail, return `nil`.
     return nil
 }
 
@@ -104,26 +133,6 @@ internal func handleVideoComposition(request: AVAsynchronousCIImageFilteringRequ
     }
     // Finish the composition request by outputting the final image
     request.finish(with: currentImage, context: nil)
-}
-
-/// Retrieves an `AVURLAsset` for the subtitles specified in `VideoSettings`.
-/// - Parameter settings: The `VideoSettings` object containing details about the subtitle file (e.g., name and extension).
-/// - Returns: An optional `AVURLAsset` for the subtitle file, or `nil` if the file does not exist.
-func subtitlesFor(_ settings: VideoSettings) -> AVURLAsset? {
-    let name = settings.subtitles
-    let ext = "vtt"
-    
-    if name.isEmpty { return nil }
-    
-    // Attempt to create a URL directly from the provided video name string
-    if let url = URL.validURLFromString(name) {
-        return AVURLAsset(url: url)
-    // If direct URL creation fails, attempt to locate the video in the main bundle using the name and extension
-    } else if let fileUrl = Bundle.main.url(forResource: name, withExtension: ext) {
-        return AVURLAsset(url: fileUrl)
-    }
-    
-    return nil
 }
 
 /// Merges a video asset with an external WebVTT subtitle file into an AVMutableComposition.

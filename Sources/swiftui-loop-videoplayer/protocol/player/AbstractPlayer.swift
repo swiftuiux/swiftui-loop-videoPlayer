@@ -194,7 +194,7 @@ extension AbstractPlayer{
         
         guard currentItem?.status == .readyToPlay else{
             /// The case when the video is finished and we are trying to seek back
-            if let currentItem, let currentAsset, let currentSettings{
+            if let currentItem{
                 
                 let callback : ((AVPlayerItem.Status) -> Void)? = { [weak self] status in
                     if status == .readyToPlay{
