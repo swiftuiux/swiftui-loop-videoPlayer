@@ -111,14 +111,14 @@ public struct ExtVideoPlayer: View{
         timePublisher: timePublisher,
         eventPublisher: eventPublisher
        )
-           .frame(maxWidth: .infinity, maxHeight: .infinity)
-           .onReceive(timePublisher, perform: { time in
-               currentTime = time
-           })
-           .onReceive(eventPublisher.collect(.byTime(DispatchQueue.main, .seconds(1))), perform: { event in
-               playerEvent = event
-           })
-           .preference(key: CurrentTimePreferenceKey.self, value: currentTime)
-           .preference(key: PlayerEventPreferenceKey.self, value: playerEvent)
+       .frame(maxWidth: .infinity, maxHeight: .infinity)
+       .onReceive(timePublisher.receive(on: DispatchQueue.main), perform: { time in
+           currentTime = time
+       })
+       .onReceive(eventPublisher.collect(.byTime(DispatchQueue.main, .seconds(1))), perform: { event in
+           playerEvent = event
+       })
+       .preference(key: CurrentTimePreferenceKey.self, value: currentTime)
+       .preference(key: PlayerEventPreferenceKey.self, value: playerEvent)
    }
 }
