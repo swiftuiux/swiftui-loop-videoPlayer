@@ -151,6 +151,9 @@ internal func handleVideoComposition(request: AVAsynchronousCIImageFilteringRequ
 /// - Returns: A new AVAsset with the video, audio, and subtitle tracks combined.
 ///            Returns `nil` if an error occurs during the merging process or if subtitles are unavailable.
 func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) -> AVAsset?  {
+    
+    #if !os(visionOS)
+    
     // Create a new composition
     let composition = AVMutableComposition()
 
@@ -213,4 +216,8 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
     }
 
     return composition
+    
+    #else
+        return nil
+    #endif
 }
