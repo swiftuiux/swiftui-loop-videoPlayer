@@ -125,8 +125,9 @@ internal extension LoopingPlayerProtocol {
         if let timePublishing{
             timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .main) { [weak self] time in
                 guard let self = self else{ return }
-                
-                self.delegate?.didPassedTime(seconds: time.seconds)
+                DispatchQueue.main.async {
+                    self.delegate?.didPassedTime(seconds: time.seconds)
+                }
             }
         }
     }

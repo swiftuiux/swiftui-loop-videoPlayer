@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 import AVFoundation
 
-@MainActor
 internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
            
     let eventPublisher: PassthroughSubject<PlayerEvent, Never>
@@ -77,7 +76,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// Called when the player has paused playback.
     ///
     /// This method is triggered when the player's `timeControlStatus` changes to `.paused`.
-    @MainActor
     func didPausePlayback(){
         eventPublisher.send(.paused)
     }
@@ -85,7 +83,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// Called when the player is waiting to play at the specified rate.
     ///
     /// This method is triggered when the player's `timeControlStatus` changes to `.waitingToPlayAtSpecifiedRate`.
-    @MainActor
     func isWaitingToPlay(){
         eventPublisher.send(.waitingToPlayAtSpecifiedRate)
     }
@@ -93,7 +90,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// Called when the player starts or resumes playing.
     ///
     /// This method is triggered when the player's `timeControlStatus` changes to `.playing`.
-    @MainActor
     func didStartPlaying(){
         eventPublisher.send(.playing)
     }
@@ -102,7 +98,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     ///
     /// This method is triggered when the player's `currentItem` is updated to a new `AVPlayerItem`.
     /// - Parameter newItem: The new `AVPlayerItem` that the player has switched to, if any.
-    @MainActor
     func currentItemDidChange(to newItem: AVPlayerItem?){
         eventPublisher.send(.currentItemChanged(newItem: newItem))
     }
@@ -110,7 +105,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// Called when the current media item is removed from the player.
     ///
     /// This method is triggered when the player's `currentItem` is set to `nil`, indicating that there is no longer an active media item.
-    @MainActor
     func currentItemWasRemoved(){
         eventPublisher.send(.currentItemRemoved)
     }
@@ -119,7 +113,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     ///
     /// This method is triggered when the player's `volume` property changes.
     /// - Parameter newVolume: The new volume level, expressed as a float between 0.0 (muted) and 1.0 (maximum volume).
-    @MainActor
     func volumeDidChange(to newVolume: Float){
         eventPublisher.send(.volumeChanged(newVolume: newVolume))
     }
