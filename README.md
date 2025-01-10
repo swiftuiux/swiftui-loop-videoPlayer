@@ -138,7 +138,8 @@ In cases where you need to re-issue a command that might appear redundant but is
 
 ### Additional Notes on for subtitles command
 This functionality is designed for use cases where the video file already contains multiple subtitle tracks (i.e., legible media tracks) embedded in its metadata. In other words, the container format (such as MP4, MOV, or QuickTime) holds one or more subtitle or closed-caption tracks that can be selected at runtime. By calling this function and providing a language code (e.g., “en”, “fr”, “de”), you instruct the AVPlayerItem to look for the corresponding subtitle track in the asset’s media selection group. If it finds a match, it will activate that subtitle track; otherwise, no subtitles will appear. Passing nil disables subtitles altogether. This approach is convenient when you want to switch between multiple embedded subtitle languages or turn them off without relying on external subtitle files (like SRT or WebVTT).
-### Configuring HLS Playlist with English Subtitles
+
+**Configuring HLS Playlist with English Subtitles**
 
 Here’s an example of an HLS playlist configured with English subtitles. The subtitles are defined as a separate track using WebVTT or a similar format, referenced within the master playlist. This setup allows seamless subtitle rendering during video playback, synchronized with the video stream.
 
