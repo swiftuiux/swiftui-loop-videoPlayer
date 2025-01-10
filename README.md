@@ -134,7 +134,30 @@ In cases where you need to re-issue a command that might appear redundant but is
 | Command                     | Description                                                                                                                                          |
 |-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `audioTrack(String)`        | Command to select a specific audio track based on language code. The `languageCode` parameter specifies the desired audio track's language (e.g., "en" for English). |
-| `subtitles(String?)`        | Command to set subtitles to a specified language or turn them off. Pass a language code (e.g., "en" for English) to set subtitles, or `nil` to turn them off. This command works only for embedded subtitles within the video file. |
+| `subtitles(String?)` | This command sets subtitles to a specified language or turns them off. Provide a language code (for example, `"en"` for English) to display that language's subtitles, or pass `nil` to disable subtitles altogether. **Note**: This only applies when the video file has embedded subtitles tracks. |
+
+### Additional Notes on for subtitles command
+This functionality is designed for use cases where the video file already contains multiple subtitle tracks (i.e., legible media tracks) embedded in its metadata. In other words, the container format (such as MP4, MOV, or QuickTime) holds one or more subtitle or closed-caption tracks that can be selected at runtime. By calling this function and providing a language code (e.g., “en”, “fr”, “de”), you instruct the AVPlayerItem to look for the corresponding subtitle track in the asset’s media selection group. If it finds a match, it will activate that subtitle track; otherwise, no subtitles will appear. Passing nil disables subtitles altogether. This approach is convenient when you want to switch between multiple embedded subtitle languages or turn them off without relying on external subtitle files (like SRT or WebVTT).
+### Configuring HLS Playlist with English Subtitles
+
+Here’s an example of an HLS playlist configured with English subtitles. The subtitles are defined as a separate track using WebVTT or a similar format, referenced within the master playlist. This setup allows seamless subtitle rendering during video playback, synchronized with the video stream.
+
+```plaintext
+#EXTM3U
+#EXT-X-MEDIA:TYPE=SUBTITLES,
+    GROUP-ID="subs",
+    NAME="English Subtitles",
+    LANGUAGE="en",
+    AUTOSELECT=YES,
+    DEFAULT=YES,
+    URI="subtitles_en.m3u8"
+
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000,
+    RESOLUTION=1280x720,
+    SUBTITLES="subs"
+video_main.m3u8
+```
+
 
 ## Player Events
 

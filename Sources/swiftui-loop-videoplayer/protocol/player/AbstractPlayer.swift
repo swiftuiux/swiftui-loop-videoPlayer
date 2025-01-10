@@ -282,6 +282,7 @@ extension AbstractPlayer{
     }
 
     /// Sets the subtitles for the video playback to a specified language or turns them off.
+    ///  This function is designed for use cases where the video file already contains multiple subtitle tracks (i.e., legible media tracks) embedded in its metadata. In other words, the container format (such as MP4, MOV, or QuickTime) holds one or more subtitle or closed-caption tracks that can be selected at runtime. By calling this function and providing a language code (e.g., “en”, “fr”, “de”), you instruct the AVPlayerItem to look for the corresponding subtitle track in the asset’s media selection group. If it finds a match, it will activate that subtitle track; otherwise, no subtitles will appear. Passing nil disables subtitles altogether. This approach is convenient when you want to switch between multiple embedded subtitle languages or turn them off without relying on external subtitle files (like SRT or WebVTT).
     /// - Parameters:
     ///   - language: The language code (e.g., "en" for English) for the desired subtitles.
     ///               Pass `nil` to turn off subtitles.
