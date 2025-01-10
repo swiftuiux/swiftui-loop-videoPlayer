@@ -136,8 +136,10 @@ In cases where you need to re-issue a command that might appear redundant but is
 | `audioTrack(String)`        | Command to select a specific audio track based on language code. The `languageCode` parameter specifies the desired audio track's language (e.g., "en" for English). |
 | `subtitles(String?)` | This command sets subtitles to a specified language or turns them off. Provide a language code (for example, `"en"` for English) to display that language's subtitles, or pass `nil` to disable subtitles altogether. **Note**: This only applies when the video file has embedded subtitles tracks. |
 
-### Additional Notes on the subtitles command
+### Additional Notes on the subtitles Command
 This functionality is designed for use cases where the video file already contains multiple subtitle tracks (i.e., legible media tracks) embedded in its metadata. In other words, the container format (such as MP4, MOV, or QuickTime) holds one or more subtitle or closed-caption tracks that can be selected at runtime. By calling this function and providing a language code (e.g., “en”, “fr”, “de”), you instruct the component to look for the corresponding subtitle track in the asset’s media selection group. If it finds a match, it will activate that subtitle track; otherwise, no subtitles will appear. Passing nil disables subtitles altogether. This approach is convenient when you want to switch between multiple embedded subtitle languages or turn them off without relying on external subtitle files (like SRT or WebVTT).
+
+Another option to add subtitles is by using **Settings** (take a look above), where you can provide subtitles as a separate source file (e.g., SRT or WebVTT). In this case, subtitles are dynamically loaded and managed alongside the video without requiring them to be embedded in the video file itself. Both of these methods — using embedded subtitle tracks or adding subtitles via Settings as external files — do not merge and save the resulting video with subtitles locally. Instead, the subtitles are rendered dynamically during playback.
 
 **Configuring HLS Playlist with English Subtitles**
 
@@ -158,7 +160,6 @@ Here’s an example of an HLS playlist configured with English subtitles. The su
     SUBTITLES="subs"
 video_main.m3u8
 ```
-
 
 ## Player Events
 
