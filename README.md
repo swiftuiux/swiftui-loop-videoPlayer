@@ -148,7 +148,8 @@ In cases where you need to re-issue a command that might appear redundant but is
 ### Additional Notes on the subtitles Command
 This functionality is designed for use cases where the video file already contains multiple subtitle tracks (i.e., legible media tracks) embedded in its metadata. In other words, the container format (such as MP4, MOV, or QuickTime) holds one or more subtitle or closed-caption tracks that can be selected at runtime. By calling this function and providing a language code (e.g., “en”, “fr”, “de”), you instruct the component to look for the corresponding subtitle track in the asset’s media selection group. If it finds a match, it will activate that subtitle track; otherwise, no subtitles will appear. Passing nil disables subtitles altogether. This approach is convenient when you want to switch between multiple embedded subtitle languages or turn them off without relying on external subtitle files (like SRT or WebVTT).
 
-Another option to add subtitles is by using **Settings** (take a look above), where you can provide subtitles as a separate source file (e.g., SRT or WebVTT). In this case, subtitles are dynamically loaded and managed alongside the video without requiring them to be embedded in the video file itself. Both of these methods — using embedded subtitle tracks or adding subtitles via Settings as external files — do not merge and save the resulting video with subtitles locally. Instead, the subtitles are rendered dynamically during playback.
+Another option to add subtitles is by using **Settings** (take a look above), where you can provide subtitles as a separate source file (e.g., SRT or WebVTT). In this case, subtitles are dynamically loaded and managed alongside the video without requiring them to be embedded in the video file itself. 
+Both of these methods — using embedded subtitle tracks or adding subtitles via Settings as external files — do not merge and save the resulting video with subtitles locally. Instead, the subtitles are rendered dynamically during playback.
 
 **Configuring HLS Playlist with English Subtitles**
 
@@ -318,6 +319,31 @@ You can introduce video hints about some functionality into the app, for example
 
 ![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/tip_video_swiftui.gif)
 
+## HLS with Adaptive Quality
+
+### How Adaptive Quality Switching Works
+
+1. **Multiple Bitrates**
+   - The video is encoded in multiple quality levels (e.g., 240p, 360p, 720p, 1080p), each with different bitrates.
+
+2. **Manifest File**
+   - The server provides a manifest file:
+     - **In HLS**: A `.m3u8` file that contains links to video segments for each quality level.
+
+3. **Segments**
+   - The video is divided into short segments, typically 2–10 seconds long.
+
+4. **Dynamic Switching**
+   - The client (e.g., `AVQueuePlayer`) dynamically adjusts playback quality based on the current internet speed:
+     - Starts playback with the most suitable quality.
+     - Switches to higher or lower quality during playback as the connection speed changes.
+
+### Why This is the Best Option
+
+- **On-the-fly quality adjustment**: Ensures smooth transitions between quality levels without interrupting playback.
+- **Minimal pauses and interruptions**: Reduces buffering and improves user experience.
+- **Bandwidth efficiency**: The server sends only the appropriate stream, saving network traffic.
+
 ## AVQueuePlayer features out of the box
 
 In the core of this package, I use `AVQueuePlayer`. Here are the supported features that are automatically enabled by `AVQueuePlayer` without passing any extra parameters:
@@ -346,3 +372,4 @@ In the core of this package, I use `AVQueuePlayer`. Here are the supported featu
 | **Buffering and Caching**                                                                                  | Efficiently manages buffering of streaming content to reduce playback interruptions.                                                              |
 | **Error Handling and Recovery**                                                                            | Provides built-in mechanisms to handle playback errors and attempt recovery without crashing the application.                                     |
 | **Accessibility Features**                                                                                 | Supports VoiceOver and other accessibility features to make media content accessible to all users.                                                |
+
