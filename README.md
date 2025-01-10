@@ -8,12 +8,12 @@
 Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for example it doesn’t allow you to hide or customize the default video controls UI, limiting its use for custom scenarios. In contrast, this solution provides full control over playback, including the ability to disable or hide UI elements, making it suitable for background videos, tooltips, and video hints. Additionally, it supports advanced features like seamless looping and real-time filter application, adding vector graphics upon the video stream etc. This package uses a declarative approach to declare parameters for the video component based on building blocks. This implementation might give some insights into how SwiftUI works under the hood. You can also pass parameters in the common way.
 
  ```swift            
-       ExtVideoPlayer{
-            VideoSettings{
-                SourceName("swipe")
-                Gravity(.resizeAspectFill)              
-            }
-        } 
+   ExtVideoPlayer{
+        VideoSettings{
+            SourceName("swipe")
+            Gravity(.resizeAspectFill)              
+        }
+    } 
 ``` 
 
 ## [SwiftUI app example](https://github.com/swiftuiux/swiftui-video-player-example)
