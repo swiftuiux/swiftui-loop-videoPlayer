@@ -7,6 +7,15 @@
 ## Why if we have Apple’s VideoPlayer ?!
 Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for example it doesn’t allow you to hide or customize the default video controls UI, limiting its use for custom scenarios. In contrast, this solution provides full control over playback, including the ability to disable or hide UI elements, making it suitable for background videos, tooltips, and video hints. Additionally, it supports advanced features like seamless looping and real-time filter application, adding vector graphics upon the video stream etc. This package uses a declarative approach to declare parameters for the video component based on building blocks. This implementation might give some insights into how SwiftUI works under the hood. You can also pass parameters in the common way.
 
+ ```swift            
+       ExtVideoPlayer{
+            VideoSettings{
+                SourceName("swipe")
+                Gravity(.resizeAspectFill)              
+            }
+        } 
+``` 
+
 ## [SwiftUI app example](https://github.com/swiftuiux/swiftui-video-player-example)
 
 ## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
@@ -56,6 +65,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
 | `init(fileName:ext:gravity:timePublishing:` <br> `eColor:eFontSize:command:)` | Constructor                    | Initializes the player with specific video parameters, such as file name, extension, gravity, time publishing, color, font size, and a playback command binding. |
 | `init(settings: () -> VideoSettings, command:)`             | Constructor                    | Initializes the player in a declarative way with a settings block and a playback command binding.     |
 | `init(settings: Binding<VideoSettings>, command:)`          | Constructor                    | Initializes the player with bindings to the video settings and a playback command.                   |
+
 
 ## Settings
 
@@ -225,15 +235,6 @@ or in a declarative way
         }
 ``` 
           
- ```swift            
-       ExtVideoPlayer{
-            VideoSettings{
-                SourceName("swipe")
-                Gravity(.resizeAspectFill)
-                EFontSize(27)                  
-            }
-        } 
-```  
 
 ```swift
 ExtVideoPlayer{
