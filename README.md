@@ -10,8 +10,7 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
  ```swift            
    ExtVideoPlayer{
         VideoSettings{
-            SourceName("swipe")
-            Gravity(.resizeAspectFill)              
+            SourceName("swipe")           
         }
     } 
 ``` 
