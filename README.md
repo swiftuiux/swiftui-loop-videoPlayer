@@ -10,15 +10,14 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 
 ## [SwiftUI app example](https://github.com/swiftuiux/swiftui-video-player-example)
 
- ```swift            
-   ExtVideoPlayer{
-        VideoSettings{
-            SourceName("swipe")           
-        }
-    } 
-``` 
-
-![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
+| **Code Example**                                                                                                                                                                                                                                                                                                            | **App Example**                                                                                                                             |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| ```swift                                                                                                                                                                                                                                                                                                                     | ![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) |
+| ExtVideoPlayer{                                                                                                                                                                                                                                                                                                              |                                                                                                                                                |
+|     VideoSettings{                                                                                                                                                                                                                                                                                                          |                                                                                                                                                |
+|         SourceName("swipe")                                                                                                                                                                                                                                                                                                 |                                                                                                                                                |
+|     }                                                                                                                                                                                                                                                                                                                       |                                                                                                                                                |
+| }                                                                                                                                                                                                                                                                                                                           |                                                                                                                                                |
 
 | **Feature Category**      | **Feature Name**                            | **Description**                                                                                          |
 |----------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------|
