@@ -15,6 +15,10 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
     } 
 ``` 
 
+## [SwiftUI app example](https://github.com/swiftuiux/swiftui-video-player-example)
+
+## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
+
 | **Feature Category**      | **Feature Name**                            | **Description**                                                                                          |
 |----------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | **General**               | SwiftUI Declarative Syntax                  | Easily integrate using declarative syntax.                                                              |
@@ -50,7 +54,6 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 |                           | Contrast Adjustment                         | Modify video contrast in real time.                                                                     |
 | **Playback Features**      | Adaptive HLS Streaming                     | Dynamic quality adjustment based on network speed.                                                      |
 |                           | Seamless Item Transitions                   | Smooth transitions between video items.                                                                 |
-|                           | Picture-in-Picture (PiP)                    | Support for PiP mode on compatible devices.                                                             |
 |                           | Multichannel Audio                          | Play Dolby Atmos, 5.1 surround, and spatial audio tracks.                                               |
 |                           | Subtitles and Captions                      | Support for multiple subtitle and caption formats.                                                      |
 | **Event Handling**         | Batch Event Processing                     | Collects and processes events in batches to avoid flooding.                                             |
@@ -63,9 +66,7 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 | **Media Support**          | File Types                                 | `.mp4`, `.mov`, `.m4v`, `.3gp`, `.mkv` (limited support).                                                |
 |                           | Codecs                                      | H.264, H.265 (HEVC), MPEG-4, AAC, MP3.                                                                  |
 |                           | Streaming Protocols                         | HLS (`.m3u8`) support for adaptive streaming.                                                           |
-## [SwiftUI app example](https://github.com/swiftuiux/swiftui-video-player-example)
 
-## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
 
 ![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
 
