@@ -27,7 +27,7 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 |                           | Background Playback                         | Continue playback in the background with appropriate audio session setup.                                |
 |                           | Custom Overlays                             | Add vector graphics and custom overlays over the video.                                                 |
 
-| **Playback Commands**      | Idle Command                                | Initialize without specific playback actions.                                                           |
+| **Playback Commands**      | Idle Command                                | Initialize without specific playback actions.                                                          |
 |                           | Play/Pause                                  | Control playback state.                                                                                 |
 |                           | Seek Command                                | Move to specific video timestamps.                                                                      |
 |                           | Mute/Unmute                                 | Toggle audio playback.                                                                                  |
