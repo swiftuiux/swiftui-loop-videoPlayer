@@ -26,7 +26,6 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 |                           | Subtitle Support                            | Add external `.vtt` files or use embedded subtitle tracks.                                               |
 |                           | Background Playback                         | Continue playback in the background with appropriate audio session setup.                                |
 |                           | Custom Overlays                             | Add vector graphics and custom overlays over the video.                                                 |
-
 | **Playback Commands**      | Idle Command                                | Initialize without specific playback actions.                                                           |
 |                           | Play/Pause                                  | Control playback state.                                                                                 |
 |                           | Seek Command                                | Move to specific video timestamps.                                                                      |
@@ -37,7 +36,6 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 |                           | Apply Filters                               | Add Core Image filters to the video stream.                                                            |
 |                           | Remove Filters                              | Clear all applied filters.                                                                              |
 |                           | Add Vector Graphics                         | Overlay custom vector graphics onto the video.                                                          |
-
 | **Settings**               | SourceName                                 | Define video source (local or remote).                                                                  |
 |                           | File Extension                              | Default extension for video files (e.g., `.mp4`).                                                       |
 |                           | Gravity                                     | Set content resizing behavior (e.g., `.resizeAspect`).                                                  |
@@ -46,27 +44,22 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 |                           | Mute by Default                             | Initialize playback without sound.                                                                      |
 |                           | Subtitle Integration                        | Configure subtitles from embedded tracks or external files.                                             |
 |                           | Error Widget Customization                  | Change error text color, font size, or disable built-in error widgets.                                  |
-
 | **Visual Features**        | Rounded Corners                            | Apply rounded corners using SwiftUI's `.mask` modifier.                                                 |
 |                           | Overlay Graphics                            | Add vector graphics over video for custom effects.                                                      |
 |                           | Brightness Adjustment                       | Control brightness levels dynamically.                                                                  |
 |                           | Contrast Adjustment                         | Modify video contrast in real time.                                                                     |
-
 | **Playback Features**      | Adaptive HLS Streaming                     | Dynamic quality adjustment based on network speed.                                                      |
 |                           | Seamless Item Transitions                   | Smooth transitions between video items.                                                                 |
 |                           | Picture-in-Picture (PiP)                    | Support for PiP mode on compatible devices.                                                             |
 |                           | Multichannel Audio                          | Play Dolby Atmos, 5.1 surround, and spatial audio tracks.                                               |
 |                           | Subtitles and Captions                      | Support for multiple subtitle and caption formats.                                                      |
-
 | **Event Handling**         | Batch Event Processing                     | Collects and processes events in batches to avoid flooding.                                             |
 |                           | Playback State Events                       | `playing`, `paused`, `seek`, `waitingToPlayAtSpecifiedRate`, etc.                                       |
 |                           | Current Item State                          | Detect when the current item changes or is removed.                                                     |
 |                           | Volume Change Events                        | Listen for changes in volume levels.                                                                    |
-
 | **Testing & Development**  | Unit Testing                               | Includes unit tests for core functionality.                                                             |
 |                           | UI Testing                                  | Integration of UI tests in the example app.                                                             |
 |                           | Example Scripts                             | Automated testing scripts for easier test execution.                                                    |
-
 | **Media Support**          | File Types                                 | `.mp4`, `.mov`, `.m4v`, `.3gp`, `.mkv` (limited support).                                                |
 |                           | Codecs                                      | H.264, H.265 (HEVC), MPEG-4, AAC, MP3.                                                                  |
 |                           | Streaming Protocols                         | HLS (`.m3u8`) support for adaptive streaming.                                                           |
