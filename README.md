@@ -14,10 +14,9 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
         }
     } 
 ``` 
-
 ## [SwiftUI app example](https://github.com/swiftuiux/swiftui-video-player-example)
 
-## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
+![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
 
 | **Feature Category**      | **Feature Name**                            | **Description**                                                                                          |
 |----------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------|
@@ -67,8 +66,7 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for
 |                           | Codecs                                      | H.264, H.265 (HEVC), MPEG-4, AAC, MP3.                                                                  |
 |                           | Streaming Protocols                         | HLS (`.m3u8`) support for adaptive streaming.                                                           |
 
-
-![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
+## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
 
 ## Philosophy of Player Dynamics
 
