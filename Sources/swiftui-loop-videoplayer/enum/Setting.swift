@@ -21,6 +21,9 @@ public enum Setting: Equatable, SettingsConvertible{
         [self]
     }
     
+    ///Enable vector layer to add overlay vector graphics
+    case vector
+    
     /// Loop video
     case loop
     

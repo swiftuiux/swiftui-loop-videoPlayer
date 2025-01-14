@@ -26,7 +26,7 @@ public protocol LayerMakerProtocol {
     /// The composite layer that contains all the sublayers, including vector layers.
     ///
     /// This layer acts as a container for all vector layers added through the protocol methods.
-    var compositeLayer: CALayer { get }
+    var compositeLayer: CALayer? { get set }
 
     /// The frame of the composite layer.
     ///
@@ -61,14 +61,14 @@ extension LayerMakerProtocol{
     func addVectorLayer(builder : any ShapeLayerBuilderProtocol, clear: Bool){
         if clear{ removeAllVectors() }
         let layer = builder.build(with: (frame, bounds))
-        compositeLayer.addSublayer(layer)
+        compositeLayer?.addSublayer(layer)
     }
     
     
     /// Removes all vector layers from the composite layer.
     @MainActor 
     func removeAllVectors(){
-            compositeLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
+            compositeLayer?.sublayers?.forEach { $0.removeFromSuperlayer() }
     }
     
 }

@@ -29,6 +29,9 @@ public struct VideoSettings: Equatable{
     /// Mute video
     public let mute: Bool
     
+    /// Enable vector layer to add overlay vector graphics
+    public let vector: Bool
+    
     /// Don't auto play video after initialization
     public let notAutoPlay: Bool
     
@@ -72,7 +75,7 @@ public struct VideoSettings: Equatable{
     ///   - errorColor: The color used for error messages.
     ///   - errorFontSize: The font size for error messages.
     ///   - errorWidgetOff: A Boolean indicating whether the error widget should be turned off.
-    public init(name: String, ext: String, subtitles: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, errorColor: Color, errorFontSize: CGFloat, errorWidgetOff: Bool) {
+    public init(name: String, ext: String, subtitles: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, errorColor: Color, errorFontSize: CGFloat, errorWidgetOff: Bool, enableVector : Bool = false) {
         self.name = name
         self.ext = ext
         self.subtitles = subtitles
@@ -84,6 +87,7 @@ public struct VideoSettings: Equatable{
         self.errorColor = errorColor
         self.errorFontSize = errorFontSize
         self.errorWidgetOff = errorWidgetOff
+        self.vector = enableVector
         self.unique = true
     }
         
@@ -115,6 +119,8 @@ public struct VideoSettings: Equatable{
         notAutoPlay = settings.contains(.notAutoPlay)
         
         errorWidgetOff = settings.contains(.errorWidgetOff)
+        
+        vector = settings.contains(.vector)
     }
 }
 
@@ -123,7 +129,7 @@ public extension VideoSettings {
    
     /// Returns a new instance of VideoSettings with loop set to false and notAutoPlay set to true, keeping other settings unchanged.
     var GetSettingsWithNotAutoPlay : VideoSettings {
-        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, errorColor: self.errorColor, errorFontSize: self.errorFontSize, errorWidgetOff: self.errorWidgetOff)
+        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, errorColor: self.errorColor, errorFontSize: self.errorFontSize, errorWidgetOff: self.errorWidgetOff, enableVector: self.vector)
     }
     
     /// Checks if the asset has changed based on the provided settings and current asset.

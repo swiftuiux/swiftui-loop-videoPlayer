@@ -30,10 +30,10 @@ internal class LoopingPlayerUIView: UIView, LoopingPlayerProtocol {
     internal var contrast: Float = 1
     
     /// A CALayer instance used for composing content, accessible only within the module.
-    internal let compositeLayer = CALayer()
+    internal var compositeLayer : CALayer?
     
     /// The AVPlayerLayer that displays the video content.
-    internal let playerLayer = AVPlayerLayer()
+    internal let playerLayer : AVPlayerLayer
     
     /// The looper responsible for continuous video playback.
     internal var playerLooper: AVPlayerLooper?
@@ -72,7 +72,16 @@ internal class LoopingPlayerUIView: UIView, LoopingPlayerProtocol {
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
     ///   - timePublishing: Optional `CMTime` that specifies a particular time for publishing or triggering an event.
     required init(asset: AVURLAsset, settings: VideoSettings, timePublishing: CMTime?){
+        
+        player = AVQueuePlayer(items: [])
+        
+        playerLayer = AVPlayerLayer()
+        if settings.vector{
+            compositeLayer = CALayer()
+        }
+        
         super.init(frame: .zero)
+        
         setupPlayerComponents(
             asset: asset, settings: settings, timePublishing : timePublishing
         )

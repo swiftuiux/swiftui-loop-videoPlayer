@@ -124,6 +124,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
 | **Loop** | Whether the video should automatically restart when it reaches the end. If not explicitly passed, the video will not loop. | false |
 | **Mute** | Indicates if the video should play without sound. | false |
 | **NotAutoPlay** | Indicates if the video should not play after initialization. Notice that if you use `command` as a control flow for the player the start command should be `.idle` | false |
+| **EnableVector** | Use this struct to activate settings that allow the addition of vector-based overlays via commands. If it is not passed via settings, any commands to `addVector` or `removeAllVectors` will have no effect. | Not Enabled |
 | **EColor** | Error message text color. | .red |
 | **EFontSize** | Size of the error text. | 17.0 |
 | **ErrorWidgetOff** | Do not show inner error showcase component. In case you'd like to implement your own error Alert widget. | - |

@@ -84,8 +84,7 @@ internal extension LoopingPlayerProtocol {
         timePublishing:  CMTime?
     ) {
         
-        let player = AVQueuePlayer(items: [])
-        self.player = player
+        guard let player else { return }
         
         configurePlayer(player, settings: settings, timePublishing: timePublishing)
         
@@ -108,19 +107,19 @@ internal extension LoopingPlayerProtocol {
         player.isMuted = settings.mute
         playerLayer.player = player
         playerLayer.videoGravity = settings.gravity
+
         #if canImport(UIKit)
         playerLayer.backgroundColor = UIColor.clear.cgColor
         layer.addSublayer(playerLayer)
-        layer.addSublayer(compositeLayer)
         #elseif canImport(AppKit)
         playerLayer.backgroundColor = NSColor.clear.cgColor
         let layer = CALayer()
         layer.addSublayer(playerLayer)
-        layer.addSublayer(compositeLayer)
         self.layer = layer
         self.wantsLayer = true
         #endif
-        compositeLayer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        
+        configureCompositeLayer()
         
         if let timePublishing{
             timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .main) { [weak self] time in
@@ -132,14 +131,18 @@ internal extension LoopingPlayerProtocol {
         }
     }
     
-    /// Clears all items from the player's queue.
-    func clearPlayerQueue() {
-        guard let items = player?.items() else { return }
-        for item in items {
-            player?.remove(item)
-        }
-    }    
-
+    func configureCompositeLayer() {
+        
+        compositeLayer?.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        
+        guard let compositeLayer else { return }
+        
+        #if canImport(UIKit)
+        layer.addSublayer(compositeLayer)
+        #elseif canImport(AppKit)
+        self.layer?.addSublayer(compositeLayer)
+        #endif
+    }
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
     ///
@@ -241,6 +244,14 @@ internal extension LoopingPlayerProtocol {
         }
     }
     
+    /// Clears all items from the player's queue.
+    func clearPlayerQueue() {
+        guard let items = player?.items() else { return }
+        for item in items {
+            player?.remove(item)
+        }
+    }
+    
     /// Removes observers for handling errors.
     ///
     /// This method ensures that the error observer is properly invalidated and the reference is cleared.
@@ -260,8 +271,6 @@ internal extension LoopingPlayerProtocol {
         guard let error = player.error else { return }
         delegate?.didReceiveError(.remoteVideoError(error))
     }
-    
-
     
     /// Sets the playback command for the video player.
     /// - Parameter value: The `PlaybackCommand` to set. This can be one of the following:
