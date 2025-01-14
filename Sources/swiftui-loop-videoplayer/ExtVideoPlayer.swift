@@ -104,14 +104,12 @@ public struct ExtVideoPlayer: View{
        
    /// The body property defines the view hierarchy for the user interface.
    public var body: some View {
-           
        LoopPlayerMultiPlatform(
         settings: $settings,
         command: $command,
         timePublisher: timePublisher,
         eventPublisher: eventPublisher
        )
-       .frame(maxWidth: .infinity, maxHeight: .infinity)
        .onReceive(timePublisher.receive(on: DispatchQueue.main), perform: { time in
            currentTime = time
        })
