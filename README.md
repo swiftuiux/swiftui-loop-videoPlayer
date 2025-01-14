@@ -11,6 +11,7 @@ It is a pure package without any third-party libraries. My main focus was on per
 
 ## SwiftUI app example [follow the link](https://github.com/swiftuiux/swiftui-video-player-example)
 
+
  ```swift            
    ExtVideoPlayer{
         VideoSettings{
