@@ -26,7 +26,7 @@ It is a pure package without any third-party libraries. My main focus was on per
 |----------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | **General**               | SwiftUI Declarative Syntax                  | Easily integrate using declarative syntax.                                                              |
 |                           | Platform Compatibility                      | Supports iOS 14+, macOS 11+, tvOS 14+.                                                                  |
-|                           | Swift Compatibility                      | Alined with Swift 5 and Swift 6                                                                |
+|                           | Swift Compatibility                      | Alined with Swift 5 and ready for Swift 6                                                                |
 |                           | Loop Playback                               | Automatically restart videos when they end.                                                             |
 |                           | Local and Remote Video URLs                 | Supports playback from local files or remote URLs.                                                      |
 |                           | Adaptive HLS Streaming                      | Handles HLS streaming with dynamic quality adjustment.                                                  |
