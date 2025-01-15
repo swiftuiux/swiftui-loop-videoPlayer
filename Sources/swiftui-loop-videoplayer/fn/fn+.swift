@@ -195,7 +195,7 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
         #if DEBUG
         print("Error adding video/audio tracks: \(error)")
         #endif
-        return nil
+        return videoAsset
     }
     
     // 3) Insert the subtitle track into the composition
@@ -213,6 +213,7 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
         #if DEBUG
         print("Error adding text track: \(error)")
         #endif
+        return videoAsset
     }
 
     return composition
