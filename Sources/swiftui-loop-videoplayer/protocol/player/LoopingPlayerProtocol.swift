@@ -104,7 +104,6 @@ internal extension LoopingPlayerProtocol {
         configurePlayerLayer(player, settings)
         configureCompositeLayer(settings)
         configureTimePublishing(player, settings)
-
     }
     
     /// Configures the player layer for the specified video player using the provided settings.
