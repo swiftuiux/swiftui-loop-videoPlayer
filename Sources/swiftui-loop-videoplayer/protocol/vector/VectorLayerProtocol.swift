@@ -70,5 +70,4 @@ extension LayerMakerProtocol{
     func removeAllVectors(){
             compositeLayer?.sublayers?.forEach { $0.removeFromSuperlayer() }
     }
-    
 }

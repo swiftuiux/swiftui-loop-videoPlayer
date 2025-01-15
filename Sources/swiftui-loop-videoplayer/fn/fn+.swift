@@ -154,10 +154,18 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
     
     #if !os(visionOS)
     
+    // 1) Find the TEXT track in the subtitle asset
+    guard let textTrack = subtitleAsset.tracks(withMediaType: .text).first else {
+        #if DEBUG
+        print("No text track found in subtitle file.")
+        #endif
+        return videoAsset // Return just videoAsset if no text track
+    }
+    
     // Create a new composition
     let composition = AVMutableComposition()
 
-    // 1) Copy the VIDEO track (and AUDIO track if available) from the original video
+    // 2) Copy the VIDEO track (and AUDIO track if available) from the original video
     do {
         // VIDEO
         if let videoTrack = videoAsset.tracks(withMediaType: .video).first {
@@ -190,14 +198,6 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
         return nil
     }
     
-    // 2) Find the TEXT track in the subtitle asset
-    guard let textTrack = subtitleAsset.tracks(withMediaType: .text).first else {
-        #if DEBUG
-        print("No text track found in subtitle file.")
-        #endif
-        return composition // Return just the video/audio if no text track
-    }
-    
     // 3) Insert the subtitle track into the composition
     do {
         let compTextTrack = composition.addMutableTrack(
@@ -218,6 +218,6 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
     return composition
     
     #else
-        return nil
+        return videoAsset
     #endif
 }
