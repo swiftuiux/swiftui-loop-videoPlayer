@@ -476,6 +476,7 @@ internal func cleanUp(
     statusObserver: inout NSKeyValueObservation?,
     timeObserver: inout Any?
 ) {
+    player?.pause()
     
     errorObserver?.invalidate()
     errorObserver = nil
@@ -492,16 +493,11 @@ internal func cleanUp(
     statusObserver?.invalidate()
     statusObserver = nil
     
-    player?.pause()
-    
     playerLooper?.disableLooping()
     playerLooper = nil
 
-    guard let items = player?.items() else { return }
-    for item in items {
-        player?.remove(item)
-    }
-    
+    player?.removeAllItems()
+
     if let observerToken = timeObserver {
         player?.removeTimeObserver(observerToken)
         timeObserver = nil
