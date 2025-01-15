@@ -1,5 +1,5 @@
 //
-//  LoopingPlayerNSView.swift
+//  ExtPlayerNSView.swift
 //
 //
 //  Created by Igor Shelopaev on 05.08.24.

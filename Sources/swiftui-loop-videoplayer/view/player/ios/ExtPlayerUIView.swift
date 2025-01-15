@@ -1,5 +1,5 @@
 //
-//  LoopingPlayerProtocol.swift
+//  ExtPlayerUIView.swift
 //
 //
 //  Created by Igor Shelopaev on 05.08.24.
