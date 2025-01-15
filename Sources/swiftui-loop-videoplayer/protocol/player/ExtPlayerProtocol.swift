@@ -18,7 +18,7 @@ import AppKit
 /// handle errors, and notify a delegate of important events.
 @available(iOS 14, macOS 11, tvOS 14, *)
 @MainActor @preconcurrency
-public protocol LoopingPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
+public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     
     #if canImport(UIKit)
         /// Provides a non-optional `CALayer` for use within UIKit environments.
@@ -68,7 +68,7 @@ public protocol LoopingPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     func handlePlayerError(_ player: AVPlayer)
 }
 
-internal extension LoopingPlayerProtocol {
+internal extension ExtPlayerProtocol {
     
     /// Initializes a new player view with a video asset and custom settings.
     ///

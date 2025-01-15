@@ -13,7 +13,7 @@ import Combine
 /// for looping video players on different platforms.
 @available(iOS 14, macOS 11, tvOS 14, *)
 @MainActor @preconcurrency
-public protocol LoopPlayerViewProtocol {
+public protocol ExtPlayerViewProtocol {
     
     #if canImport(UIKit)
     /// Typealias for the main view on iOS, using `UIView`.
@@ -31,13 +31,13 @@ public protocol LoopPlayerViewProtocol {
 
     #if canImport(UIKit)
     /// Typealias for the player view on iOS, conforming to `LoopingPlayerProtocol` and using `UIView`.
-    associatedtype PlayerView: LoopingPlayerProtocol, UIView
+    associatedtype PlayerView: ExtPlayerProtocol, UIView
     #elseif os(macOS)
     /// Typealias for the player view on macOS, conforming to `LoopingPlayerProtocol` and using `NSView`.
-    associatedtype PlayerView: LoopingPlayerProtocol, NSView
+    associatedtype PlayerView: ExtPlayerProtocol, NSView
     #else
     /// Typealias for a custom player view on other platforms, conforming to `LoopingPlayerProtocol`.
-    associatedtype PlayerView: LoopingPlayerProtocol, CustomView
+    associatedtype PlayerView: ExtPlayerProtocol, CustomView
     #endif
     
     /// Settings for configuring the video player.
@@ -58,7 +58,7 @@ public protocol LoopPlayerViewProtocol {
 }
 
 @available(iOS 14, macOS 11, tvOS 14, *)
-public extension LoopPlayerViewProtocol{
+public extension ExtPlayerViewProtocol{
     
     /// Updates the view by removing existing error messages and displaying a new one if an error is present.
     /// - Parameters:

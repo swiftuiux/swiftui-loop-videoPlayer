@@ -21,20 +21,20 @@ import AppKit
 #endif
 
 @MainActor
-internal struct LoopPlayerMultiPlatform: LoopPlayerViewProtocol {
+internal struct ExtPlayerMultiPlatform: ExtPlayerViewProtocol {
         
     #if canImport(UIKit)
     typealias View = UIView
     
     typealias ErrorView = ErrorMsgViewIOS
     
-    typealias PlayerView = LoopingPlayerUIView
+    typealias PlayerView = ExtPlayerUIView
     #elseif canImport(AppKit)
     typealias View = NSView
     
     typealias ErrorView = ErrorMsgViewMacOS
     
-    typealias PlayerView = LoopingPlayerNSView
+    typealias PlayerView = ExtPlayerNSView
     #endif
     
     /// A publisher that emits the current playback time as a `Double`.
@@ -89,7 +89,7 @@ internal struct LoopPlayerMultiPlatform: LoopPlayerViewProtocol {
 }
 
 #if canImport(UIKit)
-extension LoopPlayerMultiPlatform: UIViewRepresentable{
+extension ExtPlayerMultiPlatform: UIViewRepresentable{
     /// Creates the container view with the player view and error view if needed
     /// - Parameter context: The context for the view
     /// - Returns: A configured UIView
@@ -136,7 +136,7 @@ extension LoopPlayerMultiPlatform: UIViewRepresentable{
 #endif
 
 #if canImport(AppKit)
-extension LoopPlayerMultiPlatform: NSViewRepresentable{
+extension ExtPlayerMultiPlatform: NSViewRepresentable{
     /// Creates the NSView for the representable component. It initializes the view, configures it with a player if available, and adds an error view if necessary.
     /// - Parameter context: The context containing environment and state information used during view creation.
     /// - Returns: A fully configured NSView containing both the media player and potentially an error message display.

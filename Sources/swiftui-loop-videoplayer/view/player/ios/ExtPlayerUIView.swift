@@ -15,7 +15,7 @@ import AVKit
 import UIKit
 
 @MainActor @preconcurrency
-internal class LoopingPlayerUIView: UIView, LoopingPlayerProtocol {   
+internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {   
     
     /// This property holds an instance of `VideoSettings`
     internal var currentSettings : VideoSettings?
