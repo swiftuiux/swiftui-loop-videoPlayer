@@ -70,7 +70,6 @@ internal class LoopingPlayerUIView: UIView, LoopingPlayerProtocol {
     /// - Parameters:
     ///   - asset: The `AVURLAsset` used for video playback.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    ///   - timePublishing: Optional `CMTime` that specifies a particular time for publishing or triggering an event.
     required init(asset: AVURLAsset, settings: VideoSettings){
         
         player = AVQueuePlayer(items: [])

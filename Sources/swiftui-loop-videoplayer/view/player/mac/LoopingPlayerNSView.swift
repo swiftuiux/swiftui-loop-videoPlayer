@@ -72,7 +72,6 @@ internal class LoopingPlayerNSView: NSView, LoopingPlayerProtocol {
     /// - Parameters:
     ///   - asset: The `AVURLAsset` for video playback.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    ///   - timePublishing: Optional `CMTime` for publishing or triggering an event at a specific time.
     required init(asset: AVURLAsset, settings: VideoSettings) {
         
         player = AVQueuePlayer(items: [])
