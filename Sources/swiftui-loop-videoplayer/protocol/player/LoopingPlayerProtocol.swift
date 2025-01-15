@@ -263,10 +263,7 @@ internal extension LoopingPlayerProtocol {
     
     /// Clears all items from the player's queue.
     func clearPlayerQueue() {
-        guard let items = player?.items() else { return }
-        for item in items {
-            player?.remove(item)
-        }
+        player?.removeAllItems()
     }
     
     /// Removes observers for handling errors.
