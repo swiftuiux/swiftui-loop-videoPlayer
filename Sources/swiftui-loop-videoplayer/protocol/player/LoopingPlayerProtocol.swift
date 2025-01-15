@@ -54,8 +54,7 @@ public protocol LoopingPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     /// - Parameters:
     ///   - asset: The `AVURLAsset` used for video playback.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    ///   - timePublishing: Optional `CMTime` that specifies a particular time for publishing or triggering an event.
-    init(asset: AVURLAsset, settings: VideoSettings, timePublishing: CMTime?)
+    init(asset: AVURLAsset, settings: VideoSettings)
     
     /// Sets up the necessary observers on the AVPlayerItem and AVQueuePlayer to monitor changes and errors.
     ///
@@ -80,16 +79,13 @@ internal extension LoopingPlayerProtocol {
     ///   - timePublishing: Optional `CMTime` that specifies a particular time for publishing or triggering an event.
     func setupPlayerComponents(
         asset: AVURLAsset,
-        settings: VideoSettings,
-        timePublishing:  CMTime?
+        settings: VideoSettings
     ) {
         
         guard let player else { return }
         
-        configurePlayer(player, settings: settings, timePublishing: timePublishing)
-        
+        configurePlayer(player, settings: settings)
         update(asset: asset, settings: settings)
-        
         setupObservers(for: player)
     }
     
@@ -98,13 +94,24 @@ internal extension LoopingPlayerProtocol {
     /// - Parameters:
     ///   - player: The AVQueuePlayer to be configured.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    ///   - timePublishing: Optional interval for publishing the current playback time; nil disables this feature.
     func configurePlayer(
         _ player: AVQueuePlayer,
-        settings: VideoSettings,
-        timePublishing:  CMTime?
+        settings: VideoSettings
     ) {
+        
         player.isMuted = settings.mute
+
+        configurePlayerLayer(player, settings)
+        configureCompositeLayer(settings)
+        configureTimePublishing(player, settings)
+
+    }
+    
+    /// Configures the player layer for the specified video player using the provided settings.
+    /// - Parameters:
+    ///   - player: The `AVQueuePlayer` instance for which the player layer will be configured.
+    ///   - settings: A `VideoSettings` object containing configuration details for the player layer.
+    func configurePlayerLayer(_ player: AVQueuePlayer, _ settings: VideoSettings) {
         playerLayer.player = player
         playerLayer.videoGravity = settings.gravity
 
@@ -118,10 +125,14 @@ internal extension LoopingPlayerProtocol {
         self.layer = layer
         self.wantsLayer = true
         #endif
-        
-        configureCompositeLayer()
-        
-        if let timePublishing{
+    }
+    
+    /// Configures the time publishing observer for the specified video player.
+    /// - Parameters:
+    ///   - player: The `AVQueuePlayer` instance to which the time observer will be added.
+    ///   - settings: A `VideoSettings` object containing the time publishing interval and related configuration.
+    func configureTimePublishing(_ player: AVQueuePlayer, _ settings: VideoSettings) {
+        if let timePublishing = settings.timePublishing{
             timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .main) { [weak self] time in
                 guard let self = self else{ return }
                 DispatchQueue.main.async {
@@ -131,7 +142,11 @@ internal extension LoopingPlayerProtocol {
         }
     }
     
-    func configureCompositeLayer() {
+    /// Configures the composite layer for the view based on the provided video settings.
+    /// - Parameter settings: A `VideoSettings` object containing configuration details for the composite layer.
+    func configureCompositeLayer(_ settings: VideoSettings) {
+        
+        guard settings.vector else { return }
         
         compositeLayer?.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
         
@@ -161,44 +176,47 @@ internal extension LoopingPlayerProtocol {
         guard let player = player else { return }
 
         currentSettings = settings
+        
         player.pause()
 
-        if !player.items().isEmpty {
-            // Cleaning
+        if !player.items().isEmpty {  // Cleaning
             unloop()
             clearPlayerQueue()
             removeAllFilters()
         }
 
-        let newItem: AVPlayerItem
+        let newItem = createPlayerItem(with: asset, settings: settings)
         
-        // try to retrieve the .vtt subtitle
-        if let subtitleAsset = subtitlesAssetFor(settings),
-           let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
-            // Create a new AVPlayerItem from the merged asset
-            newItem = AVPlayerItem(asset: mergedAsset)
-        }else{
-            // Create a new AVPlayerItem from the merged asset
-            newItem = AVPlayerItem(asset: asset)
-        }
-
-        // Insert the new item into the player queue
         player.insert(newItem, after: nil)
 
-        // Loop if required
         if settings.loop {
             loop()
         }
-
+        
         // Observe status changes
         setupStateItemStatusObserver(newItem: newItem, callback: callback)
 
-        // Autoplay if allowed
         if !settings.notAutoPlay {
             play()
         }
     }
     
+    /// Creates an `AVPlayerItem` with optional subtitle merging.
+    /// - Parameters:
+    ///   - asset: The main video asset.
+    ///   - settings: A `VideoSettings` object containing subtitle configuration.
+    /// - Returns: A new `AVPlayerItem` configured with the merged or original asset.
+    func createPlayerItem(with asset: AVURLAsset, settings: VideoSettings) -> AVPlayerItem {
+        // Attempt to retrieve the subtitle asset
+        if let subtitleAsset = subtitlesAssetFor(settings),
+           let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
+            // Create and return a new `AVPlayerItem` using the merged asset
+            return AVPlayerItem(asset: mergedAsset)
+        } else {
+            // Create and return a new `AVPlayerItem` using the original asset
+            return AVPlayerItem(asset: asset)
+        }
+    }
     
     /// Sets up observers on the player item and the player to track their status and error states.
     ///
