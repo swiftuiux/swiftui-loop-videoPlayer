@@ -90,20 +90,13 @@ public extension LoopPlayerViewProtocol{
     /// Creates a player view for looping video content.
     /// - Parameters:
     ///   - context: The UIViewRepresentable context providing environment data and coordinator.
-    ///   - asset: The AVURLAsset to be used for video playback.
     /// - Returns: A PlayerView instance conforming to LoopingPlayerProtocol.
     @MainActor
-    func makePlayerView(
-        _ container: View,
-        asset: AVURLAsset?) -> PlayerView? {
+    func makePlayerView(_ container: View) -> PlayerView? {
         
-        if let asset{
-            let player = PlayerView(asset: asset, settings: settings)
-            container.addSubview(player)
-            activateFullScreenConstraints(for: player, in: container)
-            return player
-        }
-
-        return nil
+        let player = PlayerView(settings: settings)
+        container.addSubview(player)
+        activateFullScreenConstraints(for: player, in: container)
+        return player
     }
 }

@@ -52,9 +52,8 @@ public protocol LoopingPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     /// Initializes a new player view with a video asset and custom settings.
     ///
     /// - Parameters:
-    ///   - asset: The `AVURLAsset` used for video playback.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    init(asset: AVURLAsset, settings: VideoSettings)
+    init(settings: VideoSettings)
     
     /// Sets up the necessary observers on the AVPlayerItem and AVQueuePlayer to monitor changes and errors.
     ///

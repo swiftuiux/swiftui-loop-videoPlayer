@@ -72,7 +72,7 @@ internal class LoopingPlayerNSView: NSView, LoopingPlayerProtocol {
     /// - Parameters:
     ///   - asset: The `AVURLAsset` for video playback.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    required init(asset: AVURLAsset, settings: VideoSettings) {
+    required init(settings: VideoSettings) {
         
         player = AVQueuePlayer(items: [])
         
@@ -83,9 +83,11 @@ internal class LoopingPlayerNSView: NSView, LoopingPlayerProtocol {
         
         super.init(frame: .zero)
         
-        setupPlayerComponents(
-            asset: asset, settings: settings
-        )
+        if let asset = assetFor(settings){
+            setupPlayerComponents(
+                asset: asset, settings: settings
+            )
+        }
     }
 
     required init?(coder: NSCoder) {
