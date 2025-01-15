@@ -161,7 +161,7 @@ extension AbstractPlayer{
     ///   - newItem: The `AVPlayerItem` whose status is to be observed.
     ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
     func setupStateItemStatusObserver(newItem: AVPlayerItem, callback: ((AVPlayerItem.Status) -> Void)?) {
-        statusObserver?.invalidate()
+        clearStatusObserver()
         
         if let callback = callback {
             //.unknown: This state is essentially the default, indicating that the player item is new or has not yet attempted to load its assets.
