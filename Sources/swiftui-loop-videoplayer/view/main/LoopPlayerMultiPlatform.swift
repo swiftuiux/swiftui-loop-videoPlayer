@@ -144,8 +144,7 @@ extension LoopPlayerMultiPlatform: NSViewRepresentable{
         let container = NSView()
         
         if let player: PlayerView = makePlayerView(
-             container,
-             asset: asset){
+             container){
             player.delegate = context.coordinator
         }
          
