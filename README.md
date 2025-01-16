@@ -1,5 +1,5 @@
 # SwiftUI video player iOS 14+, macOS 11+, tvOS 14+
-### Please star the repository if you believe continuing the development of this package is worthwhile. This will help me understand which package deserves more effort.
+### *Please star the repository if you believe continuing the development of this package is worthwhile. This will help me understand which package deserves more effort.*
 
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoplayer%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoPlayer%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoPlayer)
