@@ -220,24 +220,22 @@ internal extension ExtPlayerProtocol {
     ///
     /// - Note: This function calls `didReceiveError` on the delegate with an error of `.sourceNotFound`
     ///         if no valid asset is found, providing context for the failure.
-    func prepareAsset(_ settings: VideoSettings,
-                          _ asset : AVURLAsset? = nil) -> AVURLAsset?{
-        let value : AVURLAsset?
-        
-        if let asset{
-            value = asset
-        }else if !settings.isEqual(currentSettings), let asset = settings.getAssets(){
-            value = asset
-        }else{
-            value = nil
+    func prepareAsset(_ settings: VideoSettings, _ asset: AVURLAsset? = nil) -> AVURLAsset? {
+        if let asset = asset {
+            return asset
         }
         
-        guard let asset = value else{
+        let newAsset = settings.getAssets()
+
+        if !settings.isEqual(currentSettings), let newAsset{
+            return newAsset
+        }
+
+        if newAsset == nil {
             delegate?.didReceiveError(.sourceNotFound(settings.name))
-            return nil
         }
         
-        return value
+        return nil
     }
     
     /// Creates an `AVPlayerItem` with optional subtitle merging.
