@@ -153,14 +153,21 @@ internal extension ExtPlayerProtocol {
         #endif
     }
     
-    /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
+    /// Updates the player with a new asset and applies specified video settings.
+    /// Initializes playback or performs a specified action once the asset is ready.
     ///
-    /// This method sets a new asset to be played, optionally loops it, and can automatically start playback.
-    /// If provided, a callback is executed when the asset is ready to play.
+    /// This method sets a new `AVURLAsset` to be played based on the provided settings.
+    /// It can configure looping and muting options, and automatically starts playback if specified.
+    /// A callback is executed when the asset transitions to the `.readyToPlay` status, allowing for
+    /// further actions dependent on the readiness of the asset.
     ///
     /// - Parameters:
-    ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    ///   - callback: An optional closure to be called when the asset is ready to play.
+    ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity,
+    ///               whether to loop the content, and whether to mute the audio.
+    ///   - asset: An optional `AVURLAsset` representing the new video content to be loaded. If nil,
+    ///            the current asset continues playing with updated settings.
+    ///   - callback: An optional closure executed when the asset reaches `.readyToPlay` status,
+    ///               providing the new status as its parameter for handling additional setup or errors.
     func update(
         settings: VideoSettings,
         asset : AVURLAsset? = nil,
@@ -171,7 +178,6 @@ internal extension ExtPlayerProtocol {
         guard let asset = asset ?? settings.getAssetIfDifferent(currentSettings) else {
             delegate?.didReceiveError(.sourceNotFound(settings.name))
             return }
-        
         
         stop(player)
         
