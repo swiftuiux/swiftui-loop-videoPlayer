@@ -110,7 +110,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
 |-------------------------------------------------------------|-------------------------------|------------------------------------------------------------------------------------------------------|
 | `settings`                                                  | `Binding<VideoSettings>`       | A binding to the video player settings, which configure various aspects of the player's behavior.    |
 | `command`                                                   | `Binding<PlaybackCommand>`     | A binding to control playback actions, such as play, pause, or seek.                                 |
-| `init(fileName:ext:gravity:timePublishing:` <br> `eColor:eFontSize:command:)` | Constructor                    | Initializes the player with specific video parameters, such as file name, extension, gravity, time publishing, color, font size, and a playback command binding. |
+| `init(fileName:ext:gravity:timePublishing:` <br> `command:)` | Constructor                    | Initializes the player with specific video parameters, such as file name, extension, gravity, time publishing and a playback command binding. |
 | `init(settings: () -> VideoSettings, command:)`             | Constructor                    | Initializes the player in a declarative way with a settings block and a playback command binding.     |
 | `init(settings: Binding<VideoSettings>, command:)`          | Constructor                    | Initializes the player with bindings to the video settings and a playback command.                   |
 
