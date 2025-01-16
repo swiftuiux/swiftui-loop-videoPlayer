@@ -41,16 +41,7 @@ public struct VideoSettings: Equatable{
            
     /// A structure that defines how a layer displays a player’s visual content within the layer’s bounds
     public let gravity: AVLayerVideoGravity
-    
-    /// Error message text color
-    public let errorColor : Color
-        
-    /// Size of the error text Default : 17.0
-    public let errorFontSize : CGFloat
-    
-    /// Do not show inner error showcase component
-    public let errorWidgetOff: Bool
-        
+            
     /// Are the params unique
     public var areUnique : Bool {
         unique
@@ -72,10 +63,7 @@ public struct VideoSettings: Equatable{
     ///   - notAutoPlay: A Boolean indicating whether the video should not auto-play.
     ///   - timePublishing: A `CMTime` value representing the interval for time publishing updates, or `nil`.
     ///   - gravity: The `AVLayerVideoGravity` value defining how the video should be displayed in its layer.
-    ///   - errorColor: The color used for error messages.
-    ///   - errorFontSize: The font size for error messages.
-    ///   - errorWidgetOff: A Boolean indicating whether the error widget should be turned off.
-    public init(name: String, ext: String, subtitles: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, errorColor: Color, errorFontSize: CGFloat, errorWidgetOff: Bool, enableVector : Bool = false) {
+    public init(name: String, ext: String, subtitles: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, enableVector : Bool = false) {
         self.name = name
         self.ext = ext
         self.subtitles = subtitles
@@ -84,9 +72,6 @@ public struct VideoSettings: Equatable{
         self.notAutoPlay = notAutoPlay
         self.timePublishing = timePublishing
         self.gravity = gravity
-        self.errorColor = errorColor
-        self.errorFontSize = errorFontSize
-        self.errorWidgetOff = errorWidgetOff
         self.vector = enableVector
         self.unique = true
     }
@@ -105,11 +90,7 @@ public struct VideoSettings: Equatable{
         subtitles = settings.fetch(by : "subtitles", defaulted: "")
         
         gravity = settings.fetch(by : "gravity", defaulted: .resizeAspect)
-        
-        errorColor = settings.fetch(by : "errorColor", defaulted: .red)
-        
-        errorFontSize = settings.fetch(by : "errorFontSize", defaulted: 17)
-        
+                
         timePublishing = settings.fetch(by : "timePublishing", defaulted: nil)
         
         loop = settings.contains(.loop)
@@ -117,8 +98,6 @@ public struct VideoSettings: Equatable{
         mute = settings.contains(.mute)
         
         notAutoPlay = settings.contains(.notAutoPlay)
-        
-        errorWidgetOff = settings.contains(.errorWidgetOff)
         
         vector = settings.contains(.vector)
     }
@@ -129,7 +108,7 @@ public extension VideoSettings {
    
     /// Returns a new instance of VideoSettings with loop set to false and notAutoPlay set to true, keeping other settings unchanged.
     var GetSettingsWithNotAutoPlay : VideoSettings {
-        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, errorColor: self.errorColor, errorFontSize: self.errorFontSize, errorWidgetOff: self.errorWidgetOff, enableVector: self.vector)
+        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
     }
     
     /// Checks if the asset has changed based on the provided settings and current asset.

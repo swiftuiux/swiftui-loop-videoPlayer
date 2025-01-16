@@ -65,7 +65,6 @@ internal struct ExtPlayerMultiPlatform: ExtPlayerViewProtocol {
         self.eventPublisher = eventPublisher
         self._settings = settings
         self._command = command
-        let settings = settings.wrappedValue
     }
     /// Creates a coordinator that handles error-related updates and interactions between the SwiftUI view and its underlying model.
     /// - Returns: An instance of PlayerErrorCoordinator that can be used to manage error states and communicate between the view and model.

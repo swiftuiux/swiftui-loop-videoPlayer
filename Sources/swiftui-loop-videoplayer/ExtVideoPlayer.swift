@@ -41,16 +41,12 @@ public struct ExtVideoPlayer: View{
     ///   - ext: The file extension, with a default value of "mp4".
     ///   - gravity: The video gravity setting, with a default value of `.resizeAspect`.
     ///   - timePublishing: An optional `CMTime` value for time publishing, with a default value of 1 second.
-    ///   - eColor: The color to be used, with a default value of `.accentColor`.
-    ///   - eFontSize: The font size to be used, with a default value of 17.0.
     ///   - command: A binding to the playback command, with a default value of `.play`.
     public init(
         fileName: String,
         ext: String = "mp4",
         gravity: AVLayerVideoGravity = .resizeAspect,
         timePublishing : CMTime? = CMTime(seconds: 1, preferredTimescale: 600),
-        eColor: Color = .accentColor,
-        eFontSize: CGFloat = 17.0,
         command : Binding<PlaybackCommand> = .constant(.play)
     ) {
         self._command = command
@@ -66,10 +62,6 @@ public struct ExtVideoPlayer: View{
             if let timePublishing{
                 timePublishing
            }
-            ErrorGroup {
-                EColor(eColor)
-                EFontSize(eFontSize)
-            }
         }
         
         _settings = .constant(settings)

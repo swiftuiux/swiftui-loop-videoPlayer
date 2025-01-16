@@ -50,7 +50,6 @@ It is a pure package without any third-party libraries. My main focus was on per
 |                           | AutoPlay                                    | Toggle automatic playback on load.                                                                      |
 |                           | Mute by Default                             | Initialize playback without sound.                                                                      |
 |                           | Subtitle Integration                        | Configure subtitles from embedded tracks or external files.                                             |
-|                           | Error Widget Customization                  | Change error text color, font size, or disable built-in error widgets.                                  |
 | **Visual Features**        | Rounded Corners                            | Apply rounded corners using SwiftUI's `.mask` modifier.                                                 |
 |                           | Overlay Graphics                            | Add vector graphics over video for custom effects.                                                      |
 |                           | Brightness Adjustment                       | Control brightness levels dynamically.                                                                  |
@@ -129,9 +128,6 @@ Please note that using videos from URLs requires ensuring that you have the righ
 | **Mute** | Indicates if the video should play without sound. | false |
 | **NotAutoPlay** | Indicates if the video should not play after initialization. Notice that if you use `command` as a control flow for the player the start command should be `.idle` | false |
 | **EnableVector** | Use this struct to activate settings that allow the addition of vector-based overlays via commands. If it is not passed via settings, any commands to `addVector` or `removeAllVectors` will have no effect. | Not Enabled |
-| **EColor** | Error message text color. | .red |
-| **EFontSize** | Size of the error text. | 17.0 |
-| **ErrorWidgetOff** | Do not show inner error showcase component. In case you'd like to implement your own error Alert widget. | - |
 
 *Additional Notes on Settings*
 
@@ -272,10 +268,6 @@ or in a declarative way
                 Ext("mp8") // Set default extension here If not provided then mp4 is default
                 Gravity(.resizeAspectFill)
                 TimePublishing()
-                ErrorGroup{
-                    EColor(.accentColor)
-                    EFontSize(27)
-                }
             }
         } 
         .onPlayerTimeChange { newTime in
@@ -291,14 +283,11 @@ or in a declarative way
 ExtVideoPlayer{
     VideoSettings{
         SourceName('https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8')
-        ErrorGroup{
-            EFontSize(27)
-        }
     }
 }
 ```
 
-You can group error settings in group **ErrorGroup** or just pass all settings as a linear list of settings. You don't need to follow some specific order for settings, just pass in an arbitrary order you are interested in. The only required setting is now **SourceName**.
+The only required setting is now **SourceName**.
 
 
 ### Supported Video Types and Formats
@@ -325,10 +314,6 @@ ExtVideoPlayer{
     VideoSettings{
         SourceName('https://example.com/video')
         Gravity(.resizeAspectFill)  // Video content fit
-        ErrorGroup{
-            EColor(.red)  // Error text color
-            EFontSize(18)  // Error text font size
-        }
     }
 }
 ```

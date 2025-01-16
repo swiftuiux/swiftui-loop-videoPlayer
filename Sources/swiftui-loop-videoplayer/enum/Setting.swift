@@ -49,18 +49,6 @@ public enum Setting: Equatable, SettingsConvertible{
     /// Video gravity
     case gravity(AVLayerVideoGravity = .resizeAspect)
 
-    /// Error text is resource is not found
-    case errorText(String)
-
-    /// Size of the error text
-    case errorFontSize(CGFloat)
-    
-    /// Color of the error text
-    case errorColor(Color)
-    
-    /// Do not show inner error showcase component
-    case errorWidgetOff
-    
     /// Case name
     var caseName: String {
         Mirror(reflecting: self).children.first?.label ?? "\(self)"
