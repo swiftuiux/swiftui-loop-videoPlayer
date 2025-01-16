@@ -76,12 +76,10 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         
         player = AVQueuePlayer(items: [])
         
-        playerLayer = AVPlayerLayer()
-        if settings.vector{
-            compositeLayer = CALayer()
-        }
-        
         super.init(frame: .zero)
+        
+        addPlayerLayer()
+        addCompositeLayer(settings)
         
         setupPlayerComponents(
             asset: asset, settings: settings
@@ -97,21 +95,41 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         super.layout()
         playerLayer.frame = bounds
     }
+    
+    private func addCompositeLayer(_ settings : VideoSettings){
+        if settings.vector{
+            compositeLayer = CALayer()
+        }
+    }
+    
+    private func removeCompositeLayer() {
+        compositeLayer?.removeFromSuperlayer()
+        compositeLayer = nil
+    }
 
     /// Cleans up resources and observers associated with the player.
     ///
     /// This method invalidates the status and error observers to prevent memory leaks,
     /// pauses the player, and clears out player-related references to assist in clean deinitialization.
     deinit {
-        
-        stop()
-        
+
+        // First, clear all observers to prevent memory leaks
         clearObservers()
         
-        player = nil
+        // Stop the player to ensure it's not playing any media
+        stop()
         
+        // Remove visual layers to clean up the UI components
+        removePlayerLayer()
+        removeCompositeLayer()
+        
+        // Finally, release player and delegate references to free up memory
+        player = nil
+        delegate = nil
+        
+        // Log the cleanup process for debugging purposes
         #if DEBUG
-        print("Cleaned up.")
+        print("Player deinitialized and resources cleaned up.")
         #endif
     }
 }

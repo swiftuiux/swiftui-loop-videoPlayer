@@ -30,10 +30,10 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     internal var contrast: Float = 1
     
     /// A CALayer instance used for composing content, accessible only within the module.
-    internal var compositeLayer : CALayer?
+    internal var compositeLayer : CALayer? = nil
     
     /// The AVPlayerLayer that displays the video content.
-    internal let playerLayer : AVPlayerLayer
+    internal var playerLayer : AVPlayerLayer? = nil
     
     /// The looper responsible for continuous video playback.
     internal var playerLooper: AVPlayerLooper?
@@ -74,12 +74,10 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         
         player = AVQueuePlayer(items: [])
         
-        playerLayer = AVPlayerLayer()
-        if settings.vector{
-            compositeLayer = CALayer()
-        }
-        
         super.init(frame: .zero)
+        
+        addPlayerLayer()
+        addCompositeLayer(settings)
         
         setupPlayerComponents(
             settings: settings
@@ -93,7 +91,18 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     /// Lays out subviews and adjusts the frame of the player layer to match the view's bounds.
     override func layoutSubviews() {
         super.layoutSubviews()
-        playerLayer.frame = bounds
+        playerLayer?.frame = bounds
+    }
+    
+    private func addCompositeLayer(_ settings : VideoSettings){
+        if settings.vector{
+            compositeLayer = CALayer()
+        }
+    }
+    
+    private func removeCompositeLayer() {
+        compositeLayer?.removeFromSuperlayer()
+        compositeLayer = nil
     }
 
     /// Cleans up resources and observers associated with the player.
@@ -101,15 +110,23 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     /// This method invalidates the status and error observers to prevent memory leaks,
     /// pauses the player, and clears out player-related references to assist in clean deinitialization.
     deinit {
-        
-        stop()
-        
+        // First, clear all observers to prevent memory leaks
         clearObservers()
         
+        // Stop the player to ensure it's not playing any media
+        stop()
+        
+        // Remove visual layers to clean up the UI components
+        removePlayerLayer()
+        removeCompositeLayer()
+        
+        // Finally, release player and delegate references to free up memory
         player = nil
-
+        delegate = nil
+        
+        // Log the cleanup process for debugging purposes
         #if DEBUG
-        print("Cleaned up.")
+        print("Player deinitialized and resources cleaned up.")
         #endif
     }
 }

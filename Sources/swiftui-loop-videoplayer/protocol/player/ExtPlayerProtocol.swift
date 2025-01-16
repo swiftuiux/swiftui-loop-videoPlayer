@@ -31,7 +31,7 @@ public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     #endif
 
     /// Provides a `AVPlayerLayer` specific to the player implementation, applicable across all platforms.
-    var playerLayer: AVPlayerLayer { get }
+    var playerLayer: AVPlayerLayer? { get set }
     
     /// An optional NSKeyValueObservation to monitor errors encountered by the video player.
     /// This observer should be configured to detect and handle errors from the AVQueuePlayer,
@@ -109,16 +109,20 @@ internal extension ExtPlayerProtocol {
     ///   - player: The `AVQueuePlayer` instance for which the player layer will be configured.
     ///   - settings: A `VideoSettings` object containing configuration details for the player layer.
     func configurePlayerLayer(_ player: AVQueuePlayer, _ settings: VideoSettings) {
-        playerLayer.player = player
-        playerLayer.videoGravity = settings.gravity
+        playerLayer?.player = player
+        playerLayer?.videoGravity = settings.gravity
 
         #if canImport(UIKit)
-        playerLayer.backgroundColor = UIColor.clear.cgColor
-        layer.addSublayer(playerLayer)
+        playerLayer?.backgroundColor = UIColor.clear.cgColor
+        if let playerLayer{
+            layer.addSublayer(playerLayer)
+        }
         #elseif canImport(AppKit)
-        playerLayer.backgroundColor = NSColor.clear.cgColor
+        playerLayer?.backgroundColor = NSColor.clear.cgColor
         let layer = CALayer()
-        layer.addSublayer(playerLayer)
+        if let playerLayer{
+            layer.addSublayer(playerLayer)
+        }
         self.layer = layer
         self.wantsLayer = true
         #endif
@@ -187,7 +191,7 @@ internal extension ExtPlayerProtocol {
         insert(newItem)
 
         if settings.loop {
-            loop()
+           loop()
         }
         
         // Observe status changes
@@ -328,6 +332,20 @@ internal extension ExtPlayerProtocol {
             player?.removeTimeObserver(observerToken)
             timeObserver = nil
         }
+    }
+    
+    func addPlayerLayer(){
+        playerLayer = AVPlayerLayer()
+    }
+    
+    /// Removes the player layer from its super layer.
+    ///
+    /// This method checks if the player layer is associated with a super layer and removes it to clean up resources
+    /// and prevent potential retain cycles or unwanted video display when the player is no longer needed.
+    func removePlayerLayer() {
+        playerLayer?.player = nil
+        playerLayer?.removeFromSuperlayer()
+        playerLayer = nil
     }
     
     /// Sets the playback command for the video player.

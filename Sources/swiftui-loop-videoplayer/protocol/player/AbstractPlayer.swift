@@ -158,11 +158,7 @@ extension AbstractPlayer{
     
     /// Determines whether the media queue of the player is empty.
     func isEmptyQueue() -> Bool{
-        if let player{
-            return player.items().isEmpty
-        }else{
-            return true
-        }
+        player?.items().isEmpty ?? true
     }
     
     /// Stop and clean player
@@ -172,7 +168,7 @@ extension AbstractPlayer{
         
         if !isEmptyQueue() {  // Cleaning
             if isLooping(){
-                unloop()
+               unloop()
             }
             
             removeAllFilters()
@@ -491,4 +487,5 @@ extension AbstractPlayer{
         }
         #endif
     }
+
 }
