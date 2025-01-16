@@ -332,6 +332,7 @@ internal extension ExtPlayerProtocol {
         }
     }
     
+    /// Add player layer
     func addPlayerLayer(){
         playerLayer = AVPlayerLayer()
     }
