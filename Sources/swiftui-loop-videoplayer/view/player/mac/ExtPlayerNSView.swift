@@ -35,7 +35,7 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     internal var compositeLayer : CALayer?
     
     /// The AVPlayerLayer that displays the video content.
-    internal let playerLayer : AVPlayerLayer
+    internal var playerLayer : AVPlayerLayer?
     
     /// The looper responsible for continuous video playback.
     internal var playerLooper: AVPlayerLooper?
@@ -81,9 +81,7 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         addPlayerLayer()
         addCompositeLayer(settings)
         
-        setupPlayerComponents(
-            asset: asset, settings: settings
-        )
+        setupPlayerComponents(settings: settings)
     }
 
     required init?(coder: NSCoder) {
@@ -93,7 +91,7 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     /// Lays out subviews and adjusts the frame of the player layer to match the view's bounds.
     override func layout() {
         super.layout()
-        playerLayer.frame = bounds
+        playerLayer?.frame = bounds
     }
     
     private func addCompositeLayer(_ settings : VideoSettings){

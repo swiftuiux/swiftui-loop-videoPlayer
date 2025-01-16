@@ -117,13 +117,9 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
     @MainActor func makeNSView(context: Context) -> NSView {
         let container = NSView()
         
-        if let player: PlayerView = makePlayerView(
-             container){
+        if let player: PlayerView = makePlayerView(container){
             player.delegate = context.coordinator
         }
-         
-
-        makeErrorView(container, error: error)
          
         return container
     }
@@ -135,9 +131,9 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
     @MainActor func updateNSView(_ nsView: NSView, context: Context) {
         let player = nsView.findFirstSubview(ofType: PlayerView.self)
         if let player {
-            if let asset = settings.getAssetIfDifferent(player.currentSettings){
-                player.update(asset: asset, settings: settings)
-            }
+            
+            player.update(settings: settings)
+            
             // Check if command changed before applying it
             if context.coordinator.getLastCommand != command {
                 player.setCommand(command)
@@ -145,13 +141,6 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
             }
             
         }
-        
-        if let e = error {
-            eventPublisher
-                .send(.error(e))
-        }
-        
-        updateView(nsView, error: error)
     }
 }
 #endif
