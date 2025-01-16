@@ -59,34 +59,7 @@ public protocol ExtPlayerViewProtocol {
 
 @available(iOS 14, macOS 11, tvOS 14, *)
 public extension ExtPlayerViewProtocol{
-    
-    /// Updates the view by removing existing error messages and displaying a new one if an error is present.
-    /// - Parameters:
-    ///   - view: The view that needs to be updated with potential error messages.
-    ///   - error: The optional error that might need to be displayed.
-    @MainActor
-    func updateView(_ view: View, error: VPErrors?) {
-        
-        makeErrorView(view, error: error)
-    }
-    
-    /// Constructs an error view and adds it to the specified view if an error is present.
-    /// - Parameters:
-    ///   - view: The view to which the error message view will be added.
-    ///   - error: The optional error which, if present, triggers the creation and addition of an error-specific view.
-    @MainActor
-    func makeErrorView(_ view: View, error: VPErrors?) {
-        
-        /// Check if error widget is off in settings
-        guard settings.errorWidgetOff == false else{ return }
-        
-        if let error = error {
-            let errorView = errorTpl(error, settings.errorColor, settings.errorFontSize)
-            view.addSubview(errorView)
-            activateFullScreenConstraints(for: errorView, in: view)
-        }
-    }
-    
+       
     /// Creates a player view for looping video content.
     /// - Parameters:
     ///   - context: The UIViewRepresentable context providing environment data and coordinator.

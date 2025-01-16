@@ -48,14 +48,7 @@ internal struct ExtPlayerMultiPlatform: ExtPlayerViewProtocol {
     
     /// Settings for the player view
     @Binding public var settings: VideoSettings
-       
-    /// State to store any error that occurs
-    @State private var error: VPErrors?
     
-    var asset : AVURLAsset?{
-        assetFor(settings)
-    }
-
     /// Initializes a new instance of `ExtPlayerView`.
     /// - Parameters:
     ///   - settings: A binding to the video settings used by the player.
@@ -73,18 +66,11 @@ internal struct ExtPlayerMultiPlatform: ExtPlayerViewProtocol {
         self._settings = settings
         self._command = command
         let settings = settings.wrappedValue
-        let asset =  assetFor(settings)
-        let e = detectError(settings: settings, asset: asset)
-        if let e {
-            self._error = State(initialValue: e)
-        }
     }
-
-    
     /// Creates a coordinator that handles error-related updates and interactions between the SwiftUI view and its underlying model.
     /// - Returns: An instance of PlayerErrorCoordinator that can be used to manage error states and communicate between the view and model.
     func makeCoordinator() -> PlayerCoordinator {
-        PlayerCoordinator($error, timePublisher: timePublisher, eventPublisher: eventPublisher)
+        PlayerCoordinator(timePublisher: timePublisher, eventPublisher: eventPublisher)
     }
 }
 
@@ -96,14 +82,11 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
     @MainActor func makeUIView(context: Context) -> UIView {
        let container = UIView()
    
-       if let player: PlayerView = makePlayerView(
-            container){
+       if let player: PlayerView = makePlayerView(container){
            player.delegate = context.coordinator
        }
-        
-        makeErrorView(container, error: error)
 
-        return container
+       return container
     }
     
     /// Updates the container view, removing any existing error views and adding a new one if needed
@@ -114,23 +97,15 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
         let player = uiView.findFirstSubview(ofType: PlayerView.self)
        
         if let player{
-            if let asset = settings.getAssetIfDifferent(player.currentSettings) {
-                player.update(asset: asset, settings: settings)
-            }
+            
+            player.update(settings: settings)
             
             // Check if command changed before applying it
             if context.coordinator.getLastCommand != command {
                 player.setCommand(command)
                 context.coordinator.setLastCommand(command) // Update the last command in the coordinator
             }
-        }
-        
-        if let e = error {
-            eventPublisher
-                .send(.error(e))
-        }
-        
-        updateView(uiView, error: error)
+        }        
     }
 }
 #endif

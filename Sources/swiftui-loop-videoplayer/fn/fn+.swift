@@ -75,21 +75,6 @@ fileprivate func extractExtension(from name: String) -> String? {
     return nil
 }
 
-/// Detects and returns the appropriate error based on settings and asset.
-/// - Parameters:
-///   - settings: The settings for the video player.
-///   - asset: The asset for the video player.
-/// - Returns: The detected error or nil if no error.
-func detectError(settings: VideoSettings, asset: AVURLAsset?) -> VPErrors? {
-    if !settings.areUnique {
-        return .settingsNotUnique
-    } else if asset == nil {
-        return .sourceNotFound(settings.name)
-    } else {
-        return nil
-    }
-}
-
 /// Combines an array of CIFilters with additional brightness and contrast adjustments.
 ///
 /// This function appends brightness and contrast adjustments as CIFilters to the existing array of filters.

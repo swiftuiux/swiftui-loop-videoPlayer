@@ -17,16 +17,11 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     
     /// Stores the last command applied to the player.
     private var lastCommand: PlaybackCommand?
-    
-    /// A binding to an optional `VPErrors` instance, used to report errors back to the parent view.
-    @Binding private var error: VPErrors?
 
     init(
-        _ error: Binding<VPErrors?>,
          timePublisher: PassthroughSubject<Double, Never>,
         eventPublisher: PassthroughSubject<PlayerEvent, Never>
     ) {
-        self._error = error
         self.timePublisher = timePublisher
         self.eventPublisher = eventPublisher
     }
@@ -42,7 +37,6 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// This method is called when an error is encountered during playback or other operations.
     /// - Parameter error: The error received.
     func didReceiveError(_ error: VPErrors) {
-        self.error = error
         eventPublisher.send(.error(error))
     }
     

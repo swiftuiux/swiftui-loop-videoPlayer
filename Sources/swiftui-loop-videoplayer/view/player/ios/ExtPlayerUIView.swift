@@ -15,7 +15,7 @@ import AVKit
 import UIKit
 
 @MainActor @preconcurrency
-internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {   
+internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     
     /// This property holds an instance of `VideoSettings`
     internal var currentSettings : VideoSettings?
@@ -81,11 +81,9 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         
         super.init(frame: .zero)
         
-        if let asset = assetFor(settings){
-            setupPlayerComponents(
-                asset: asset, settings: settings
-            )
-        }
+        setupPlayerComponents(
+            settings: settings
+        )
     }
 
     required init?(coder: NSCoder) {

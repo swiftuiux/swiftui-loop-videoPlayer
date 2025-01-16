@@ -110,7 +110,7 @@ public protocol AbstractPlayer: AnyObject {
     func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
-    func update(asset: AVURLAsset, settings: VideoSettings, callback: ((AVPlayerItem.Status) -> Void)?)
+    func update(settings: VideoSettings, callback: ((AVPlayerItem.Status) -> Void)?)
 }
 
 extension AbstractPlayer{
@@ -189,7 +189,7 @@ extension AbstractPlayer{
     func seek(to time: Double) {
         guard let player = player, let duration = player.currentItem?.duration else {
             if let settings = currentSettings, let asset = assetFor(settings){
-                update(asset: asset, settings: settings, callback: nil)
+                update(settings: settings, callback: nil)
                 seek(to: time)
                 return
             }
@@ -477,7 +477,7 @@ internal func cleanUp(
     timeObserver: inout Any?
 ) {
     player?.pause()
-    
+
     errorObserver?.invalidate()
     errorObserver = nil
     
@@ -493,13 +493,15 @@ internal func cleanUp(
     statusObserver?.invalidate()
     statusObserver = nil
     
-    playerLooper?.disableLooping()
-    playerLooper = nil
+    if let looper = playerLooper {
+        looper.disableLooping()
+        playerLooper = nil  // Optionally, set the looper to nil to deallocate it
+    }
 
     player?.removeAllItems()
 
     if let observerToken = timeObserver {
-        player?.removeTimeObserver(observerToken)
+        player?.removeTimeObserver(observerToken)        
         timeObserver = nil
     }
     

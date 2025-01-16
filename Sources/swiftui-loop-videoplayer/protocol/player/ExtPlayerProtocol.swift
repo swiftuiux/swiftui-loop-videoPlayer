@@ -73,18 +73,16 @@ internal extension ExtPlayerProtocol {
     /// Initializes a new player view with a video asset and custom settings.
     ///
     /// - Parameters:
-    ///   - asset: The `AVURLAsset` used for video playback.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
     ///   - timePublishing: Optional `CMTime` that specifies a particular time for publishing or triggering an event.
     func setupPlayerComponents(
-        asset: AVURLAsset,
         settings: VideoSettings
     ) {
         
         guard let player else { return }
         
         configurePlayer(player, settings: settings)
-        update(asset: asset, settings: settings)
+        update(settings: settings)
         setupObservers(for: player)
     }
     
@@ -131,11 +129,9 @@ internal extension ExtPlayerProtocol {
     ///   - settings: A `VideoSettings` object containing the time publishing interval and related configuration.
     func configureTimePublishing(_ player: AVQueuePlayer, _ settings: VideoSettings) {
         if let timePublishing = settings.timePublishing{
-            timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .main) { [weak self] time in
+            timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .global()) { [weak self] time in
                 guard let self = self else{ return }
-                DispatchQueue.main.async {
-                    self.delegate?.didPassedTime(seconds: time.seconds)
-                }
+                self.delegate?.didPassedTime(seconds: time.seconds)
             }
         }
     }
@@ -167,25 +163,21 @@ internal extension ExtPlayerProtocol {
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
     ///   - callback: An optional closure to be called when the asset is ready to play.
     func update(
-        asset: AVURLAsset,
         settings: VideoSettings,
         callback: ((AVPlayerItem.Status) -> Void)? = nil
     ) {
-        guard let player = player else { return }
-
+        guard let player else { return }
+        guard let asset = settings.getAssetIfDifferent(currentSettings) else {
+            delegate?.didReceiveError(.sourceNotFound(settings.name))
+            return }
+        
+        stop(player)
+        
         currentSettings = settings
         
-        player.pause()
-
-        if !player.items().isEmpty {  // Cleaning
-            unloop()
-            clearPlayerQueue()
-            removeAllFilters()
-        }
-
         let newItem = createPlayerItem(with: asset, settings: settings)
         
-        player.insert(newItem, after: nil)
+        insert(player, newItem)
 
         if settings.loop {
             loop()
@@ -196,6 +188,22 @@ internal extension ExtPlayerProtocol {
 
         if !settings.notAutoPlay {
             play()
+        }
+    }
+    
+    func insert(_ player: AVQueuePlayer,_ item : AVPlayerItem){
+        player.insert(item, after: nil)
+    }
+    
+    /// Stop and clean player
+    func stop(_ player: AVQueuePlayer){
+        
+        player.pause()
+
+        if !player.items().isEmpty {  // Cleaning
+            unloop()
+            clearPlayerQueue()
+            removeAllFilters()
         }
     }
     
