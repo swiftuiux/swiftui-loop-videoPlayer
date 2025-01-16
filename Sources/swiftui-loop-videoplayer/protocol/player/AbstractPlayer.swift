@@ -151,6 +151,40 @@ extension AbstractPlayer{
         player?.pause()        
     }
     
+    /// Clears all items from the player's queue.
+    func clearPlayerQueue() {
+        player?.removeAllItems()
+    }
+    
+    /// Determines whether the media queue of the player is empty.
+    func isEmptyQueue() -> Bool{
+        if let player{
+            return player.items().isEmpty
+        }else{
+            return true
+        }
+    }
+    
+    /// Stop and clean player
+    func stop(){
+        
+        pause()
+        
+        if !isEmptyQueue() {  // Cleaning
+            if isLooping(){
+                unloop()
+            }
+            
+            removeAllFilters()
+            clearPlayerQueue()
+        }
+    }
+    /// Inserts a new player item into the media queue of the player.
+    /// - Parameter item: The AVPlayerItem to be inserted into the queue.
+    func insert(_ item : AVPlayerItem){
+        player?.insert(item, after: nil)
+    }
+    
     /// Sets up an observer for the status of the provided `AVPlayerItem`.
     ///
     /// This method observes changes in the status of `newItem` and triggers the provided callback
@@ -241,6 +275,7 @@ extension AbstractPlayer{
         }
 
         player.seek(to: seekTime){ [weak self] value in
+            print(Thread.current, "***********************")
                 let currentTime = CMTimeGetSeconds(player.currentTime())
                 self?.delegate?.didSeek(value: value, currentTime: currentTime)
         }
@@ -318,6 +353,11 @@ extension AbstractPlayer{
         #endif
     }
     
+    /// Check if looping is applied
+    func isLooping() -> Bool{
+        playerLooper != nil
+    }
+    
     /// Enables looping for the current video item.
     /// This method sets up the `playerLooper` to loop the currently playing item indefinitely.
     func loop() {
@@ -326,7 +366,7 @@ extension AbstractPlayer{
         }
 
         // Check if the video is already being looped
-        if playerLooper != nil {
+        if isLooping() {
             return
         }
 
@@ -337,7 +377,7 @@ extension AbstractPlayer{
     /// This method removes the `playerLooper`, stopping the loop.
     func unloop() {
         // Check if the video is not looped (i.e., playerLooper is nil)
-        guard playerLooper != nil else {
+        guard isLooping() else {
             return // Not looped, no need to unloop
         }
 
@@ -415,7 +455,7 @@ extension AbstractPlayer{
         if wasPlaying {
             player.pause()
         }
-               
+
         player.items().forEach{ item in
             
             let videoComposition = AVVideoComposition(asset: item.asset, applyingCIFiltersWithHandler: { request in
@@ -469,7 +509,6 @@ extension AbstractPlayer{
 ///   - timeObserver: An inout reference to a generic observer (e.g., a time observer token) that needs to be removed to prevent memory leaks. It is cleared and set to nil.
 internal func cleanUp(
     player: inout AVQueuePlayer?,
-    playerLooper: inout AVPlayerLooper?,
     errorObserver: inout NSKeyValueObservation?,
     timeControlObserver: inout NSKeyValueObservation?,
     currentItemObserver: inout NSKeyValueObservation?,
@@ -477,8 +516,7 @@ internal func cleanUp(
     statusObserver: inout NSKeyValueObservation?,
     timeObserver: inout Any?
 ) {
-    player?.pause()
-
+    
     errorObserver?.invalidate()
     errorObserver = nil
     
@@ -493,13 +531,6 @@ internal func cleanUp(
     
     statusObserver?.invalidate()
     statusObserver = nil
-    
-    if let looper = playerLooper {
-        looper.disableLooping()
-        playerLooper = nil  // Optionally, set the looper to nil to deallocate it
-    }
-
-    player?.removeAllItems()
 
     if let observerToken = timeObserver {
         player?.removeTimeObserver(observerToken)        

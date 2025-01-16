@@ -173,19 +173,17 @@ internal extension ExtPlayerProtocol {
         asset : AVURLAsset? = nil,
         callback: ((AVPlayerItem.Status) -> Void)? = nil
     ) {
-        guard let player else { return }        
+        guard let player else { return }
         
-        guard let asset = asset ?? settings.getAssetIfDifferent(currentSettings) else {
-            delegate?.didReceiveError(.sourceNotFound(settings.name))
-            return }
+        guard let asset = prepareAsset(settings, asset) else { return }
         
-        stop(player)
+        stop()
         
         currentSettings = settings
         
         let newItem = createPlayerItem(with: asset, settings: settings)
         
-        insert(player, newItem)
+        insert(newItem)
 
         if settings.loop {
             loop()
@@ -199,20 +197,42 @@ internal extension ExtPlayerProtocol {
         }
     }
     
-    func insert(_ player: AVQueuePlayer,_ item : AVPlayerItem){
-        player.insert(item, after: nil)
-    }
-    
-    /// Stop and clean player
-    func stop(_ player: AVQueuePlayer){
+    /// Prepares and validates the media asset for playback based on the given settings.
+    ///
+    /// This function determines the appropriate `AVURLAsset` to use for media playback.
+    /// If a specific asset is provided, it uses that asset; otherwise, it attempts to retrieve
+    /// an asset based on the provided settings. If the settings have changed from the current settings,
+    /// it fetches a new asset using a method presumed to be `getAssets()`. If no valid asset is found or
+    /// provided, it notifies a delegate of the error.
+    ///
+    /// - Parameters:
+    ///   - settings: The `VideoSettings` containing configuration and asset retrieval logic.
+    ///   - asset: An optional `AVURLAsset` to be used directly if provided. If nil, an asset is attempted
+    ///            to be retrieved based on the `settings`.
+    ///
+    /// - Returns: An optional `AVURLAsset` if a valid asset is found or provided; otherwise, nil if no
+    ///            valid asset could be located or an error occurred.
+    ///
+    /// - Note: This function calls `didReceiveError` on the delegate with an error of `.sourceNotFound`
+    ///         if no valid asset is found, providing context for the failure.
+    func prepareAsset(_ settings: VideoSettings,
+                          _ asset : AVURLAsset? = nil) -> AVURLAsset?{
+        let value : AVURLAsset?
         
-        player.pause()
-
-        if !player.items().isEmpty {  // Cleaning
-            unloop()
-            clearPlayerQueue()
-            removeAllFilters()
+        if let asset{
+            value = asset
+        }else if !settings.isEqual(currentSettings), let asset = settings.getAssets(){
+            value = asset
+        }else{
+            value = nil
         }
+        
+        guard let asset = value else{
+            delegate?.didReceiveError(.sourceNotFound(settings.name))
+            return nil
+        }
+        
+        return value
     }
     
     /// Creates an `AVPlayerItem` with optional subtitle merging.
@@ -231,7 +251,7 @@ internal extension ExtPlayerProtocol {
             return AVPlayerItem(asset: asset)
         }
     }
-    
+        
     /// Sets up observers on the player item and the player to track their status and error states.
     ///
     /// - Parameters:
@@ -275,11 +295,7 @@ internal extension ExtPlayerProtocol {
             }
         }
     }
-    
-    /// Clears all items from the player's queue.
-    func clearPlayerQueue() {
-        player?.removeAllItems()
-    }
+
     
     /// Removes observers for handling errors.
     ///

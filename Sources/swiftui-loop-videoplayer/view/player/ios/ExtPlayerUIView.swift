@@ -101,9 +101,11 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     /// This method invalidates the status and error observers to prevent memory leaks,
     /// pauses the player, and clears out player-related references to assist in clean deinitialization.
     deinit {
+        
+        stop()
+        
         cleanUp(
             player: &player,
-            playerLooper: &playerLooper,
             errorObserver: &errorObserver,
             timeControlObserver : &timeControlObserver,
             currentItemObserver: &currentItemObserver,

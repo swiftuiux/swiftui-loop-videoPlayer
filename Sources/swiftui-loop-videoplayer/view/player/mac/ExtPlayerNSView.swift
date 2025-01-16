@@ -83,11 +83,9 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         
         super.init(frame: .zero)
         
-        if let asset = assetFor(settings){
-            setupPlayerComponents(
-                asset: asset, settings: settings
-            )
-        }
+        setupPlayerComponents(
+            asset: asset, settings: settings
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -105,9 +103,11 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     /// This method invalidates the status and error observers to prevent memory leaks,
     /// pauses the player, and clears out player-related references to assist in clean deinitialization.
     deinit {
+        
+        stop()
+        
         cleanUp(
             player: &player,
-            playerLooper: &playerLooper,
             errorObserver: &errorObserver,
             timeControlObserver : &timeControlObserver,
             currentItemObserver: &currentItemObserver,

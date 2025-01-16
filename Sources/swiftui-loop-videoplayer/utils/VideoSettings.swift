@@ -111,22 +111,26 @@ public extension VideoSettings {
         VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
     }
     
+    func getAssets()-> AVURLAsset?{
+        assetFor(self)
+    }
+    
     /// Checks if the asset has changed based on the provided settings and current asset.
     /// - Parameters:
     ///   - asset: The current asset being played.
     /// - Returns: A new `AVURLAsset` if the asset has changed, or `nil` if the asset remains the same.
-    func getAssetIfDifferent(_ settings : VideoSettings?) -> AVURLAsset?{
+    func isEqual(_ settings : VideoSettings?) -> Bool{
         let newAsset =  assetFor(self)
         
-        guard let settings = settings else{ return newAsset }
+        guard let settings = settings else{ return false }
         
         let oldAsset = assetFor(settings)
         
         if let newUrl = newAsset?.url, let oldUrl = oldAsset?.url, newUrl != oldUrl{
-            return newAsset
+            return false
         }
 
-        return nil
+        return true
     }
 }
 
