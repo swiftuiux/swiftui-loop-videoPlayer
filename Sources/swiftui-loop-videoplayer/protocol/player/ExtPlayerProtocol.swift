@@ -178,8 +178,6 @@ internal extension ExtPlayerProtocol {
         asset : AVURLAsset? = nil,
         callback: ((AVPlayerItem.Status) -> Void)? = nil
     ) {
-        guard let player else { return }
-        
         guard let asset = prepareAsset(settings, asset) else { return }
         
         stop()

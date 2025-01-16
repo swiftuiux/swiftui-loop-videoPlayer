@@ -14,7 +14,6 @@ import AVKit
 #if canImport(UIKit)
 import UIKit
 
-@MainActor @preconcurrency
 internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     
     /// This property holds an instance of `VideoSettings`

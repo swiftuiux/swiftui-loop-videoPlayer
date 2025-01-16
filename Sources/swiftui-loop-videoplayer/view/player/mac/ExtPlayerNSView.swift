@@ -16,8 +16,7 @@ import AppKit
 
 /// A NSView subclass that loops video using AVFoundation on macOS.
 /// This class handles the initialization and management of a looping video player with customizable video gravity.
-@MainActor @preconcurrency
-internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {   
+internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     
     /// This property holds an instance of `VideoSettings`
     internal var currentSettings : VideoSettings?
