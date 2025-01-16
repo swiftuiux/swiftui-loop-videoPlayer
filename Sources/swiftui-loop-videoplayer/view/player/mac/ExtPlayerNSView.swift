@@ -106,14 +106,13 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         
         stop()
         
-        cleanUp(
-            player: &player,
-            errorObserver: &errorObserver,
-            timeControlObserver : &timeControlObserver,
-            currentItemObserver: &currentItemObserver,
-            volumeObserver: &volumeObserver,
-            statusObserver: &statusObserver,
-            timeObserver: &timeObserver)
+        clearObservers()
+        
+        player = nil
+        
+        #if DEBUG
+        print("Cleaned up.")
+        #endif
     }
 }
 #endif

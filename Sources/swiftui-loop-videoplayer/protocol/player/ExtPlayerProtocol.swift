@@ -12,6 +12,7 @@ import UIKit
 #elseif canImport(AppKit)
 import AppKit
 #endif
+
 /// A protocol defining the requirements for a looping video player.
 ///
 /// Conforming types are expected to manage a video player that can loop content continuously,
@@ -296,17 +297,6 @@ internal extension ExtPlayerProtocol {
         }
     }
 
-    
-    /// Removes observers for handling errors.
-    ///
-    /// This method ensures that the error observer is properly invalidated and the reference is cleared.
-    /// It is important to call this method to prevent memory leaks and remove any unwanted side effects
-    /// from obsolete observers.
-    func removeObservers() {
-        errorObserver?.invalidate()
-        errorObserver = nil
-    }
-
     /// Responds to errors reported by the AVPlayer.
     ///
     /// If an error is present, this method notifies the delegate of the encountered error,
@@ -315,6 +305,29 @@ internal extension ExtPlayerProtocol {
     func handlePlayerError(_ player: AVPlayer) {
         guard let error = player.error else { return }
         delegate?.didReceiveError(.remoteVideoError(error))
+    }
+    
+    /// Clear observers
+    func clearObservers(){
+        
+        errorObserver?.invalidate()
+        errorObserver = nil
+        
+        timeControlObserver?.invalidate()
+        timeControlObserver = nil
+        
+        currentItemObserver?.invalidate()
+        currentItemObserver = nil
+        
+        volumeObserver?.invalidate()
+        volumeObserver = nil
+        
+        clearStatusObserver()
+
+        if let observerToken = timeObserver {
+            player?.removeTimeObserver(observerToken)
+            timeObserver = nil
+        }
     }
     
     /// Sets the playback command for the video player.
