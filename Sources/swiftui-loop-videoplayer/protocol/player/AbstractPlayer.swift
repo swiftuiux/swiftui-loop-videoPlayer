@@ -110,7 +110,7 @@ public protocol AbstractPlayer: AnyObject {
     func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
-    func update(settings: VideoSettings, callback: ((AVPlayerItem.Status) -> Void)?)
+    func update(settings: VideoSettings, asset : AVURLAsset?, callback: ((AVPlayerItem.Status) -> Void)?)
 }
 
 extension AbstractPlayer{
@@ -189,7 +189,8 @@ extension AbstractPlayer{
     func seek(to time: Double) {
         guard let player = player, let duration = player.currentItem?.duration else {
             if let settings = currentSettings{
-                update(settings: settings, callback: nil)
+                let asset = assetFor(settings)
+                update(settings: settings, asset: asset, callback: nil)
                 seek(to: time)
                 return
             }

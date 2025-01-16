@@ -159,17 +159,19 @@ internal extension ExtPlayerProtocol {
     /// If provided, a callback is executed when the asset is ready to play.
     ///
     /// - Parameters:
-    ///   - asset: The AVURLAsset to be loaded into the player.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
     ///   - callback: An optional closure to be called when the asset is ready to play.
     func update(
         settings: VideoSettings,
+        asset : AVURLAsset? = nil,
         callback: ((AVPlayerItem.Status) -> Void)? = nil
     ) {
-        guard let player else { return }
-        guard let asset = settings.getAssetIfDifferent(currentSettings) else {
+        guard let player else { return }        
+        
+        guard let asset = asset ?? settings.getAssetIfDifferent(currentSettings) else {
             delegate?.didReceiveError(.sourceNotFound(settings.name))
             return }
+        
         
         stop(player)
         
