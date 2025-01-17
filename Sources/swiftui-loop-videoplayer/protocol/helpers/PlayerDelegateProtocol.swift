@@ -12,6 +12,7 @@ import AVFoundation
 ///
 /// Conforming to this protocol allows a class to respond to error events that occur within a media player context.
 @available(iOS 14, macOS 11, tvOS 14, *)
+@MainActor
 public protocol PlayerDelegateProtocol: AnyObject {
     /// Called when an error is encountered within the media player.
     ///

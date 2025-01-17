@@ -103,12 +103,8 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         compositeLayer?.removeFromSuperlayer()
         compositeLayer = nil
     }
-
-    /// Cleans up resources and observers associated with the player.
-    ///
-    /// This method invalidates the status and error observers to prevent memory leaks,
-    /// pauses the player, and clears out player-related references to assist in clean deinitialization.
-    deinit {
+    
+    func onDeinit(){
         // First, clear all observers to prevent memory leaks
         clearObservers()
         
@@ -127,6 +123,14 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         #if DEBUG
         print("Player deinitialized and resources cleaned up.")
         #endif
+    }
+
+    /// Cleans up resources and observers associated with the player.
+    ///
+    /// This method invalidates the status and error observers to prevent memory leaks,
+    /// pauses the player, and clears out player-related references to assist in clean deinitialization.
+    deinit {
+            onDeinit()
     }
 }
 #endif

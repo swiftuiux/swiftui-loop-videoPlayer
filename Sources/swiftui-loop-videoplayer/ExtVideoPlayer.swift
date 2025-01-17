@@ -97,11 +97,15 @@ public struct ExtVideoPlayer: View{
    /// The body property defines the view hierarchy for the user interface.
    public var body: some View {
        ExtPlayerMultiPlatform(
-        settings: $settings,
-        command: $command,
-        timePublisher: timePublisher,
-        eventPublisher: eventPublisher
+            settings: $settings,
+            command: $command,
+            timePublisher: timePublisher,
+            eventPublisher: eventPublisher
        )
+       .onDisappear{
+           //player?.onDeinit()
+           //player = nil
+       }
        .onReceive(timePublisher.receive(on: DispatchQueue.main), perform: { time in
            currentTime = time
        })

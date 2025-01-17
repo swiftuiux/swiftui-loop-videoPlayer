@@ -9,6 +9,12 @@ import SwiftUI
 import Combine
 import AVFoundation
 
+@MainActor
+protocol PlayerDeinit: AnyObject{
+    func onDeinit()
+}
+
+@MainActor
 internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
            
     let eventPublisher: PassthroughSubject<PlayerEvent, Never>
@@ -17,6 +23,8 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     
     /// Stores the last command applied to the player.
     private var lastCommand: PlaybackCommand?
+    
+    weak var delegate : PlayerDeinit?
 
     init(
          timePublisher: PassthroughSubject<Double, Never>,
@@ -29,7 +37,7 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// Deinitializes the coordinator and prints a debug message if in DEBUG mode.
     deinit {
         #if DEBUG
-        print("deinit Coordinator")
+        print("Deinit Coordinator")
         #endif
     }
     

@@ -18,7 +18,7 @@ import AppKit
 /// Conforming types are expected to manage a video player that can loop content continuously,
 /// handle errors, and notify a delegate of important events.
 @available(iOS 14, macOS 11, tvOS 14, *)
-@MainActor @preconcurrency
+@MainActor
 public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     
     #if canImport(UIKit)
@@ -136,7 +136,9 @@ internal extension ExtPlayerProtocol {
         if let timePublishing = settings.timePublishing{
             timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .global()) { [weak self] time in
                 guard let self = self else{ return }
-                self.delegate?.didPassedTime(seconds: time.seconds)
+                Task { @MainActor in
+                    self.delegate?.didPassedTime(seconds: time.seconds)
+                }
             }
         }
     }
@@ -260,20 +262,28 @@ internal extension ExtPlayerProtocol {
     ///   - player: The player to observe.
     func setupObservers(for player: AVQueuePlayer) {
         errorObserver = player.observe(\.error, options: [.new]) { [weak self] player, _ in
-            self?.handlePlayerError(player)
+            Task { @MainActor in
+                self?.handlePlayerError(player)
+            }
         }
         
         timeControlObserver = player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] player, change in
             switch player.timeControlStatus {
             case .paused:
                 // This could mean playback has stopped, but it's not specific to end of playback
-                self?.delegate?.didPausePlayback()
+                Task { @MainActor in
+                    self?.delegate?.didPausePlayback()
+                }
             case .waitingToPlayAtSpecifiedRate:
                 // Player is waiting to play (e.g., buffering)
-                self?.delegate?.isWaitingToPlay()
+                Task { @MainActor in
+                    self?.delegate?.isWaitingToPlay()
+                }
             case .playing:
                 // Player is currently playing
-                self?.delegate?.didStartPlaying()
+                Task { @MainActor in
+                    self?.delegate?.didStartPlaying()
+                }
             @unknown default:
                 break
             }
@@ -282,17 +292,24 @@ internal extension ExtPlayerProtocol {
         currentItemObserver = player.observe(\.currentItem, options: [.new, .old]) { [weak self]  player, change in
             // Detecting when the current item is changed
             if let newItem = change.newValue as? AVPlayerItem {
-                self?.delegate?.currentItemDidChange(to: newItem)
+                Task { @MainActor in
+                    self?.delegate?.currentItemDidChange(to: newItem)
+                }
             } else if change.newValue == nil {
-                self?.delegate?.currentItemWasRemoved()
+                Task { @MainActor in
+                    self?.delegate?.currentItemWasRemoved()
+                }
             }
-            
-            self?.clearStatusObserver()
+            Task { @MainActor in
+                self?.clearStatusObserver()
+            }
         }
         
         volumeObserver = player.observe(\.volume, options: [.new, .old]) { [weak self]  player, change in
             if let newVolume = change.newValue{
-                self?.delegate?.volumeDidChange(to: newVolume)
+                Task { @MainActor in
+                    self?.delegate?.volumeDidChange(to: newVolume)
+                }
             }
         }
     }

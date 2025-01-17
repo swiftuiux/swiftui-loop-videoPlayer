@@ -13,7 +13,7 @@ import Combine
 /// for looping video players on different platforms.
 @available(iOS 14, macOS 11, tvOS 14, *)
 @MainActor @preconcurrency
-public protocol ExtPlayerViewProtocol {
+protocol ExtPlayerViewProtocol {
     
     #if canImport(UIKit)
     /// Typealias for the main view on iOS, using `UIView`.
@@ -25,9 +25,6 @@ public protocol ExtPlayerViewProtocol {
     /// Typealias for a custom view type on platforms other than iOS and macOS.
     associatedtype View: CustomView
     #endif
-
-    /// Typealias for the view used to display errors.
-    associatedtype ErrorView
 
     #if canImport(UIKit)
     /// Typealias for the player view on iOS, conforming to `LoopingPlayerProtocol` and using `UIView`.
@@ -58,7 +55,7 @@ public protocol ExtPlayerViewProtocol {
 }
 
 @available(iOS 14, macOS 11, tvOS 14, *)
-public extension ExtPlayerViewProtocol{
+extension ExtPlayerViewProtocol{
        
     /// Creates a player view for looping video content.
     /// - Parameters:

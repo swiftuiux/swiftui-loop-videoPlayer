@@ -26,13 +26,9 @@ internal struct ExtPlayerMultiPlatform: ExtPlayerViewProtocol {
     #if canImport(UIKit)
     typealias View = UIView
     
-    typealias ErrorView = ErrorMsgViewIOS
-    
     typealias PlayerView = ExtPlayerUIView
     #elseif canImport(AppKit)
-    typealias View = NSView
-    
-    typealias ErrorView = ErrorMsgViewMacOS
+    typealias View = NSView    
     
     typealias PlayerView = ExtPlayerNSView
     #endif
@@ -78,7 +74,7 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
     /// Creates the container view with the player view and error view if needed
     /// - Parameter context: The context for the view
     /// - Returns: A configured UIView
-    @MainActor func makeUIView(context: Context) -> UIView {
+    func makeUIView(context: Context) -> UIView {
        let container = UIView()
    
        if let player: PlayerView = makePlayerView(container){
@@ -92,11 +88,10 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
     /// - Parameters:
     ///   - uiView: The UIView to update
     ///   - context: The context for the view
-    @MainActor func updateUIView(_ uiView: UIView, context: Context) {
+    func updateUIView(_ uiView: UIView, context: Context) {
         let player = uiView.findFirstSubview(ofType: PlayerView.self)
        
         if let player{
-            
             player.update(settings: settings)
             
             // Check if command changed before applying it
@@ -114,7 +109,7 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
     /// Creates the NSView for the representable component. It initializes the view, configures it with a player if available, and adds an error view if necessary.
     /// - Parameter context: The context containing environment and state information used during view creation.
     /// - Returns: A fully configured NSView containing both the media player and potentially an error message display.
-    @MainActor func makeNSView(context: Context) -> NSView {
+    func makeNSView(context: Context) -> NSView {
         let container = NSView()
         
         if let player: PlayerView = makePlayerView(container){
@@ -128,7 +123,7 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
     /// - Parameters:
     ///   - nsView: The NSView that needs updating.
     ///   - context: The context containing environment and state information used during the view update.
-    @MainActor func updateNSView(_ nsView: NSView, context: Context) {
+    func updateNSView(_ nsView: NSView, context: Context) {
         let player = nsView.findFirstSubview(ofType: PlayerView.self)
         if let player {
             
