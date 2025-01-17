@@ -155,7 +155,7 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
     /// - Parameters:
     ///   - uiView: The NSView instance being dismantled.
     ///   - coordinator: The coordinator instance that manages interactions between SwiftUI and the NSView.
-    static func dismantleUIView(_ uiView: NSView, coordinator: PlayerCoordinator) {
+    static func dismantleNSView(_ uiView: NSView, coordinator: PlayerCoordinator) {
         // Called by SwiftUI when this view is removed from the hierarchy
         let player = uiView.findFirstSubview(ofType: PlayerView.self)
         if let player{
