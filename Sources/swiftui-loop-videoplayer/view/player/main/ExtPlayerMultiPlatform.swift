@@ -103,7 +103,7 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
     }
     
     /// Called by SwiftUI to dismantle the UIView when the associated SwiftUI view is removed from the view hierarchy.
-    ///
+    /// https://developer.apple.com/documentation/swiftui/uiviewrepresentable/dismantleuiview(_:coordinator:)
     /// - Parameters:
     ///   - uiView: The UIView instance being dismantled.
     ///   - coordinator: The coordinator instance that manages interactions between SwiftUI and the UIView.
