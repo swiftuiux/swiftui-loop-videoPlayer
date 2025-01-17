@@ -63,10 +63,6 @@ public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     ///   - player: The AVQueuePlayer to observe for errors.
     func setupObservers(for player: AVQueuePlayer)
 
-    /// Responds to errors reported by the AVQueuePlayer.
-    ///
-    /// - Parameter player: The AVQueuePlayer that encountered an error.
-    func handlePlayerError(_ player: AVPlayer)
 }
 
 internal extension ExtPlayerProtocol {
@@ -262,9 +258,8 @@ internal extension ExtPlayerProtocol {
     ///   - player: The player to observe.
     func setupObservers(for player: AVQueuePlayer) {
         errorObserver = player.observe(\.error, options: [.new]) { [weak self] player, _ in
-            Task { @MainActor in
-                self?.handlePlayerError(player)
-            }
+            guard let error = player.error else { return }
+            self?.delegate?.didReceiveError(.remoteVideoError(error))
         }
         
         timeControlObserver = player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] player, change in
@@ -292,36 +287,18 @@ internal extension ExtPlayerProtocol {
         currentItemObserver = player.observe(\.currentItem, options: [.new, .old]) { [weak self]  player, change in
             // Detecting when the current item is changed
             if let newItem = change.newValue as? AVPlayerItem {
-                Task { @MainActor in
-                    self?.delegate?.currentItemDidChange(to: newItem)
-                }
+                self?.delegate?.currentItemDidChange(to: newItem)
             } else if change.newValue == nil {
-                Task { @MainActor in
                     self?.delegate?.currentItemWasRemoved()
-                }
             }
-            Task { @MainActor in
-                self?.clearStatusObserver()
-            }
+            self?.clearStatusObserver()
         }
         
         volumeObserver = player.observe(\.volume, options: [.new, .old]) { [weak self]  player, change in
             if let newVolume = change.newValue{
-                Task { @MainActor in
-                    self?.delegate?.volumeDidChange(to: newVolume)
-                }
+                self?.delegate?.volumeDidChange(to: newVolume)
             }
         }
-    }
-
-    /// Responds to errors reported by the AVPlayer.
-    ///
-    /// If an error is present, this method notifies the delegate of the encountered error,
-    /// encapsulated within a `remoteVideoError`.
-    /// - Parameter player: The AVPlayer that encountered an error to be evaluated.
-    func handlePlayerError(_ player: AVPlayer) {
-        guard let error = player.error else { return }
-        delegate?.didReceiveError(.remoteVideoError(error))
     }
     
     /// Clear observers
@@ -389,8 +366,8 @@ internal extension ExtPlayerProtocol {
             play()
         case .pause:
             pause()
-        case .seek(to: let time):
-            seek(to: time)
+        case .seek(to: let time, play: let play):
+            seek(to: time, play: play)
         case .begin:
             seekToStart()
         case .end:

@@ -14,7 +14,8 @@ import AVKit
 #if canImport(UIKit)
 import UIKit
 
-internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
+@MainActor
+internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {   
     
     /// This property holds an instance of `VideoSettings`
     internal var currentSettings : VideoSettings?
@@ -104,7 +105,7 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         compositeLayer = nil
     }
     
-    func onDeinit(){
+    func onDisappear(){
         // First, clear all observers to prevent memory leaks
         clearObservers()
         
@@ -123,14 +124,6 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         #if DEBUG
         print("Player deinitialized and resources cleaned up.")
         #endif
-    }
-
-    /// Cleans up resources and observers associated with the player.
-    ///
-    /// This method invalidates the status and error observers to prevent memory leaks,
-    /// pauses the player, and clears out player-related references to assist in clean deinitialization.
-    deinit {
-            onDeinit()
     }
 }
 #endif

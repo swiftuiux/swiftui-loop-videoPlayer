@@ -62,7 +62,7 @@ public protocol AbstractPlayer: AnyObject {
     /// Seeks the video to a specific time.
     /// This method moves the playback position to the specified time with precise accuracy.
     /// - Parameter time: The target time to seek to in the video timeline.
-    func seek(to time: Double)
+    func seek(to time: Double, play: Bool)
     
     /// Seeks to the start of the video.
     /// This method positions the playback at the beginning of the video.
@@ -218,12 +218,12 @@ extension AbstractPlayer{
     /// This method moves the playback position to the specified time with precise accuracy.
     /// If the specified time is out of bounds, it will be clamped to the nearest valid time.
     /// - Parameter time: The target time to seek to in the video timeline.
-    func seek(to time: Double) {
+    func seek(to time: Double, play: Bool = false) {
         guard let player = player, let duration = player.currentItem?.duration else {
             if let settings = currentSettings{
                 let asset = assetFor(settings)
                 update(settings: settings, asset: asset, callback: nil)
-                seek(to: time)
+                seek(to: time, play: play)
                 return
             }
             
@@ -238,7 +238,7 @@ extension AbstractPlayer{
                 
                 let callback : ((AVPlayerItem.Status) -> Void)? = { [weak self] status in
                     if status == .readyToPlay{
-                        self?.seek(to: time)
+                        self?.seek(to: time, play: play)
                     }else {
                         self?.delegate?.didSeek(value: false, currentTime: time)
                     }
@@ -273,10 +273,13 @@ extension AbstractPlayer{
         }
 
         player.seek(to: seekTime){ [weak self] value in
-                let currentTime = CMTimeGetSeconds(player.currentTime())
-            Task { @MainActor in
-                    self?.delegate?.didSeek(value: value, currentTime: currentTime)
+            let currentTime = CMTimeGetSeconds(player.currentTime())
+            self?.delegate?.didSeek(value: value, currentTime: currentTime)
+            Task{ @MainActor in
+                if play{
+                    self?.play()
                 }
+            }
         }
     }
     

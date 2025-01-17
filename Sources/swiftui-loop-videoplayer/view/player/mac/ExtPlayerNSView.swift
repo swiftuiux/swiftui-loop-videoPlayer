@@ -16,6 +16,7 @@ import AppKit
 
 /// A NSView subclass that loops video using AVFoundation on macOS.
 /// This class handles the initialization and management of a looping video player with customizable video gravity.
+@MainActor
 internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     
     /// This property holds an instance of `VideoSettings`
@@ -104,12 +105,7 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         compositeLayer = nil
     }
 
-    /// Cleans up resources and observers associated with the player.
-    ///
-    /// This method invalidates the status and error observers to prevent memory leaks,
-    /// pauses the player, and clears out player-related references to assist in clean deinitialization.
-    deinit {
-
+    func onDisappear(){
         // First, clear all observers to prevent memory leaks
         clearObservers()
         

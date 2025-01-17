@@ -101,6 +101,19 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
             }
         }        
     }
+    
+    /// Called by SwiftUI to dismantle the UIView when the associated SwiftUI view is removed from the view hierarchy.
+    ///
+    /// - Parameters:
+    ///   - uiView: The UIView instance being dismantled.
+    ///   - coordinator: The coordinator instance that manages interactions between SwiftUI and the UIView.
+    static func dismantleUIView(_ uiView: UIView, coordinator: PlayerCoordinator) {
+        // Called by SwiftUI when this view is removed from the hierarchy
+        let player = uiView.findFirstSubview(ofType: PlayerView.self)
+        if let player{
+            player.onDisappear()
+        }
+    }
 }
 #endif
 
@@ -134,7 +147,19 @@ extension ExtPlayerMultiPlatform: NSViewRepresentable{
                 player.setCommand(command)
                 context.coordinator.setLastCommand(command) // Update the last command in the coordinator
             }
-            
+        }
+    }
+    
+    /// Called by SwiftUI to dismantle the NSView when the associated SwiftUI view is removed from the view hierarchy.
+    ///
+    /// - Parameters:
+    ///   - uiView: The NSView instance being dismantled.
+    ///   - coordinator: The coordinator instance that manages interactions between SwiftUI and the NSView.
+    static func dismantleUIView(_ uiView: NSView, coordinator: PlayerCoordinator) {
+        // Called by SwiftUI when this view is removed from the hierarchy
+        let player = uiView.findFirstSubview(ofType: PlayerView.self)
+        if let player{
+            player.onDisappear()
         }
     }
 }

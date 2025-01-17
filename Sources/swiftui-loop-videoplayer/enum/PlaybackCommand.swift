@@ -25,7 +25,7 @@ public enum PlaybackCommand: Equatable {
     
     /// Command to seek to a specific time in the video.
     /// - Parameter time: The target position to seek to in the video, represented in seconds.
-    case seek(to: Double)
+    case seek(to: Double, play: Bool = true)
     
     /// Command to position the video at the beginning.
     case begin
@@ -97,8 +97,8 @@ public enum PlaybackCommand: Equatable {
              (.removeAllFilters, .removeAllFilters), (.removeAllVectors, .removeAllVectors):
             return true
 
-        case (.seek(let lhsTime), .seek(let rhsTime)):
-            return lhsTime == rhsTime
+        case (.seek(let lhsTime, let lhsPlay), .seek(let rhsTime, let rhsPlay)):
+            return lhsTime == rhsTime && lhsPlay == rhsPlay
 
         case (.volume(let lhsVolume), .volume(let rhsVolume)):
             return lhsVolume == rhsVolume
