@@ -110,7 +110,7 @@ public protocol AbstractPlayer: AnyObject {
     func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
-    func update(settings: VideoSettings, asset : AVURLAsset?)
+    func update(settings: VideoSettings, doUpdate : Bool)
 }
 
 extension AbstractPlayer{
@@ -188,24 +188,25 @@ extension AbstractPlayer{
     /// the observer is invalidated, ensuring that the callback is called only once.
     ///
     /// - Parameters:
-    ///   - newItem: The `AVPlayerItem` whose status is to be observed.
+    ///   - item: The `AVPlayerItem` whose status is to be observed.
     ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
-    func setupStateItemStatusObserver(newItem: AVPlayerItem, callback : @escaping (AVPlayerItem.Status) -> Void) {
+    func setupStateStatusObserver(for item: AVPlayerItem, callback : @escaping (AVPlayerItem.Status) -> Void) {
         
         clearStatusObserver()
         
-        guard newItem.status == .unknown else{
-            callback(newItem.status)
+        guard item.status == .unknown else{
+            callback(item.status)
             return
         }
         
-        //.unknown: This state is essentially the default, indicating that the player item is new or has not yet attempted to load its assets.
-        statusObserver = newItem.observe(\.status, options: [.new, .old]) { [weak self] item, _ in
+        statusObserver = item.observe(\.status, options: [.new, .initial]) { [weak self] item, change in
+            print(item.status.rawValue, "status")
             guard item.status == .readyToPlay || item.status == .failed else {
                 return
             }
             
             callback(item.status)
+            
             Task { @MainActor in
                 self?.clearStatusObserver()
             }
@@ -219,6 +220,28 @@ extension AbstractPlayer{
             statusObserver = nil
         }
     }
+    
+    /// Creates an `AVPlayerItem` with optional subtitle merging.
+    /// - Parameters:
+    ///   - asset: The main video asset.
+    ///   - settings: A `VideoSettings` object containing subtitle configuration.
+    /// - Returns: A new `AVPlayerItem` configured with the merged or original asset.
+    func createPlayerItem(with settings: VideoSettings) -> AVPlayerItem? {
+        
+        guard let asset = assetFor(settings) else{
+            delegate?.didReceiveError(.sourceNotFound(settings.name))
+            return nil
+        }
+        
+        if let subtitleAsset = subtitlesAssetFor(settings),
+           let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
+            // Create and return a new `AVPlayerItem` using the merged asset
+            return AVPlayerItem(asset: mergedAsset)
+        } else {
+            // Create and return a new `AVPlayerItem` using the original asset
+            return AVPlayerItem(asset: asset)
+        }
+    }
 
     /// Seeks the video to a specific time.
     /// This method moves the playback position to the specified time with precise accuracy.
@@ -226,24 +249,23 @@ extension AbstractPlayer{
     /// - Parameter time: The target time to seek to in the video timeline.
     func seek(to time: Double, play: Bool = false) {
         guard let player = player, let duration = player.currentItem?.duration else {
-            if let settings = currentSettings{
-                let callback : (AVPlayerItem.Status) -> Void = { [weak self] status in
-                    if status == .readyToPlay{
-                        self?.seek(to: time, play: play)
-                    }else {
-                        self?.delegate?.didSeek(value: false, currentTime: time)
-                    }
-                }
-                update(settings: settings, asset: assetFor(settings))
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                    if let item = self.currentItem{
-                        self.setupStateItemStatusObserver(newItem: item, callback: callback)
-                    }
-                }
-            }else{
+            guard let settings = currentSettings else{
                 delegate?.didSeek(value: false, currentTime: time)
+                return
             }
-            
+            update(settings: settings, doUpdate: true)
+            let callback : (AVPlayerItem.Status) -> Void = { [weak self] status in
+                guard status == .readyToPlay else {
+                    self?.delegate?.didSeek(value: false, currentTime: time)
+                    return
+                }
+                self?.seek(to: time, play: play)
+            }
+            /// Need to refactor
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){ [weak self] in
+                guard let item = self?.currentItem else { return }
+                self?.setupStateStatusObserver(for: item, callback: callback)
+            }
             return
         }
         
@@ -274,6 +296,8 @@ extension AbstractPlayer{
                 self?.delegate?.didSeek(value: value, currentTime: currentTime)
                 if play{
                     self?.play()
+                }else{
+                    self?.pause()
                 }
             }
         }

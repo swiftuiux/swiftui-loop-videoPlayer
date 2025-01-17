@@ -167,21 +167,19 @@ internal extension ExtPlayerProtocol {
     /// - Parameters:
     ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity,
     ///               whether to loop the content, and whether to mute the audio.
-    ///   - asset: An optional `AVURLAsset` representing the new video content to be loaded. If nil,
-    ///            the current asset continues playing with updated settings.
-    ///   - callback: An optional closure executed when the asset reaches `.readyToPlay` status,
-    ///               providing the new status as its parameter for handling additional setup or errors.
-    func update(
-        settings: VideoSettings,
-        asset : AVURLAsset? = nil
-    ) {
-        guard let asset = prepareAsset(settings, asset) else { return }
+    func update(settings: VideoSettings, doUpdate : Bool = false) {
+        
+        if doUpdate == false && settings.isEqual(currentSettings){
+            return
+        }
         
         stop()
         
         currentSettings = settings
         
-        let newItem = createPlayerItem(with: asset, settings: settings)
+        guard let newItem = createPlayerItem(with: settings) else{
+            return
+        }
         
         insert(newItem)
         
@@ -191,59 +189,6 @@ internal extension ExtPlayerProtocol {
 
         if !settings.notAutoPlay {
             play()
-        }
-    }
-    
-    /// Prepares and validates the media asset for playback based on the given settings.
-    ///
-    /// This function determines the appropriate `AVURLAsset` to use for media playback.
-    /// If a specific asset is provided, it uses that asset; otherwise, it attempts to retrieve
-    /// an asset based on the provided settings. If the settings have changed from the current settings,
-    /// it fetches a new asset using a method presumed to be `getAssets()`. If no valid asset is found or
-    /// provided, it notifies a delegate of the error.
-    ///
-    /// - Parameters:
-    ///   - settings: The `VideoSettings` containing configuration and asset retrieval logic.
-    ///   - asset: An optional `AVURLAsset` to be used directly if provided. If nil, an asset is attempted
-    ///            to be retrieved based on the `settings`.
-    ///
-    /// - Returns: An optional `AVURLAsset` if a valid asset is found or provided; otherwise, nil if no
-    ///            valid asset could be located or an error occurred.
-    ///
-    /// - Note: This function calls `didReceiveError` on the delegate with an error of `.sourceNotFound`
-    ///         if no valid asset is found, providing context for the failure.
-    func prepareAsset(_ settings: VideoSettings, _ asset: AVURLAsset? = nil) -> AVURLAsset? {
-        if let asset = asset {
-            return asset
-        }
-        
-        let newAsset = settings.getAssets()
-
-        if !settings.isEqual(currentSettings), let newAsset{
-            return newAsset
-        }
-
-        if newAsset == nil {
-            delegate?.didReceiveError(.sourceNotFound(settings.name))
-        }
-        
-        return nil
-    }
-    
-    /// Creates an `AVPlayerItem` with optional subtitle merging.
-    /// - Parameters:
-    ///   - asset: The main video asset.
-    ///   - settings: A `VideoSettings` object containing subtitle configuration.
-    /// - Returns: A new `AVPlayerItem` configured with the merged or original asset.
-    func createPlayerItem(with asset: AVURLAsset, settings: VideoSettings) -> AVPlayerItem {
-        // Attempt to retrieve the subtitle asset
-        if let subtitleAsset = subtitlesAssetFor(settings),
-           let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
-            // Create and return a new `AVPlayerItem` using the merged asset
-            return AVPlayerItem(asset: mergedAsset)
-        } else {
-            // Create and return a new `AVPlayerItem` using the original asset
-            return AVPlayerItem(asset: asset)
         }
     }
         
