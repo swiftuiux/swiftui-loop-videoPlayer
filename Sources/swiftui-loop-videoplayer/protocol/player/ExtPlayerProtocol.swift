@@ -173,8 +173,7 @@ internal extension ExtPlayerProtocol {
     ///               providing the new status as its parameter for handling additional setup or errors.
     func update(
         settings: VideoSettings,
-        asset : AVURLAsset? = nil,
-        callback: ((AVPlayerItem.Status) -> Void)? = nil
+        asset : AVURLAsset? = nil
     ) {
         guard let asset = prepareAsset(settings, asset) else { return }
         
@@ -185,13 +184,10 @@ internal extension ExtPlayerProtocol {
         let newItem = createPlayerItem(with: asset, settings: settings)
         
         insert(newItem)
-
+        
         if settings.loop {
            loop()
         }
-        
-        // Observe status changes
-        setupStateItemStatusObserver(newItem: newItem, callback: callback)
 
         if !settings.notAutoPlay {
             play()

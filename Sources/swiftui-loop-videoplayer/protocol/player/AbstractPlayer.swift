@@ -110,7 +110,7 @@ public protocol AbstractPlayer: AnyObject {
     func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
-    func update(settings: VideoSettings, asset : AVURLAsset?, callback: ((AVPlayerItem.Status) -> Void)?)
+    func update(settings: VideoSettings, asset : AVURLAsset?)
 }
 
 extension AbstractPlayer{
@@ -190,28 +190,34 @@ extension AbstractPlayer{
     /// - Parameters:
     ///   - newItem: The `AVPlayerItem` whose status is to be observed.
     ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
-    func setupStateItemStatusObserver(newItem: AVPlayerItem, callback: ((AVPlayerItem.Status) -> Void)?) {
+    func setupStateItemStatusObserver(newItem: AVPlayerItem, callback : @escaping (AVPlayerItem.Status) -> Void) {
+        
         clearStatusObserver()
         
-        if let callback = callback {
-            //.unknown: This state is essentially the default, indicating that the player item is new or has not yet attempted to load its assets.
-            statusObserver = newItem.observe(\.status, options: [.new, .old]) { [weak self] item, _ in
-                guard item.status == .readyToPlay || item.status == .failed else {
-                    return
-                }
-                
-                callback(item.status)
-                Task { @MainActor in
-                    self?.clearStatusObserver()
-                }
+        guard newItem.status == .unknown else{
+            callback(newItem.status)
+            return
+        }
+        
+        //.unknown: This state is essentially the default, indicating that the player item is new or has not yet attempted to load its assets.
+        statusObserver = newItem.observe(\.status, options: [.new, .old]) { [weak self] item, _ in
+            guard item.status == .readyToPlay || item.status == .failed else {
+                return
+            }
+            
+            callback(item.status)
+            Task { @MainActor in
+                self?.clearStatusObserver()
             }
         }
     }
     
     /// Clear status observer
     func clearStatusObserver(){
-        statusObserver?.invalidate()
-        statusObserver = nil
+        if statusObserver != nil{
+            statusObserver?.invalidate()
+            statusObserver = nil
+        }
     }
 
     /// Seeks the video to a specific time.
@@ -221,33 +227,23 @@ extension AbstractPlayer{
     func seek(to time: Double, play: Bool = false) {
         guard let player = player, let duration = player.currentItem?.duration else {
             if let settings = currentSettings{
-                let asset = assetFor(settings)
-                update(settings: settings, asset: asset, callback: nil)
-                seek(to: time, play: play)
-                return
-            }
-            
-            delegate?.didSeek(value: false, currentTime: time)
-            return
-            
-        }
-        
-        guard currentItem?.status == .readyToPlay else{
-            /// The case when the video is finished and we are trying to seek back
-            if let currentItem{
-                
-                let callback : ((AVPlayerItem.Status) -> Void)? = { [weak self] status in
+                let callback : (AVPlayerItem.Status) -> Void = { [weak self] status in
                     if status == .readyToPlay{
                         self?.seek(to: time, play: play)
                     }else {
                         self?.delegate?.didSeek(value: false, currentTime: time)
                     }
                 }
-                
-                setupStateItemStatusObserver(newItem: currentItem, callback: callback)
+                update(settings: settings, asset: assetFor(settings))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                    if let item = self.currentItem{
+                        self.setupStateItemStatusObserver(newItem: item, callback: callback)
+                    }
+                }
+            }else{
+                delegate?.didSeek(value: false, currentTime: time)
             }
             
-            delegate?.didSeek(value: false, currentTime: time)
             return
         }
         
