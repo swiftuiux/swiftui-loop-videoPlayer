@@ -24,7 +24,13 @@ public enum PlaybackCommand: Equatable {
     case pause
     
     /// Command to seek to a specific time in the video.
-    /// - Parameter time: The target position to seek to in the video, represented in seconds.
+    ///
+    /// This case allows seeking to a specified time position in the video and optionally starts playback immediately.
+    ///
+    /// - Parameters:
+    ///   - time: The target time position in the video, specified in seconds.
+    ///   - play: A Boolean value indicating whether playback should automatically resume after seeking.
+    ///           Defaults to `true`.
     case seek(to: Double, play: Bool = true)
     
     /// Command to position the video at the beginning.
