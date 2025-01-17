@@ -274,8 +274,8 @@ extension AbstractPlayer{
 
         player.seek(to: seekTime){ [weak self] value in
             let currentTime = CMTimeGetSeconds(player.currentTime())
-            self?.delegate?.didSeek(value: value, currentTime: currentTime)
-            Task{ @MainActor in
+            Task { @MainActor in
+                self?.delegate?.didSeek(value: value, currentTime: currentTime)
                 if play{
                     self?.play()
                 }

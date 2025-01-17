@@ -259,7 +259,9 @@ internal extension ExtPlayerProtocol {
     func setupObservers(for player: AVQueuePlayer) {
         errorObserver = player.observe(\.error, options: [.new]) { [weak self] player, _ in
             guard let error = player.error else { return }
-            self?.delegate?.didReceiveError(.remoteVideoError(error))
+            Task { @MainActor in
+                self?.delegate?.didReceiveError(.remoteVideoError(error))
+            }
         }
         
         timeControlObserver = player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] player, change in
@@ -287,16 +289,24 @@ internal extension ExtPlayerProtocol {
         currentItemObserver = player.observe(\.currentItem, options: [.new, .old]) { [weak self]  player, change in
             // Detecting when the current item is changed
             if let newItem = change.newValue as? AVPlayerItem {
-                self?.delegate?.currentItemDidChange(to: newItem)
+                Task { @MainActor in
+                    self?.delegate?.currentItemDidChange(to: newItem)
+                }
             } else if change.newValue == nil {
+                Task { @MainActor in
                     self?.delegate?.currentItemWasRemoved()
+                }
             }
-            self?.clearStatusObserver()
+            Task { @MainActor in
+                self?.clearStatusObserver()
+            }
         }
         
         volumeObserver = player.observe(\.volume, options: [.new, .old]) { [weak self]  player, change in
             if let newVolume = change.newValue{
-                self?.delegate?.volumeDidChange(to: newVolume)
+                Task { @MainActor in
+                    self?.delegate?.volumeDidChange(to: newVolume)
+                }
             }
         }
     }
