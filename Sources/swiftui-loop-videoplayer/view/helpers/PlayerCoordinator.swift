@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 import AVFoundation
 
-
+@MainActor
 internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
            
     let eventPublisher: PassthroughSubject<PlayerEvent, Never>
