@@ -207,3 +207,33 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
         return videoAsset
     #endif
 }
+
+/// Determines the seek time as a `CMTime` based on a specified time and the total duration of the media.
+/// The function ensures that the seek time is within valid bounds (start to end of the media).
+///
+/// - Parameters:
+///   - time: A `Double` value representing the desired time to seek to, in seconds.
+///           If the value is negative, the function will seek to the start of the media.
+///           If the value exceeds the total duration, the function will seek to the end.
+///   - duration: A `CMTime` value representing the total duration of the media.
+///               This value must be valid for the calculation to work correctly.
+/// - Returns: A `CMTime` value representing the resolved seek position within the media.
+func getSeekTime(for time: Double, duration : CMTime) -> CMTime{
+    let endTime = CMTimeGetSeconds(duration)
+    let seekTime : CMTime
+    
+    if time < 0 {
+        // If the time is negative, seek to the start of the video
+        seekTime = .zero
+    } else if time >= endTime {
+        // If the time exceeds the video duration, seek to the end of the video
+        let endCMTime = CMTime(seconds: endTime, preferredTimescale: duration.timescale)
+        seekTime = endCMTime
+    } else {
+        // Otherwise, seek to the specified time
+        let seekCMTime = CMTime(seconds: time, preferredTimescale: duration.timescale)
+        seekTime = seekCMTime
+    }
+    
+    return seekTime
+}

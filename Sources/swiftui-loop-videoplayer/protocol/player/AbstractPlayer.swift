@@ -243,10 +243,16 @@ extension AbstractPlayer{
         }
     }
 
-    /// Seeks the video to a specific time.
-    /// This method moves the playback position to the specified time with precise accuracy.
-    /// If the specified time is out of bounds, it will be clamped to the nearest valid time.
-    /// - Parameter time: The target time to seek to in the video timeline.
+    /// Seeks the video to a specific time in the timeline.
+    /// This method adjusts the playback position to the specified time with precise accuracy.
+    /// If the target time is out of bounds (negative or beyond the duration), it will be clamped to the nearest valid time (start or end of the video).
+    ///
+    /// - Parameters:
+    ///   - time: A `Double` value representing the target time (in seconds) to seek to in the video timeline.
+    ///           If the value is less than 0, the playback position will be set to the start of the video.
+    ///           If the value exceeds the video's duration, it will be set to the end.
+    ///   - play: A `Bool` value indicating whether to start playback immediately after seeking.
+    ///           Defaults to `false`, meaning playback will remain paused after the seek operation.
     func seek(to time: Double, play: Bool = false) {
         guard let player = player, let duration = player.currentItem?.duration else {
             guard let settings = currentSettings else{
@@ -274,21 +280,7 @@ extension AbstractPlayer{
             return
         }
        
-        let endTime = CMTimeGetSeconds(duration)
-        let seekTime : CMTime
-        
-        if time < 0 {
-            // If the time is negative, seek to the start of the video
-            seekTime = .zero
-        } else if time >= endTime {
-            // If the time exceeds the video duration, seek to the end of the video
-            let endCMTime = CMTime(seconds: endTime, preferredTimescale: duration.timescale)
-            seekTime = endCMTime
-        } else {
-            // Otherwise, seek to the specified time
-            let seekCMTime = CMTime(seconds: time, preferredTimescale: duration.timescale)
-            seekTime = seekCMTime
-        }
+        let seekTime = getSeekTime(for: time, duration: duration)
 
         player.seek(to: seekTime){ [weak self] value in
             let currentTime = CMTimeGetSeconds(player.currentTime())
