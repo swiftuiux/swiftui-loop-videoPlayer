@@ -156,18 +156,27 @@ internal extension ExtPlayerProtocol {
         #endif
     }
     
-    /// Updates the player with a new asset and applies specified video settings.
-    /// Initializes playback or performs a specified action once the asset is ready.
+    /// Updates the player with a new asset and applies the specified video settings.
     ///
-    /// This method sets a new `AVURLAsset` to be played based on the provided settings.
-    /// It can configure looping and muting options, and automatically starts playback if specified.
-    /// A callback is executed when the asset transitions to the `.readyToPlay` status, allowing for
-    /// further actions dependent on the readiness of the asset.
+    /// This method sets a new `AVURLAsset` for playback and configures it according to the provided settings.
+    /// It can adjust options such as playback gravity, looping, and muting. If `doUpdate` is `true`, the player is
+    /// updated immediately with the new asset. The method also provides an optional callback that is executed when
+    /// the asset transitions to the `.readyToPlay` status, enabling additional actions to be performed once the
+    /// player item is ready for playback.
     ///
     /// - Parameters:
-    ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity,
-    ///               whether to loop the content, and whether to mute the audio.
-    func update(settings: VideoSettings, doUpdate : Bool = false) {
+    ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity, looping behavior,
+    ///               and whether the audio should be muted.
+    ///   - doUpdate: A `Bool` value indicating whether the player should update immediately with the new asset.
+    ///               Defaults to `false`, meaning the player will not change unless explicitly triggered.
+    ///   - callback: An optional closure that takes an `AVPlayerItem` as its parameter. This is called when the
+    ///               player item transitions to the `.readyToPlay` status, allowing for additional customization
+    ///               or actions once the asset is prepared.
+    func update(
+        settings: VideoSettings,
+        doUpdate : Bool = false,
+        callback : ((AVPlayerItem) -> Void)? = nil
+    ) {
         
         if doUpdate == false && settings.isEqual(currentSettings){
             return
@@ -180,6 +189,8 @@ internal extension ExtPlayerProtocol {
         guard let newItem = createPlayerItem(with: settings) else{
             return
         }
+        
+        callback?(newItem)
         
         insert(newItem)
         
