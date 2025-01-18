@@ -218,7 +218,10 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
 ///   - duration: A `CMTime` value representing the total duration of the media.
 ///               This value must be valid for the calculation to work correctly.
 /// - Returns: A `CMTime` value representing the resolved seek position within the media.
-func getSeekTime(for time: Double, duration : CMTime) -> CMTime{
+func getSeekTime(for time: Double, duration : CMTime) -> CMTime?{
+    
+    guard duration.value != 0 else{  return nil }
+    
     let endTime = CMTimeGetSeconds(duration)
     let seekTime : CMTime
     

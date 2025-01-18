@@ -274,13 +274,11 @@ extension AbstractPlayer{
             }
             return
         }
-        
-        guard duration.value != 0 else{
+       
+        guard let seekTime = getSeekTime(for: time, duration: duration) else{
             delegate?.didSeek(value: false, currentTime: time)
             return
         }
-       
-        let seekTime = getSeekTime(for: time, duration: duration)
 
         player.seek(to: seekTime){ [weak self] value in
             let currentTime = CMTimeGetSeconds(player.currentTime())
