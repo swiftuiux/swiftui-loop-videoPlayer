@@ -107,7 +107,7 @@ You can reach out the effect simply via mask modifier
 The package includes unit tests that cover key functionality. While not exhaustive, these tests help ensure the core components work as expected. UI tests are in progress and are being developed [in the example application](https://github.com/swiftuiux/swiftui-video-player-example). The run_tests.sh is an example script that automates testing by encapsulating test commands into a single executable file, simplifying the execution process. You can configure the script to run specific testing environment relevant to your projects.
 
 ## Disclaimer on Video Sources like YouTube
-Please note that using videos from URLs requires ensuring that you have the right to use and stream these videos. Videos hosted on platforms like YouTube cannot be used directly due to restrictions in their terms of service. Always ensure the video URL is compliant with copyright laws and platform policies.
+Please note that using videos from URLs requires ensuring that you have the right to use and stream these videos. Videos hosted on platforms like YouTube cannot be used directly due to restrictions in their terms of service.
 
 ## API
 
