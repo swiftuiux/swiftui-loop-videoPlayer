@@ -107,7 +107,7 @@ public protocol AbstractPlayer: AnyObject {
     func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
-    func update(settings: VideoSettings, doUpdate : Bool)
+    func update(settings: VideoSettings)
 }
 
 extension AbstractPlayer{

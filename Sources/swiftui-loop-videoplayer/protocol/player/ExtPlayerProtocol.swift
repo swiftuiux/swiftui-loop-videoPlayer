@@ -170,17 +170,9 @@ internal extension ExtPlayerProtocol {
     /// - Parameters:
     ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity, looping behavior,
     ///               and whether the audio should be muted.
-    ///   - doUpdate: A `Bool` value indicating whether the player should update immediately with the new asset.
-    ///               Defaults to `false`, meaning the player will not change unless explicitly triggered.
-    ///   - callback: An optional closure that takes an `AVPlayerItem` as its parameter. This is called when the
-    ///               player item transitions to the `.readyToPlay` status, allowing for additional customization
-    ///               or actions once the asset is prepared.
-    func update(
-        settings: VideoSettings,
-        doUpdate : Bool = false
-    ) {
+    func update(settings: VideoSettings) {
         
-        if doUpdate == false && settings.isEqual(currentSettings){
+        if settings.isEqual(currentSettings){
             return
         }
         
