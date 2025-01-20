@@ -107,8 +107,8 @@ public struct VideoSettings: Equatable{
 public extension VideoSettings {
    
     /// Returns a new instance of VideoSettings with loop set to false and notAutoPlay set to true, keeping other settings unchanged.
-    var GetSettingsWithNotAutoPlay : VideoSettings {
-        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: true, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
+    var settingsWithAutoPlay : VideoSettings {
+        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: false, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
     }
     
     func getAssets()-> AVURLAsset?{

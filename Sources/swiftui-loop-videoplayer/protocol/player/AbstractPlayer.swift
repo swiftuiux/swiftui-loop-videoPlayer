@@ -230,14 +230,14 @@ extension AbstractPlayer{
             return
         }
         
-        itemStatusObserver = item.observe(\.status, options: [.new, .initial, .old]) { [weak self] item, change in
-            print(item.status.rawValue, "status")
+        itemStatusObserver = item.observe(\.status, options: [.new, .initial]) { [weak self] observedItem, change in
+            print(observedItem.status.rawValue, "status")
             
-            guard [.readyToPlay, .failed].contains(item.status) else {
+            guard [.readyToPlay, .failed].contains(observedItem.status) else {
                 return
             }
             
-            callback(item.status)
+            callback(observedItem.status)
             
             Task { @MainActor in
                 self?.clearStatusObserver()
@@ -276,7 +276,7 @@ extension AbstractPlayer{
             delegate?.didSeek(value: false, currentTime: time)
             return
         }
-        
+       
         let callback: ItemStatusCallback = { [weak self] status in
             if status == .readyToPlay {
                 self?.seek(to: time, play: play)
@@ -286,9 +286,9 @@ extension AbstractPlayer{
         }
         
         update(settings: settings, doUpdate: true) { [weak self] item in
-            /// DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-            self?.setupStateStatusObserver(for: item, callback: callback)
-            /// }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                self?.setupStateStatusObserver(for: item, callback: callback)
+            }
         }
     }
 
