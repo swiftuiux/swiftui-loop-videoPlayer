@@ -191,7 +191,6 @@ internal extension ExtPlayerProtocol {
         }
         
         callback?(newItem)
-        
         insert(newItem)
         
         if settings.loop {

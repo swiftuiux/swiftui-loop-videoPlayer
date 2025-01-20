@@ -16,8 +16,10 @@ import CoreImage
 @MainActor
 public protocol AbstractPlayer: AnyObject {
     
+    typealias ItemStatusCallback = (AVPlayerItem.Status) -> Void
+    
     /// Observes the status property of the new player item.
-    var statusObserver: NSKeyValueObservation? { get set }
+    var itemStatusObserver: NSKeyValueObservation? { get set }
     
     /// An optional property that stores the current video settings.
     ///
@@ -205,9 +207,9 @@ extension AbstractPlayer{
     
     /// Clear status observer
     func clearStatusObserver(){
-        guard statusObserver != nil else { return }
-        statusObserver?.invalidate()
-        statusObserver = nil
+        guard itemStatusObserver != nil else { return }
+        itemStatusObserver?.invalidate()
+        itemStatusObserver = nil
     }
     
     /// Sets up an observer for the status of the provided `AVPlayerItem`.
@@ -219,7 +221,7 @@ extension AbstractPlayer{
     /// - Parameters:
     ///   - item: The `AVPlayerItem` whose status is to be observed.
     ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
-    func setupStateStatusObserver(for item: AVPlayerItem, callback : @escaping (AVPlayerItem.Status) -> Void) {
+    func setupStateStatusObserver(for item: AVPlayerItem, callback : @escaping ItemStatusCallback) {
         
         clearStatusObserver()
         
@@ -228,9 +230,10 @@ extension AbstractPlayer{
             return
         }
         
-        statusObserver = item.observe(\.status, options: [.new, .initial, .old]) { [weak self] item, change in
+        itemStatusObserver = item.observe(\.status, options: [.new, .initial, .old]) { [weak self] item, change in
             print(item.status.rawValue, "status")
-            guard item.status == .readyToPlay || item.status == .failed else {
+            
+            guard [.readyToPlay, .failed].contains(item.status) else {
                 return
             }
             
@@ -254,42 +257,51 @@ extension AbstractPlayer{
     ///           Defaults to `false`, meaning playback will remain paused after the seek operation.
     func seek(to time: Double, play: Bool = false) {
         guard let player = player, let duration = player.currentItem?.duration else {
-            guard let settings = currentSettings else{
-                delegate?.didSeek(value: false, currentTime: time)
-                return
-            }
-            let callback : (AVPlayerItem.Status) -> Void = { [weak self] status in
-                guard status == .readyToPlay else {
-                    self?.delegate?.didSeek(value: false, currentTime: time)
-                    return
-                }
-                self?.seek(to: time, play: play)
-            }
-            
-            update(settings: settings, doUpdate: true){ [weak self] item in
-                /// Need to refactor
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                    self?.setupStateStatusObserver(for: item, callback: callback)
-                }
-            }
-
+            onUnavailableDuration(for: time, play: play)
             return
         }
-       
-        guard let seekTime = getSeekTime(for: time, duration: duration) else{
+        
+        guard let seekTime = getSeekTime(for: time, duration: duration) else {
             delegate?.didSeek(value: false, currentTime: time)
             return
         }
+        
+        player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] success in
+            self?.seekCompletion(success: success, autoPlay: play)
+        }
+    }
+    
+    private func onUnavailableDuration(for time: Double, play: Bool) {
+        guard let settings = currentSettings else {
+            delegate?.didSeek(value: false, currentTime: time)
+            return
+        }
+        
+        let callback: ItemStatusCallback = { [weak self] status in
+            if status == .readyToPlay {
+                self?.seek(to: time, play: play)
+            } else {
+                self?.delegate?.didSeek(value: false, currentTime: time)
+            }
+        }
+        
+        update(settings: settings, doUpdate: true) { [weak self] item in
+            /// DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+            self?.setupStateStatusObserver(for: item, callback: callback)
+            /// }
+        }
+    }
 
-        player.seek(to: seekTime){ [weak self] value in
-            let currentTime = CMTimeGetSeconds(player.currentTime())
-            Task { @MainActor in
-                self?.delegate?.didSeek(value: value, currentTime: currentTime)
-                if play{
-                    self?.play()
-                }else{
-                    self?.pause()
-                }
+    private func seekCompletion(success: Bool, autoPlay: Bool) {
+        guard let player = player else { return }
+        let currentTime = CMTimeGetSeconds(player.currentTime())
+        
+        Task { @MainActor in
+            delegate?.didSeek(value: success, currentTime: currentTime)
+            if autoPlay {
+                play()
+            } else {
+                pause()
             }
         }
     }
