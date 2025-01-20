@@ -94,7 +94,10 @@ internal extension ExtPlayerProtocol {
     ) {
         
         player.isMuted = settings.mute
-
+        if !settings.loop{
+            player.actionAtItemEnd = .pause
+        }
+        
         configurePlayerLayer(player, settings)
         configureCompositeLayer(settings)
         configureTimePublishing(player, settings)
@@ -174,8 +177,7 @@ internal extension ExtPlayerProtocol {
     ///               or actions once the asset is prepared.
     func update(
         settings: VideoSettings,
-        doUpdate : Bool = false,
-        callback : ((AVPlayerItem) -> Void)? = nil
+        doUpdate : Bool = false
     ) {
         
         if doUpdate == false && settings.isEqual(currentSettings){
@@ -189,8 +191,6 @@ internal extension ExtPlayerProtocol {
         guard let newItem = createPlayerItem(with: settings) else{
             return
         }
-        
-        callback?(newItem)
         
         insert(newItem)
         
@@ -249,9 +249,6 @@ internal extension ExtPlayerProtocol {
                     self?.delegate?.currentItemWasRemoved()
                 }
             }
-            Task { @MainActor in
-                self?.clearStatusObserver()
-            }
         }
         
         volumeObserver = player.observe(\.volume, options: [.new, .old]) { [weak self]  player, change in
@@ -277,8 +274,6 @@ internal extension ExtPlayerProtocol {
         
         volumeObserver?.invalidate()
         volumeObserver = nil
-        
-        clearStatusObserver()
 
         if let observerToken = timeObserver {
             player?.removeTimeObserver(observerToken)

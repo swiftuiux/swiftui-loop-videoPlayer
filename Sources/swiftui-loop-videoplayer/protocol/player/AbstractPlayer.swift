@@ -16,8 +16,6 @@ import CoreImage
 @MainActor
 public protocol AbstractPlayer: AnyObject {
     
-    typealias ItemStatusCallback = (AVPlayerItem.Status) -> Void
-    
     /// Observes the status property of the new player item.
     var itemStatusObserver: NSKeyValueObservation? { get set }
     
@@ -112,7 +110,7 @@ public protocol AbstractPlayer: AnyObject {
     func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
-    func update(settings: VideoSettings, doUpdate : Bool, callback : ((AVPlayerItem) -> Void)?)
+    func update(settings: VideoSettings, doUpdate : Bool)
 }
 
 extension AbstractPlayer{
@@ -204,46 +202,6 @@ extension AbstractPlayer{
             return AVPlayerItem(asset: asset)
         }
     }
-    
-    /// Clear status observer
-    func clearStatusObserver(){
-        guard itemStatusObserver != nil else { return }
-        itemStatusObserver?.invalidate()
-        itemStatusObserver = nil
-    }
-    
-    /// Sets up an observer for the status of the provided `AVPlayerItem`.
-    ///
-    /// This method observes changes in the status of `newItem` and triggers the provided callback
-    /// whenever the status changes to `.readyToPlay` or `.failed`. Once the callback is invoked,
-    /// the observer is invalidated, ensuring that the callback is called only once.
-    ///
-    /// - Parameters:
-    ///   - item: The `AVPlayerItem` whose status is to be observed.
-    ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
-    func setupStateStatusObserver(for item: AVPlayerItem, callback : @escaping ItemStatusCallback) {
-        
-        clearStatusObserver()
-        
-        guard item.status == .unknown else{
-            callback(item.status)
-            return
-        }
-        
-        itemStatusObserver = item.observe(\.status, options: [.new, .initial]) { [weak self] observedItem, change in
-            print(observedItem.status.rawValue, "status")
-            
-            guard [.readyToPlay, .failed].contains(observedItem.status) else {
-                return
-            }
-            
-            callback(observedItem.status)
-            
-            Task { @MainActor in
-                self?.clearStatusObserver()
-            }
-        }
-    }
 
     /// Seeks the video to a specific time in the timeline.
     /// This method adjusts the playback position to the specified time with precise accuracy.
@@ -257,7 +215,7 @@ extension AbstractPlayer{
     ///           Defaults to `false`, meaning playback will remain paused after the seek operation.
     func seek(to time: Double, play: Bool = false) {
         guard let player = player, let duration = player.currentItem?.duration else {
-            onUnavailableDuration(for: time, play: play)
+            delegate?.didSeek(value: false, currentTime: time)
             return
         }
         
@@ -266,29 +224,8 @@ extension AbstractPlayer{
             return
         }
         
-        player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] success in
+        player.seek(to: seekTime) { [weak self] success in
             self?.seekCompletion(success: success, autoPlay: play)
-        }
-    }
-    
-    private func onUnavailableDuration(for time: Double, play: Bool) {
-        guard let settings = currentSettings else {
-            delegate?.didSeek(value: false, currentTime: time)
-            return
-        }
-       
-        let callback: ItemStatusCallback = { [weak self] status in
-            if status == .readyToPlay {
-                self?.seek(to: time, play: play)
-            } else {
-                self?.delegate?.didSeek(value: false, currentTime: time)
-            }
-        }
-        
-        update(settings: settings, doUpdate: true) { [weak self] item in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                self?.setupStateStatusObserver(for: item, callback: callback)
-            }
         }
     }
 
@@ -298,11 +235,7 @@ extension AbstractPlayer{
         
         Task { @MainActor in
             delegate?.didSeek(value: success, currentTime: currentTime)
-            if autoPlay {
-                play()
-            } else {
-                pause()
-            }
+            autoPlay ? play() : pause()
         }
     }
     
