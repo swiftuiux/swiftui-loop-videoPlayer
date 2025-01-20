@@ -16,9 +16,6 @@ import CoreImage
 @MainActor
 public protocol AbstractPlayer: AnyObject {
     
-    /// Observes the status property of the new player item.
-    var itemStatusObserver: NSKeyValueObservation? { get set }
-    
     /// An optional property that stores the current video settings.
     ///
     /// This property holds an instance of `VideoSettings` or nil if no settings have been configured yet.
@@ -225,18 +222,17 @@ extension AbstractPlayer{
         }
         
         player.seek(to: seekTime) { [weak self] success in
-            self?.seekCompletion(success: success, autoPlay: play)
+            Task { @MainActor in
+                self?.seekCompletion(success: success, autoPlay: play)
+            }
         }
     }
 
     private func seekCompletion(success: Bool, autoPlay: Bool) {
         guard let player = player else { return }
         let currentTime = CMTimeGetSeconds(player.currentTime())
-        
-        Task { @MainActor in
             delegate?.didSeek(value: success, currentTime: currentTime)
             autoPlay ? play() : pause()
-        }
     }
     
     /// Seeks to the start of the video.

@@ -59,9 +59,6 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     /// of an `AVPlayer`.
     internal var volumeObserver: NSKeyValueObservation?
     
-    /// Observes the status property of the new player item.
-    internal var itemStatusObserver: NSKeyValueObservation?
-    
     /// The delegate to be notified about errors encountered by the player.
     weak var delegate: PlayerDelegateProtocol?
 
