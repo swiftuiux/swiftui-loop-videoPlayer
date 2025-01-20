@@ -35,6 +35,8 @@ The player's functionality is designed around a dual &#8646; interaction model:
   
 - **Event Feedback**: Through event handling, the player communicates back to the application, informing it of internal changes that may need attention. Due to the nature of media players, especially in environments with dynamic content or user interactions, the flow of events can become flooded. To manage this effectively and prevent the application from being overwhelmed by the volume of incoming events, the **system collects these events every second and returns them as a batch**
 
+## Specs
+
 | **Feature Category**      | **Feature Name**                            | **Description**                                                                                          |
 |----------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | **General**               | SwiftUI Declarative Syntax                  | Easily integrate using declarative syntax.                                                              |
