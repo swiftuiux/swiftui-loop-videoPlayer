@@ -181,45 +181,6 @@ extension AbstractPlayer{
         player?.insert(item, after: nil)
     }
     
-    /// Sets up an observer for the status of the provided `AVPlayerItem`.
-    ///
-    /// This method observes changes in the status of `newItem` and triggers the provided callback
-    /// whenever the status changes to `.readyToPlay` or `.failed`. Once the callback is invoked,
-    /// the observer is invalidated, ensuring that the callback is called only once.
-    ///
-    /// - Parameters:
-    ///   - item: The `AVPlayerItem` whose status is to be observed.
-    ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
-    func setupStateStatusObserver(for item: AVPlayerItem, callback : @escaping (AVPlayerItem.Status) -> Void) {
-        
-        clearStatusObserver()
-        
-        guard item.status == .unknown else{
-            callback(item.status)
-            return
-        }
-        
-        statusObserver = item.observe(\.status, options: [.new, .initial]) { [weak self] item, change in
-            print(item.status.rawValue, "status")
-            guard item.status == .readyToPlay || item.status == .failed else {
-                return
-            }
-            
-            callback(item.status)
-            
-            Task { @MainActor in
-                self?.clearStatusObserver()
-            }
-        }
-    }
-    
-    /// Clear status observer
-    func clearStatusObserver(){
-        guard statusObserver != nil else { return }
-        statusObserver?.invalidate()
-        statusObserver = nil
-    }
-    
     /// Creates an `AVPlayerItem` with optional subtitle merging.
     /// - Parameters:
     ///   - asset: The main video asset.
@@ -239,6 +200,45 @@ extension AbstractPlayer{
         } else {
             // Create and return a new `AVPlayerItem` using the original asset
             return AVPlayerItem(asset: asset)
+        }
+    }
+    
+    /// Clear status observer
+    func clearStatusObserver(){
+        guard statusObserver != nil else { return }
+        statusObserver?.invalidate()
+        statusObserver = nil
+    }
+    
+    /// Sets up an observer for the status of the provided `AVPlayerItem`.
+    ///
+    /// This method observes changes in the status of `newItem` and triggers the provided callback
+    /// whenever the status changes to `.readyToPlay` or `.failed`. Once the callback is invoked,
+    /// the observer is invalidated, ensuring that the callback is called only once.
+    ///
+    /// - Parameters:
+    ///   - item: The `AVPlayerItem` whose status is to be observed.
+    ///   - callback: A closure that is called when the item's status changes to `.readyToPlay` or `.failed`.
+    func setupStateStatusObserver(for item: AVPlayerItem, callback : @escaping (AVPlayerItem.Status) -> Void) {
+        
+        clearStatusObserver()
+        
+        guard item.status == .unknown else{
+            callback(item.status)
+            return
+        }
+        
+        statusObserver = item.observe(\.status, options: [.new, .initial, .old]) { [weak self] item, change in
+            print(item.status.rawValue, "status")
+            guard item.status == .readyToPlay || item.status == .failed else {
+                return
+            }
+            
+            callback(item.status)
+            
+            Task { @MainActor in
+                self?.clearStatusObserver()
+            }
         }
     }
 
