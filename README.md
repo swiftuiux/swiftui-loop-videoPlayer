@@ -190,8 +190,8 @@ In cases where you need to re-issue a command that might appear redundant but is
 | `addVector(ShapeLayerBuilderProtocol, clear: Bool)` | Command to add a vector graphic layer over the video stream. The `builder` parameter is an instance conforming to `ShapeLayerBuilderProtocol`. The `clear` parameter specifies whether to clear existing vector layers before adding the new one.                                                                                                           |
 | `removeAllVectors`                           | Command to remove all vector graphic layers from the video stream.                                                                                    |
 ### Additional Notes on the subtitles Command
-1. To use these commands, don’t forget to enable the Vector layer in settings via the EnableVector() setting.
-2. The boundsChanged event(`boundsChanged(CGRect)`) is triggered when the main layer’s bounds are updated. This approach is particularly useful when overlays or custom vector layers need to adapt dynamically to changes in video player dimensions or other layout adjustments. To handle the frequent boundsChanged events effectively and improve performance, you can use a **throttle** function to limit how often the updates occur.
+- To use these commands, don’t forget to enable the Vector layer in settings via the EnableVector() setting.
+- The boundsChanged event(`boundsChanged(CGRect)`) is triggered when the main layer’s bounds are updated. This approach is particularly useful when overlays or custom vector layers need to adapt dynamically to changes in video player dimensions or other layout adjustments. To handle the frequent boundsChanged events effectively and improve performance, you can use a **throttle** function to limit how often the updates occur.
 
 
 ### Audio & Language Commands
