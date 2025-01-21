@@ -26,6 +26,9 @@ public struct VideoSettings: Equatable{
     /// Loop video
     public let loop: Bool
     
+    /// Loop video
+    public let pictureInPicture: Bool
+    
     /// Mute video
     public let mute: Bool
     
@@ -63,11 +66,12 @@ public struct VideoSettings: Equatable{
     ///   - notAutoPlay: A Boolean indicating whether the video should not auto-play.
     ///   - timePublishing: A `CMTime` value representing the interval for time publishing updates, or `nil`.
     ///   - gravity: The `AVLayerVideoGravity` value defining how the video should be displayed in its layer.
-    public init(name: String, ext: String, subtitles: String, loop: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, enableVector : Bool = false) {
+    public init(name: String, ext: String, subtitles: String, loop: Bool, pictureInPicture: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, enableVector : Bool = false) {
         self.name = name
         self.ext = ext
         self.subtitles = subtitles
         self.loop = loop
+        self.pictureInPicture = pictureInPicture
         self.mute = mute
         self.notAutoPlay = notAutoPlay
         self.timePublishing = timePublishing
@@ -95,6 +99,8 @@ public struct VideoSettings: Equatable{
         
         loop = settings.contains(.loop)
         
+        pictureInPicture = settings.contains(.pictureInPicture)
+        
         mute = settings.contains(.mute)
         
         notAutoPlay = settings.contains(.notAutoPlay)
@@ -108,7 +114,7 @@ public extension VideoSettings {
    
     /// Returns a new instance of VideoSettings with loop set to false and notAutoPlay set to true, keeping other settings unchanged.
     var settingsWithAutoPlay : VideoSettings {
-        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, mute: self.mute, notAutoPlay: false, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
+        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, pictureInPicture: self.pictureInPicture, mute: self.mute, notAutoPlay: false, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
     }
     
     func getAssets()-> AVURLAsset?{

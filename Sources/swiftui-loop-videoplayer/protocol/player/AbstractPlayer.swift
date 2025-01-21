@@ -8,6 +8,7 @@
 import AVFoundation
 #if canImport(CoreImage)
 import CoreImage
+import AVKit
 #endif
 
 /// Defines an abstract player protocol to be implemented by player objects, ensuring main-thread safety and compatibility with specific OS versions.
@@ -17,6 +18,10 @@ import CoreImage
 public protocol AbstractPlayer: AnyObject {
     
     // MARK: - Properties
+    
+    #if os(iOS)
+    var pipController: AVPictureInPictureController? { get set }
+    #endif
     
     /// An optional property that stores the current video settings.
     ///
@@ -445,4 +450,25 @@ extension AbstractPlayer{
         }
         #endif
     }
+    
+    #if os(iOS)
+    func startPiP() {
+        guard let pipController = pipController else { return }
+
+        if !pipController.isPictureInPictureActive {
+            pipController.startPictureInPicture()
+
+        }
+    }
+    
+    func stopPiP() {
+        guard let pipController = pipController else { return }
+
+        if pipController.isPictureInPictureActive {
+            // Stop PiP
+            pipController.stopPictureInPicture()
+        }
+    }
+    
+    #endif
 }

@@ -95,14 +95,23 @@ public enum PlaybackCommand: Equatable {
     /// Command to select a specific audio track based on language code.
     /// - Parameter languageCode: The language code (e.g., "en" for English) of the desired audio track.
     case audioTrack(languageCode: String)
-
+    
+    #if os(iOS)
+    case startPiP
+    
+    case stopPiP
+    #endif
+    
     public static func == (lhs: PlaybackCommand, rhs: PlaybackCommand) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle), (.play, .play), (.pause, .pause), (.begin, .begin), (.end, .end),
              (.mute, .mute), (.unmute, .unmute), (.loop, .loop), (.unloop, .unloop),
              (.removeAllFilters, .removeAllFilters), (.removeAllVectors, .removeAllVectors):
             return true
-
+        #if os(iOS)
+        case (.startPiP, .startPiP), (.stopPiP, .stopPiP):
+            return true
+        #endif
         case (.seek(let lhsTime, let lhsPlay), .seek(let rhsTime, let rhsPlay)):
             return lhsTime == rhsTime && lhsPlay == rhsPlay
 

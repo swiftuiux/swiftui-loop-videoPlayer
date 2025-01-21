@@ -42,6 +42,9 @@ public enum Setting: Equatable, SettingsConvertible{
     /// Subtitles
     case subtitles(String)
     
+    /// Support Picture-in-Picture
+    case pictureInPicture
+    
     /// A CMTime value representing the interval at which the player's current time should be published.
     /// If set, the player will publish periodic time updates based on this interval.
     case timePublishing(CMTime)

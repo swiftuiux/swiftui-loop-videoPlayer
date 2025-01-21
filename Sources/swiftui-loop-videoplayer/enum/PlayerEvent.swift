@@ -62,6 +62,10 @@ public enum PlayerEvent: Equatable {
     
     
     case boundsChanged(CGRect)
+    
+    case startedPiP
+    
+    case stoppedPiP
 }
 
 extension PlayerEvent: CustomStringConvertible {
@@ -85,6 +89,10 @@ extension PlayerEvent: CustomStringConvertible {
             return "\(e.description)"
         case .boundsChanged(let bounds):
             return "Bounds changed \(bounds)"
+        case .startedPiP:
+            return "Started PiP"
+        case .stoppedPiP:
+            return "Stopped PiP"
         }
     }
 }

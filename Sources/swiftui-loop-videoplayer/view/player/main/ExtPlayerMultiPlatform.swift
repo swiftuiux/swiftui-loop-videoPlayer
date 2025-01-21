@@ -79,6 +79,11 @@ extension ExtPlayerMultiPlatform: UIViewRepresentable{
    
        if let player: PlayerView = makePlayerView(container){
            player.delegate = context.coordinator
+           #if os(iOS)
+           if settings.pictureInPicture{
+               player.setupPiP(delegate: context.coordinator)
+           }
+           #endif
        }
 
        return container

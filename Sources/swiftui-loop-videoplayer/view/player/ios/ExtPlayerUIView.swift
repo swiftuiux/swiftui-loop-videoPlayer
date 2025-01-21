@@ -15,7 +15,7 @@ import AVKit
 import UIKit
 
 @MainActor
-internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {   
+internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
     
     /// This property holds an instance of `VideoSettings`
     internal var currentSettings : VideoSettings?
@@ -62,6 +62,8 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     /// The delegate to be notified about errors encountered by the player.
     weak var delegate: PlayerDelegateProtocol?
 
+    internal var pipController: AVPictureInPictureController?
+    
     /// Initializes a new player view with a video asset and custom settings.
     ///
     /// - Parameters:
@@ -75,10 +77,11 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         
         addPlayerLayer()
         addCompositeLayer(settings)
-        
+       
         setupPlayerComponents(
             settings: settings
         )
+
     }
 
     required init?(coder: NSCoder) {
@@ -92,6 +95,8 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         // Update the composite layer (and sublayers)
         layoutCompositeLayer()
     }
+    
+
     
     /// Updates the composite layer and all its sublayers' frames.
     public func layoutCompositeLayer() {
@@ -128,5 +133,25 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
         print("Player deinitialized and resources cleaned up.")
         #endif
     }
+    
+    #if os(iOS)
+    /// Called by the Coordinator to set up PiP
+    func setupPiP(delegate: AVPictureInPictureControllerDelegate) {
+        // Check if PiP is supported
+        guard AVPictureInPictureController.isPictureInPictureSupported() else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [weak self] in
+                self?.onError(.notSupportedPiP)
+            }
+            return
+        }
+        
+        guard let playerLayer else{
+            return
+        }
+        
+        pipController = AVPictureInPictureController(playerLayer: playerLayer)
+        pipController?.delegate = delegate   
+    }
+    #endif
 }
 #endif

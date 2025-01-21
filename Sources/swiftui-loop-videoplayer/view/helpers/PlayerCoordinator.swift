@@ -8,6 +8,9 @@
 import SwiftUI
 import Combine
 import AVFoundation
+#if os(iOS)
+import AVKit
+#endif
 
 @MainActor
 internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
@@ -119,4 +122,22 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     func boundsDidChange(to bounds: CGRect) {
         eventPublisher.send(.boundsChanged(bounds))
     }
+
 }
+
+#if os(iOS)
+extension PlayerCoordinator: AVPictureInPictureControllerDelegate{
+    
+    nonisolated func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        Task{ @MainActor in
+            eventPublisher.send(.startedPiP)
+        }
+    }
+    
+    nonisolated func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        Task{ @MainActor in
+            eventPublisher.send(.stoppedPiP)
+        }
+    }
+}
+#endif

@@ -7,13 +7,16 @@
 
 import Foundation
 import AVFoundation
+#if os(iOS)
+import AVKit
+#endif
 
 /// Protocol to handle player-related errors.
 ///
 /// Conforming to this protocol allows a class to respond to error events that occur within a media player context.
 @available(iOS 14, macOS 11, tvOS 14, *)
 @MainActor
-public protocol PlayerDelegateProtocol: AnyObject {
+public protocol PlayerDelegateProtocol: AnyObject{
     /// Called when an error is encountered within the media player.
     ///
     /// This method provides a way for delegate objects to respond to error conditions, allowing them to handle or
@@ -69,4 +72,10 @@ public protocol PlayerDelegateProtocol: AnyObject {
     /// - Parameter bounds: The new bounds of the main layer where we keep the video player and all vector layers. This allows a developer to recalculate and update all vector layers that lie in the CompositeLayer.
 
     func boundsDidChange(to bounds: CGRect)
+    
+#if os(iOS)
+    func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController)
+    
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController)
+#endif
 }

@@ -63,7 +63,9 @@ public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     ///   - item: The AVPlayerItem to observe for status changes.
     ///   - player: The AVQueuePlayer to observe for errors.
     func setupObservers(for player: AVQueuePlayer)
-
+    
+    /// Handles errors
+    func onError(_ error : VPErrors)
 }
 
 internal extension ExtPlayerProtocol {
@@ -193,7 +195,7 @@ internal extension ExtPlayerProtocol {
     
     /// Handles errors
     /// - Parameter error: An instance of `VPErrors` representing the error to be handled.
-    private func onError(_ error : VPErrors){
+    func onError(_ error : VPErrors){
         delegate?.didReceiveError(error)
     }
         
@@ -351,6 +353,10 @@ internal extension ExtPlayerProtocol {
             addVectorLayer(builder: builder, clear: clear)
         case .removeAllVectors:
             removeAllVectors()
+        #if os(iOS)
+        case .startPiP: startPiP()
+        case .stopPiP: stopPiP()
+        #endif
         default : return
         }
     }
