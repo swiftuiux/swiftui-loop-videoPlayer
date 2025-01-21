@@ -134,7 +134,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
 | **NotAutoPlay** | Indicates if the video should not play after initialization. Notice that if you use `command` as a control flow for the player the start command should be `.idle` | false |
 | **EnableVector** | Use this struct to activate settings that allow the addition of vector-based overlays via commands. If it is not passed via settings, any commands to `addVector` or `removeAllVectors` will have no effect. | Not Enabled |
 
-*Additional Notes on Settings*
+### Additional Notes on Settings
 
 - **Time Publishing:**  If the parameter is passed during initialization, the player will publish the time according to the input settings. You can pass just `TimePublishing` without any value to use the default interval of 1 second, or you can pass a specific `CMTime` value to set a custom interval. | 1 second (CMTime with 1 second and preferred timescale of 600) If no `TimePublishing` is provided, the player will not emit time events, which can improve performance when timing information is not needed.
 
