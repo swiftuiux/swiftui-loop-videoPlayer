@@ -27,6 +27,7 @@ public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     #elseif canImport(AppKit)
         /// Provides an optional `CALayer` which can be set, and a property to indicate if the layer is wanted, for use within AppKit environments.
         var layer: CALayer? { get set }
+        /// WantsLayer is necessary. Otherwise, your NSView will not render the layer-based content at all.
         var wantsLayer: Bool { get set }
     #endif
 
