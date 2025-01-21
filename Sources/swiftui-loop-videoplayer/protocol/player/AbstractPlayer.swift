@@ -16,6 +16,8 @@ import CoreImage
 @MainActor
 public protocol AbstractPlayer: AnyObject {
     
+    // MARK: - Properties
+    
     /// An optional property that stores the current video settings.
     ///
     /// This property holds an instance of `VideoSettings` or nil if no settings have been configured yet.
@@ -24,15 +26,6 @@ public protocol AbstractPlayer: AnyObject {
     
     /// The delegate to be notified about errors encountered by the player.
     var delegate: PlayerDelegateProtocol? { get set }
-    
-    /// Retrieves the current item being played.
-    var currentItem : AVPlayerItem? { get }
-    
-    /// The current asset being played, if available.
-    var currentAsset : AVURLAsset? { get }
-    
-    /// Check if looping is applied
-    var isLooping : Bool { get }
     
     /// Adjusts the brightness of the video. Default is 0 (no change), with positive values increasing and negative values decreasing brightness.
     var brightness: Float { get set }
@@ -49,7 +42,18 @@ public protocol AbstractPlayer: AnyObject {
     /// The queue player that plays the video items.
     var player: AVQueuePlayer? { get set }
     
-    // Playback control methods
+    // MARK: - Calculated properties
+    
+    /// Retrieves the current item being played.
+    var currentItem : AVPlayerItem? { get }
+    
+    /// The current asset being played, if available.
+    var currentAsset : AVURLAsset? { get }
+    
+    /// Check if looping is applied
+    var isLooping : Bool { get }
+    
+    // MARK: - Playback control methods
 
     /// Initiates or resumes playback of the video.
     /// This method should be implemented to start playing the video from its current position.

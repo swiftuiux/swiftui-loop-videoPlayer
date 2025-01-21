@@ -168,8 +168,7 @@ internal extension ExtPlayerProtocol {
     /// player item is ready for playback.
     ///
     /// - Parameters:
-    ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity, looping behavior,
-    ///               and whether the audio should be muted.
+    ///   - settings: A `VideoSettings` struct containing configurations such as playback gravity, looping behavior, whether the audio should be muted.
     func update(settings: VideoSettings) {
         
         if settings.isEqual(currentSettings){
