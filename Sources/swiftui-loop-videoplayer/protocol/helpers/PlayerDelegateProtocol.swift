@@ -64,4 +64,9 @@ public protocol PlayerDelegateProtocol: AnyObject {
     /// - Parameter newVolume: The new volume level, expressed as a float between 0.0 (muted) and 1.0 (maximum volume).
     func volumeDidChange(to newVolume: Float)
     
+    /// Notifies that the bounds have changed.
+    ///
+    /// - Parameter bounds: The new bounds of the main layer where we keep the video player and all vector layers. This allows a developer to recalculate and update all vector layers that lie in the CompositeLayer.
+
+    func boundsDidChange(to bounds: CGRect)
 }

@@ -16,6 +16,7 @@ import AppKit
 
 /// A NSView subclass that loops video using AVFoundation on macOS.
 /// This class handles the initialization and management of a looping video player with customizable video gravity.
+@MainActor
 internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     
     /// This property holds an instance of `VideoSettings`
@@ -88,7 +89,23 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     override func layout() {
         super.layout()
         playerLayer?.frame = bounds
-        compositeLayer?.frame = bounds
+        // Update the composite layer (and sublayers)
+        layoutCompositeLayer()
+    }
+    
+    /// Updates the composite layer and all its sublayers' frames.
+    public func layoutCompositeLayer() {
+        guard let compositeLayer = compositeLayer else { return }
+        
+        // Update the composite layer's frame to match the parent
+        compositeLayer.frame = bounds
+        
+        // Adjust each sublayer's frame (if they should fill the entire composite layer)
+        compositeLayer.sublayers?.forEach { sublayer in
+            sublayer.frame = compositeLayer.bounds
+        }
+        
+        delegate?.boundsDidChange(to: bounds)
     }
 
 

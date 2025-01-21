@@ -28,5 +28,4 @@ public protocol ShapeLayerBuilderProtocol: Identifiable {
     /// - Returns: A configured `CAShapeLayer`.
     @MainActor
     func build(with geometry: (frame: CGRect, bounds: CGRect)) -> CAShapeLayer
-    
 }

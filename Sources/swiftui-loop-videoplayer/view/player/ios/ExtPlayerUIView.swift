@@ -89,7 +89,23 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol {
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer?.frame = bounds
-        compositeLayer?.frame = bounds
+        // Update the composite layer (and sublayers)
+        layoutCompositeLayer()
+    }
+    
+    /// Updates the composite layer and all its sublayers' frames.
+    public func layoutCompositeLayer() {
+        guard let compositeLayer = compositeLayer else { return }
+        
+        // Update the composite layer's frame to match the parent
+        compositeLayer.frame = bounds
+        
+        // Adjust each sublayer's frame (if they should fill the entire composite layer)
+        compositeLayer.sublayers?.forEach { sublayer in
+            sublayer.frame = compositeLayer.bounds
+        }
+        
+        delegate?.boundsDidChange(to: bounds)
     }
     
     func onDisappear(){

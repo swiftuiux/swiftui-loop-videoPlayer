@@ -111,4 +111,12 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     func volumeDidChange(to newVolume: Float){
         eventPublisher.send(.volumeChanged(newVolume: newVolume))
     }
+    
+    /// Notifies that the bounds have changed.
+    ///
+    /// - Parameter bounds: The new bounds of the main layer where we keep the video player and all vector layers. This allows a developer to recalculate and update all vector layers that lie in the CompositeLayer.
+
+    func boundsDidChange(to bounds: CGRect) {
+        eventPublisher.send(.boundsChanged(bounds))
+    }
 }

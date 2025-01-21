@@ -189,6 +189,8 @@ In cases where you need to re-issue a command that might appear redundant but is
 |----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `addVector(ShapeLayerBuilderProtocol, clear: Bool)` | Command to add a vector graphic layer over the video stream. The `builder` parameter is an instance conforming to `ShapeLayerBuilderProtocol`. The `clear` parameter specifies whether to clear existing vector layers before adding the new one.                                                                                                           |
 | `removeAllVectors`                           | Command to remove all vector graphic layers from the video stream.                                                                                    |
+### Additional Notes on the subtitles Command
+The boundsChanged event(`boundsChanged(CGRect)`) is triggered when the main layer’s bounds are updated. This approach is particularly useful when overlays or custom vector layers need to adapt dynamically to changes in video player dimensions or other layout adjustments. To handle the frequent boundsChanged events effectively and improve performance, you can use a **throttle** function to limit how often the updates occur.
 
 ### Audio & Language Commands
 
@@ -235,6 +237,7 @@ video_main.m3u8
 | `currentItemRemoved`    | Occurs when the player's `currentItem` is set to `nil`, indicating that the current media item has been removed from the player.                      |
 | `error(VPErrors)`                  | Represents an occurrence of an error within the player. The event provides a `VPErrors` enum value indicating the specific type of error encountered. |
 | `volumeChanged`         | Happens when the player's volume level is adjusted. This event provides the new volume level, which ranges from 0.0 (muted) to 1.0 (maximum volume).  |
+| `boundsChanged(CGRect)` | Triggered when the bounds of the main layer change, allowing the developer to recalculate and update all vector layers within the CompositeLayer. |
 
 
 ### Additional Notes on Adding and Removing Vector Graphics

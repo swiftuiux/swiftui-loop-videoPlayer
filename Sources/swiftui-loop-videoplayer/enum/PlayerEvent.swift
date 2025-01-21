@@ -59,6 +59,9 @@ public enum PlayerEvent: Equatable {
     ///
     /// - Parameter VPErrors: The error from the VPErrors enum associated with this case.
     case error(VPErrors)
+    
+    
+    case boundsChanged(CGRect)
 }
 
 extension PlayerEvent: CustomStringConvertible {
@@ -80,6 +83,8 @@ extension PlayerEvent: CustomStringConvertible {
             return "VolumeChanged"
         case .error(let e):
             return "\(e.description)"
+        case .boundsChanged(let bounds):
+            return "Bounds changed \(bounds)"
         }
     }
 }
