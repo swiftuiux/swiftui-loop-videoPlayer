@@ -97,9 +97,12 @@ public enum PlaybackCommand: Equatable {
     case audioTrack(languageCode: String)
     
     #if os(iOS)
+    /// Command to initiate Picture-in-Picture (PiP) mode for video playback. If the PiP feature is already active, this command will have no additional effect.
     case startPiP
     
+    /// Command to terminate Picture-in-Picture (PiP) mode, returning the video playback to its inline view. If PiP is not active, this command will have no effect.
     case stopPiP
+    
     #endif
     
     public static func == (lhs: PlaybackCommand, rhs: PlaybackCommand) -> Bool {

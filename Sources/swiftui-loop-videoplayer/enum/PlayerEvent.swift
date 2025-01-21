@@ -60,11 +60,14 @@ public enum PlayerEvent: Equatable {
     /// - Parameter VPErrors: The error from the VPErrors enum associated with this case.
     case error(VPErrors)
     
-    
+    /// Event triggered when the bounds of the video player change.
+    /// - Parameter CGRect: The new bounds of the video player.
     case boundsChanged(CGRect)
-    
+
+    /// Event triggered when Picture-in-Picture (PiP) mode starts.
     case startedPiP
-    
+
+    /// Event triggered when Picture-in-Picture (PiP) mode stops.
     case stoppedPiP
 }
 

@@ -47,6 +47,7 @@ The player's functionality is designed around a dual &#8646; interaction model:
 |                           | Error Handling                              | Customizable error messages and visual displays.                                                        |
 |                           | Subtitle Support                            | Add external `.vtt` files or use embedded subtitle tracks.                                               |
 |                           | Custom Overlays                             | Add vector graphics and custom overlays over the video.                                                 |
+|                           | Picture In Picture (PiP)                            | Picture-in-Picture (PiP) is supported on iOS and iPadOS                                                |
 | **Playback Commands**      | Idle Command                                | Initialize without specific playback actions.                                                           |
 |                           | Play/Pause                                  | Control playback state.                                                                                 |
 |                           | Seek Command                                | Move to specific video timestamps.                                                                      |
@@ -125,13 +126,14 @@ Please note that using videos from URLs requires ensuring that you have the righ
 |---------------|-----------------------------------------------------------------------------------------------------|---------|
 | **SourceName** | The URL or local filename of the video.                                                             | -       |
 | **Ext**        | File extension for the video, used when loading from local resources. This is optional when a URL is provided and the URL ends with the video file extension. | "mp4"  |
-| **Subtitles**  | The URL or local filename of the WebVTT (.vtt) subtitles file to be merged with the video. With a AVMutableComposition approach that is used currently in the package, you cannot directly change the position or size of subtitles. AVFoundation’s built-in handling of “text” tracks simply renders them in a default style, without allowing additional layout options. Take a look on the implementation in the example app (Video8.swift)  | -       |
+| **Subtitles**  | The URL or local filename of the WebVTT (.vtt) subtitles file to be merged with the video. With a AVMutableComposition approach that is used currently in the package, you cannot directly change the position or size of subtitles. AVFoundation’s built-in handling of “text” tracks simply renders them in a default style, without allowing additional layout options. Take a look on the implementation in the example app *Video8.swift*  | -       |
 | **Gravity** | How the video content should be resized to fit the player's bounds. | .resizeAspect |
 | **TimePublishing** | Specifies the interval at which the player publishes the current playback time. | - |
 | **Loop** | Whether the video should automatically restart when it reaches the end. If not explicitly passed, the video will not loop. | false |
 | **Mute** | Indicates if the video should play without sound. | false |
 | **NotAutoPlay** | Indicates if the video should not play after initialization. Notice that if you use `command` as a control flow for the player the start command should be `.idle` | false |
 | **EnableVector** | Use this struct to activate settings that allow the addition of vector-based overlays via commands. If it is not passed via settings, any commands to `addVector` or `removeAllVectors` will have no effect. | Not Enabled |
+|**PictureInPicture()**| Enable Picture-in-Picture (PiP) support. If not passed than any command like `startPiP` or `stopPiP` have no effect. Take a look the example app *Video11.swift* |
 
 ### Additional Notes on Settings
 
@@ -172,6 +174,8 @@ In cases where you need to re-issue a command that might appear redundant but is
 | `playbackSpeed(Float)`      | Command to adjust the playback speed of the video. The `speed` parameter is a `Float` value representing the playback speed (e.g., 1.0 for normal speed, 0.5 for half speed, 2.0 for double speed). If a negative value is passed, it will be clamped to 0.0. |
 | `loop`                      | Command to enable looping of the video playback. By default, looping is enabled, so this command will have no effect if looping is already active.     |
 | `unloop`                    | Command to disable looping of the video playback. This command will only take effect if the video is currently being looped.                                                                |
+| `startPiP`    | Command to initiate **Picture-in-Picture (PiP)** mode for video playback. If the PiP feature is already active, this command will have no additional effect.       |
+| `stopPiP`     | Command to terminate **Picture-in-Picture (PiP)** mode, returning the video playback to its inline view. If PiP is not active, this command will have no effect.   |
 
 ### Visual Adjustment Commands
 
