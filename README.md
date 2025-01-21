@@ -174,8 +174,8 @@ In cases where you need to re-issue a command that might appear redundant but is
 | `playbackSpeed(Float)`      | Command to adjust the playback speed of the video. The `speed` parameter is a `Float` value representing the playback speed (e.g., 1.0 for normal speed, 0.5 for half speed, 2.0 for double speed). If a negative value is passed, it will be clamped to 0.0. |
 | `loop`                      | Command to enable looping of the video playback. By default, looping is enabled, so this command will have no effect if looping is already active.     |
 | `unloop`                    | Command to disable looping of the video playback. This command will only take effect if the video is currently being looped.                                                                |
-| `startPiP`    | Command to initiate **Picture-in-Picture (PiP)** mode for video playback. If the PiP feature is already active, this command will have no additional effect.       |
-| `stopPiP`     | Command to terminate **Picture-in-Picture (PiP)** mode, returning the video playback to its inline view. If PiP is not active, this command will have no effect.   |
+| `startPiP`    | Command to initiate **Picture-in-Picture (PiP)** mode for video playback. If the PiP feature is already active, this command will have no additional effect. Don't forget to add PictureInPicture() in settings to enable the PiP feature.     |
+| `stopPiP`     | Command to terminate **Picture-in-Picture (PiP)** mode, returning the video playback to its inline view. If PiP is not active, this command will have no effect. Don't forget to add PictureInPicture() in settings to enable the PiP feature.  |
 
 ### Visual Adjustment Commands
 
