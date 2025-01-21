@@ -72,9 +72,7 @@ internal extension ExtPlayerProtocol {
     /// - Parameters:
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
     ///   - timePublishing: Optional `CMTime` that specifies a particular time for publishing or triggering an event.
-    func setupPlayerComponents(
-        settings: VideoSettings
-    ) {
+    func setupPlayerComponents(settings: VideoSettings) {
         
         guard let player else { return }
         
@@ -88,10 +86,7 @@ internal extension ExtPlayerProtocol {
     /// - Parameters:
     ///   - player: The AVQueuePlayer to be configured.
     ///   - settings: The `VideoSettings` struct that includes all necessary configurations like gravity, loop, and mute.
-    func configurePlayer(
-        _ player: AVQueuePlayer,
-        settings: VideoSettings
-    ) {
+    func configurePlayer(_ player: AVQueuePlayer, settings: VideoSettings) {
         
         player.isMuted = settings.mute
         if !settings.loop{
