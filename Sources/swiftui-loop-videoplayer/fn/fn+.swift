@@ -240,3 +240,24 @@ func getSeekTime(for time: Double, duration : CMTime) -> CMTime?{
     
     return seekTime
 }
+
+/// Creates an `AVPlayerItem` with optional subtitle merging.
+/// - Parameters:
+///   - asset: The main video asset.
+///   - settings: A `VideoSettings` object containing subtitle configuration.
+/// - Returns: A new `AVPlayerItem` configured with the merged or original asset.
+func createPlayerItem(with settings: VideoSettings) -> AVPlayerItem? {
+    
+    guard let asset = assetFor(settings) else{
+        return nil
+    }
+    
+    if let subtitleAsset = subtitlesAssetFor(settings),
+       let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
+        // Create and return a new `AVPlayerItem` using the merged asset
+        return AVPlayerItem(asset: mergedAsset)
+    } else {
+        // Create and return a new `AVPlayerItem` using the original asset
+        return AVPlayerItem(asset: asset)
+    }
+}

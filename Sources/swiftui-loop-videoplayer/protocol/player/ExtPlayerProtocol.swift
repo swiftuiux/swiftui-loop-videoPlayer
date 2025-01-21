@@ -181,6 +181,7 @@ internal extension ExtPlayerProtocol {
         currentSettings = settings
         
         guard let newItem = createPlayerItem(with: settings) else{
+            delegate?.didReceiveError(.sourceNotFound(settings.name))
             return
         }
         

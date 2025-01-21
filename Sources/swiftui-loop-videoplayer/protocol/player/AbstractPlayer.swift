@@ -31,6 +31,9 @@ public protocol AbstractPlayer: AnyObject {
     /// The current asset being played, if available.
     var currentAsset : AVURLAsset? { get }
     
+    /// Check if looping is applied
+    var isLooping : Bool { get }
+    
     /// Adjusts the brightness of the video. Default is 0 (no change), with positive values increasing and negative values decreasing brightness.
     var brightness: Float { get set }
 
@@ -55,6 +58,12 @@ public protocol AbstractPlayer: AnyObject {
     /// Pauses the current video playback.
     /// This method should be implemented to pause the video, allowing it to be resumed later from the same position.
     func pause()
+    
+    /// Stop and clean player
+    func stop()
+    
+    /// Inserts a new player item into the media queue of the player.
+    func insert(_ item : AVPlayerItem)
 
     /// Seeks the video to a specific time.
     /// This method moves the playback position to the specified time with precise accuracy.
@@ -81,7 +90,19 @@ public protocol AbstractPlayer: AnyObject {
     /// - Parameter volume: A `Float` value between 0.0 (mute) and 1.0 (full volume).
     /// If the value is out of range, it will be clamped to the nearest valid value.
     func setVolume(_ volume: Float)
-
+    
+    /// Sets the playback speed for the video playback.
+    func setPlaybackSpeed(_ speed: Float)
+    
+    /// Sets the subtitles for the video playback to a specified language or turns them off.
+    func setSubtitles(to language: String?)
+    
+    /// Enables looping for the current video item.
+    func loop()
+    
+    /// Disables looping for the current video item.
+    func unloop()
+    
     /// Adjusts the brightness of the video playback.
     /// - Parameter brightness: A `Float` value representing the brightness level. Typically ranges from -1.0 to 1.0.
     func adjustBrightness(to brightness: Float)
@@ -102,9 +123,6 @@ public protocol AbstractPlayer: AnyObject {
 
     /// Sets the playback command for the video player.
     func setCommand(_ value: PlaybackCommand)
-    
-    /// Applies the current set of filters to the video using an AVVideoComposition.
-    func applyVideoComposition()
     
     /// Updates the current playback asset, settings, and initializes playback or a specific action when the asset is ready.
     func update(settings: VideoSettings)
@@ -164,7 +182,7 @@ extension AbstractPlayer{
         pause()
         
         if !isEmptyQueue() {  // Cleaning
-            if isLooping(){
+            if isLooping{
                unloop()
             }
             
@@ -176,28 +194,6 @@ extension AbstractPlayer{
     /// - Parameter item: The AVPlayerItem to be inserted into the queue.
     func insert(_ item : AVPlayerItem){
         player?.insert(item, after: nil)
-    }
-    
-    /// Creates an `AVPlayerItem` with optional subtitle merging.
-    /// - Parameters:
-    ///   - asset: The main video asset.
-    ///   - settings: A `VideoSettings` object containing subtitle configuration.
-    /// - Returns: A new `AVPlayerItem` configured with the merged or original asset.
-    func createPlayerItem(with settings: VideoSettings) -> AVPlayerItem? {
-        
-        guard let asset = assetFor(settings) else{
-            delegate?.didReceiveError(.sourceNotFound(settings.name))
-            return nil
-        }
-        
-        if let subtitleAsset = subtitlesAssetFor(settings),
-           let mergedAsset = mergeAssetWithSubtitles(videoAsset: asset, subtitleAsset: subtitleAsset) {
-            // Create and return a new `AVPlayerItem` using the merged asset
-            return AVPlayerItem(asset: mergedAsset)
-        } else {
-            // Create and return a new `AVPlayerItem` using the original asset
-            return AVPlayerItem(asset: asset)
-        }
     }
 
     /// Seeks the video to a specific time in the timeline.
@@ -308,7 +304,7 @@ extension AbstractPlayer{
     }
     
     /// Check if looping is applied
-    func isLooping() -> Bool{
+    var isLooping : Bool{
         playerLooper != nil
     }
     
@@ -320,7 +316,7 @@ extension AbstractPlayer{
         }
 
         // Check if the video is already being looped
-        if isLooping() {
+        if isLooping {
             return
         }
 
@@ -331,7 +327,7 @@ extension AbstractPlayer{
     /// This method removes the `playerLooper`, stopping the loop.
     func unloop() {
         // Check if the video is not looped (i.e., playerLooper is nil)
-        guard isLooping() else {
+        guard isLooping else {
             return // Not looped, no need to unloop
         }
 
@@ -373,7 +369,6 @@ extension AbstractPlayer{
         filters.append(value)
     }
 
-
     /// Removes all applied CIFilters from the video playback.
     ///
     /// This function clears the array of filters and optionally re-applies the video composition
@@ -397,7 +392,7 @@ extension AbstractPlayer{
     /// This method combines the existing filters and brightness/contrast adjustments, creates a new video composition,
     /// and assigns it to the current AVPlayerItem. The video is paused during this process to ensure smooth application.
     /// This method is not supported on Vision OS.
-    func applyVideoComposition() {
+    private func applyVideoComposition() {
         guard let player = player else { return }
         let allFilters = combineFilters(filters, brightness, contrast)
         
