@@ -21,7 +21,7 @@ import QuartzCore
 ///
 @available(iOS 14, macOS 11, tvOS 14, *)
 @MainActor
-public protocol LayerMakerProtocol {
+public protocol LayerMakerProtocol: AnyObject {
 
     /// The composite layer that contains all the sublayers, including vector layers.
     ///
@@ -51,6 +51,20 @@ public protocol LayerMakerProtocol {
 
 extension LayerMakerProtocol{
     
+    /// Adds a composite layer if vector mode is enabled in the provided `VideoSettings`.
+    @MainActor
+    func addCompositeLayer(_ settings: VideoSettings) {
+        if settings.vector {
+            compositeLayer = CALayer()
+        }
+    }
+
+    /// Removes the composite layer from its superlayer and sets `compositeLayer` to `nil`.
+    @MainActor
+    func removeCompositeLayer() {
+        compositeLayer?.removeFromSuperlayer()
+        compositeLayer = nil
+    }
     
     /// Adds a vector layer to the composite layer using a specified builder.
     ///

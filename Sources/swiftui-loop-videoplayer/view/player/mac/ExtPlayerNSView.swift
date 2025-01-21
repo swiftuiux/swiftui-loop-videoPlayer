@@ -88,18 +88,9 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     override func layout() {
         super.layout()
         playerLayer?.frame = bounds
+        compositeLayer?.frame = bounds
     }
-    
-    private func addCompositeLayer(_ settings : VideoSettings){
-        if settings.vector{
-            compositeLayer = CALayer()
-        }
-    }
-    
-    private func removeCompositeLayer() {
-        compositeLayer?.removeFromSuperlayer()
-        compositeLayer = nil
-    }
+
 
     func onDisappear(){
         // First, clear all observers to prevent memory leaks
