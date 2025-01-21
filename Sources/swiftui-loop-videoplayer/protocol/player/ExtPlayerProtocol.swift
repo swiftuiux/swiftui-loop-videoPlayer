@@ -175,7 +175,7 @@ internal extension ExtPlayerProtocol {
         currentSettings = settings
         
         guard let newItem = createPlayerItem(with: settings) else{
-            delegate?.didReceiveError(.sourceNotFound(settings.name))
+            onError(.sourceNotFound(settings.name))
             return
         }
         
@@ -189,6 +189,12 @@ internal extension ExtPlayerProtocol {
             play()
         }
     }
+    
+    /// Handles errors
+    /// - Parameter error: An instance of `VPErrors` representing the error to be handled.
+    private func onError(_ error : VPErrors){
+        delegate?.didReceiveError(error)
+    }
         
     /// Sets up observers on the player item and the player to track their status and error states.
     ///
@@ -199,7 +205,7 @@ internal extension ExtPlayerProtocol {
         errorObserver = player.observe(\.error, options: [.new]) { [weak self] player, _ in
             guard let error = player.error else { return }
             Task { @MainActor in
-                self?.delegate?.didReceiveError(.remoteVideoError(error))
+                self?.onError(.remoteVideoError(error))
             }
         }
         
