@@ -133,7 +133,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
 | **Mute** | Indicates if the video should play without sound. | false |
 | **NotAutoPlay** | Indicates if the video should not play after initialization. Notice that if you use `command` as a control flow for the player the start command should be `.idle` | false |
 | **EnableVector** | Use this struct to activate settings that allow the addition of vector-based overlays via commands. If it is not passed via settings, any commands to `addVector` or `removeAllVectors` will have no effect. | Not Enabled |
-|**PictureInPicture()**| Enable Picture-in-Picture (PiP) support. If not passed than any command like `startPiP` or `stopPiP` have no effect. Take a look the example app *Video11.swift* |
+|**PictureInPicture**| Enable Picture-in-Picture (PiP) support. If not passed than any command like `startPiP` or `stopPiP` have no effect. Take a look the example app *Video11.swift* |
 
 ### Additional Notes on Settings
 
