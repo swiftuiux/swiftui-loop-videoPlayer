@@ -48,6 +48,10 @@ fileprivate func assetFrom(name: String, fileExtension: String?) -> AVURLAsset? 
         return AVURLAsset(url: url)
     }
     
+    if let url = fileURL(from: name){
+        return AVURLAsset(url: url)
+    }
+    
     // If not a valid URL, try to locate the file in the main bundle with the specified extension.
     if let fileExtension = fileExtension,
        let fileUrl = Bundle.main.url(forResource: name, withExtension: fileExtension) {
@@ -56,6 +60,27 @@ fileprivate func assetFrom(name: String, fileExtension: String?) -> AVURLAsset? 
     
     // If all attempts fail, return `nil`.
     return nil
+}
+
+
+/// Attempts to create a valid `URL` from a string that starts with `"file://"`.
+/// - Parameter rawString: A file URL string, e.g. `"file:///Users/igor/My Folder/File.mp4"`.
+/// - Returns: A `URL` if successfully parsed; otherwise `nil`.
+func fileURL(from rawString: String) -> URL? {
+    guard rawString.hasPrefix("file://") else {
+        // Not a file URL scheme
+        return nil
+    }
+    // Strip off "file://"
+    let pathIndex = rawString.index(rawString.startIndex, offsetBy: 7)
+    let pathPortion = rawString[pathIndex...]
+
+    guard let encodedPath = pathPortion
+        .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+    else { return nil }
+
+    let finalString = "file://\(encodedPath)"
+    return URL(string: finalString)
 }
 
 /// Checks whether a given filename contains an extension and returns the extension if it exists.
