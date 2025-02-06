@@ -7,7 +7,7 @@
 
 import AVFoundation
 #if canImport(CoreImage)
-import CoreImage
+@preconcurrency import CoreImage
 import AVKit
 #endif
 

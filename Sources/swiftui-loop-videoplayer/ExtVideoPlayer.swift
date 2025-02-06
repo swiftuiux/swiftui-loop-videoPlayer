@@ -102,10 +102,6 @@ public struct ExtVideoPlayer: View{
             timePublisher: timePublisher,
             eventPublisher: eventPublisher
        )
-       .onDisappear{
-           //player?.onDeinit()
-           //player = nil
-       }
        .onReceive(timePublisher.receive(on: DispatchQueue.main), perform: { time in
            currentTime = time
        })

@@ -181,7 +181,7 @@ internal extension ExtPlayerProtocol {
         currentSettings = settings
         
         guard let newItem = createPlayerItem(with: settings) else{
-            onError(.sourceNotFound(settings.name))
+            itemNotFound(with: settings.name)
             return
         }
         
@@ -203,6 +203,14 @@ internal extension ExtPlayerProtocol {
         delegate?.didReceiveError(error)
     }
     
+    /// Emit the error "Item not found" with delay
+    /// - Parameter name: resource name
+    func itemNotFound(with name: String){
+        Task{ @MainActor [weak self] in
+            self?.onError(.sourceNotFound(name))
+        }
+    }
+    
     /// Observes the status of an AVPlayerItem and notifies the delegate when the status changes.
     /// - Parameter item: The AVPlayerItem whose status should be observed.
     private func observeItemStatus(_ item: AVPlayerItem) {
@@ -221,6 +229,10 @@ internal extension ExtPlayerProtocol {
                     self?.delegate?.duration(item.duration)
                 }
             case .failed:
+                Task { @MainActor in
+                    self?.onError(.failedToLoad)
+                }
+            @unknown default:
                 Task { @MainActor in
                     self?.onError(.failedToLoad)
                 }

@@ -112,6 +112,8 @@ extension PlayerEvent: CustomStringConvertible {
                 return "Status: ReadyToPlay"
             case .failed:
                 return "Status: FailedToLoad"
+            @unknown default:
+                return "Unknown status"
             }
         case .duration(let value):
             let roundedString = String(format: "%.0f", value.seconds)
