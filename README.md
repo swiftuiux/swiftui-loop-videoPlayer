@@ -74,7 +74,7 @@ The player's functionality is designed around a dual &#8646; interaction model:
 |                           | Multichannel Audio                          | Play Dolby Atmos, 5.1 surround, and spatial audio tracks.                                               |
 |                           | Subtitles and Captions                      | Support for multiple subtitle and caption formats.                                                      |
 | **Event Handling**         | Batch Event Processing                     | Collects and processes events in batches to avoid flooding.                                             |
-|                           | Playback State Events                       | `playing`, `paused`, `seek`, `waitingToPlayAtSpecifiedRate`, etc.                                       |
+|                           | Playback State Events                       | `playing`, `paused`, `seek`, `duration(CMTime)`, etc.                                                   |
 |                           | Current Item State                          | Detect when the current item changes or is removed.                                                     |
 |                           | Volume Change Events                        | Listen for changes in volume levels.                                                                    |
 | **Testing & Development**  | Unit Testing                               | Includes unit tests for core functionality.                                                             |
