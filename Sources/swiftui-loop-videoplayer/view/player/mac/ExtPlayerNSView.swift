@@ -55,6 +55,9 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
     /// An optional observer for monitoring changes to the player's `currentItem` property.
     internal var currentItemObserver: NSKeyValueObservation?
     
+    /// Item status observer
+    internal var itemStatusObserver: NSKeyValueObservation?
+    
     /// An optional observer for monitoring changes to the player's `volume` property.
     ///
     /// This property holds an instance of `NSKeyValueObservation`, which observes the `volume`

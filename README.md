@@ -243,6 +243,10 @@ video_main.m3u8
 | `error(VPErrors)`                  | Represents an occurrence of an error within the player. The event provides a `VPErrors` enum value indicating the specific type of error encountered. |
 | `volumeChanged`         | Happens when the player's volume level is adjusted. This event provides the new volume level, which ranges from 0.0 (muted) to 1.0 (maximum volume).  |
 | `boundsChanged(CGRect)` | Triggered when the bounds of the main layer change, allowing the developer to recalculate and update all vector layers within the CompositeLayer. |
+| `startedPiP`                        | Event triggered when Picture-in-Picture (PiP) mode starts. |
+| `stoppedPiP`                        | Event triggered when Picture-in-Picture (PiP) mode stops. |
+| `itemStatusChanged(AVPlayerItem.Status)` | Indicates that the AVPlayerItem's status has changed. Possible statuses: `.unknown`, `.readyToPlay`, `.failed`. |
+| `duration(CMTime)`                  | Provides the duration of the AVPlayerItem when it is ready to play. The duration is given in `CMTime`. |
 
 
 ### Additional Notes on Adding and Removing Vector Graphics

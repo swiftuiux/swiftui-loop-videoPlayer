@@ -53,6 +53,9 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
     /// An optional observer for monitoring changes to the player's `currentItem` property.
     internal var currentItemObserver: NSKeyValueObservation?
     
+    /// Item status observer
+    internal var itemStatusObserver: NSKeyValueObservation?
+    
     /// An optional observer for monitoring changes to the player's `volume` property.
     ///
     /// This property holds an instance of `NSKeyValueObservation`, which observes the `volume`
@@ -62,6 +65,7 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
     /// The delegate to be notified about errors encountered by the player.
     weak var delegate: PlayerDelegateProtocol?
 
+    /// The Picture-in-Picture (PiP) controller for managing PiP functionality.
     internal var pipController: AVPictureInPictureController?
     
     /// Initializes a new player view with a video asset and custom settings.

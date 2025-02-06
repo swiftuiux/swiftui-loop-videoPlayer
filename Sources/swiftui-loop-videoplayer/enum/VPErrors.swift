@@ -9,7 +9,7 @@ import Foundation
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
 /// An enumeration of possible errors that can occur in the video player.
-public enum VPErrors: Error, CustomStringConvertible, Sendable{
+public enum VPErrors: Error, CustomStringConvertible, Sendable {
     
     /// Error case for when there is an error with remote video playback.
     /// - Parameter error: The error that occurred during remote video playback.
@@ -25,25 +25,26 @@ public enum VPErrors: Error, CustomStringConvertible, Sendable{
     /// Picture-in-Picture (PiP)  is not supported
     case notSupportedPiP
     
+    /// Failed to load
+    case failedToLoad
+    
     /// A description of the error, suitable for display.
     public var description: String {
         switch self {
-            /// Returns a description indicating that the specified file was not found.
-            /// - Parameter name: The name of the file that was not found.
             case .sourceNotFound(let name):
                 return "Source not found: \(name)"
             
             case .notSupportedPiP:
                 return "Picture-in-Picture (PiP) is not supported on this device."
             
-            /// Returns a description indicating that the settings are not unique.
             case .settingsNotUnique:
                 return "Settings are not unique"
             
-            /// Returns a description indicating a playback error with the remote video.
-            /// - Parameter error: The error that occurred during remote video playback.
             case .remoteVideoError(let error):
                 return "Playback error: \(String(describing: error?.localizedDescription))"
+            
+            case .failedToLoad:
+                return "Failed to load the video."
         }
     }
 }
@@ -52,10 +53,6 @@ public enum VPErrors: Error, CustomStringConvertible, Sendable{
 extension VPErrors: Equatable {
     
     /// Compares two `VPErrors` instances for equality based on specific error conditions.
-    /// - Parameters:
-    ///   - lhs: The left-hand side `VPErrors` instance to compare.
-    ///   - rhs: The right-hand side `VPErrors` instance to compare.
-    /// - Returns: A Boolean value indicating whether the two `VPErrors` instances are considered equal.
     public static func ==(lhs: VPErrors, rhs: VPErrors) -> Bool {
         switch (lhs, rhs) {
         case (.remoteVideoError(let a), .remoteVideoError(let b)):
@@ -64,9 +61,10 @@ extension VPErrors: Equatable {
             return a == b
         case (.settingsNotUnique, .settingsNotUnique):
             return true
+        case (.failedToLoad, .failedToLoad):
+            return true
         default:
             return false
         }
     }
 }
- 

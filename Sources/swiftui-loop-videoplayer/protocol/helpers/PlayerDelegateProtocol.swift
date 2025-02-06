@@ -73,6 +73,19 @@ public protocol PlayerDelegateProtocol: AnyObject{
 
     func boundsDidChange(to bounds: CGRect)
     
+    /// Called when the AVPlayerItem's status changes.
+    /// - Parameter status: The new status of the AVPlayerItem.
+    ///   - `.unknown`: The item is still loading or its status is not yet determined.
+    ///   - `.readyToPlay`: The item is fully loaded and ready to play.
+    ///   - `.failed`: The item failed to load due to an error.
+    func itemStatusChanged(_ status: AVPlayerItem.Status)
+    
+    /// Called when the duration of the AVPlayerItem is available.
+    /// - Parameter time: The total duration of the media item in `CMTime`.
+    ///   - This method is only called when the item reaches `.readyToPlay`,
+    ///     ensuring that the duration value is valid.
+    func duration(_ time: CMTime)
+    
 #if os(iOS)
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController)
     

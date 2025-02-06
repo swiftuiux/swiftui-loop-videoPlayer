@@ -118,9 +118,25 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
     /// Notifies that the bounds have changed.
     ///
     /// - Parameter bounds: The new bounds of the main layer where we keep the video player and all vector layers. This allows a developer to recalculate and update all vector layers that lie in the CompositeLayer.
-
     func boundsDidChange(to bounds: CGRect) {
         eventPublisher.send(.boundsChanged(bounds))
+    }
+    
+    /// Called when the AVPlayerItem's status changes.
+    /// - Parameter status: The new status of the AVPlayerItem.
+    ///   - `.unknown`: The item is still loading or its status is not yet determined.
+    ///   - `.readyToPlay`: The item is fully loaded and ready to play.
+    ///   - `.failed`: The item failed to load due to an error.
+    func itemStatusChanged(_ status: AVPlayerItem.Status) {
+        eventPublisher.send(.itemStatusChanged(status))
+    }
+    
+    /// Called when the duration of the AVPlayerItem is available.
+    /// - Parameter time: The total duration of the media item in `CMTime`.
+    ///   - This method is only called when the item reaches `.readyToPlay`,
+    ///     ensuring that the duration value is valid.
+    func duration(_ time: CMTime) {
+        eventPublisher.send(.duration(time))
     }
 
 }

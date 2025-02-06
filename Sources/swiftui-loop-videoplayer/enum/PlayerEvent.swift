@@ -69,6 +69,14 @@ public enum PlayerEvent: Equatable {
 
     /// Event triggered when Picture-in-Picture (PiP) mode stops.
     case stoppedPiP
+    
+    /// Indicates that the AVPlayerItem's status has changed.
+    /// - Parameter status: The new status of the AVPlayerItem.
+    case itemStatusChanged(AVPlayerItem.Status)
+    
+    /// Provides the duration of the AVPlayerItem when it is ready to play.
+    /// - Parameter duration: The total duration of the media item in `CMTime`.
+    case duration(CMTime)
 }
 
 extension PlayerEvent: CustomStringConvertible {
@@ -96,6 +104,18 @@ extension PlayerEvent: CustomStringConvertible {
             return "Started PiP"
         case .stoppedPiP:
             return "Stopped PiP"
+        case .itemStatusChanged(let status):
+            switch status {
+            case .unknown:
+                return "Status: Unknown"
+            case .readyToPlay:
+                return "Status: ReadyToPlay"
+            case .failed:
+                return "Status: FailedToLoad"
+            }
+        case .duration(let value):
+            let roundedString = String(format: "%.0f", value.seconds)
+            return "Duration \(roundedString) sec"
         }
     }
 }

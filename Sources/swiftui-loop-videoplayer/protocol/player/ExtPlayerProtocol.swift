@@ -44,6 +44,9 @@ public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     
     /// An optional observer for monitoring changes to the player's `currentItem` property.
     var currentItemObserver: NSKeyValueObservation? { get set }
+    
+    /// Item status observer
+    var itemStatusObserver: NSKeyValueObservation?  { get set }
 
     /// An optional observer for monitoring changes to the player's `volume` property.
     var volumeObserver: NSKeyValueObservation? { get set }
@@ -182,6 +185,7 @@ internal extension ExtPlayerProtocol {
             return
         }
         
+        observeItemStatus(newItem)
         insert(newItem)
         
         if settings.loop{
@@ -197,6 +201,37 @@ internal extension ExtPlayerProtocol {
     /// - Parameter error: An instance of `VPErrors` representing the error to be handled.
     func onError(_ error : VPErrors){
         delegate?.didReceiveError(error)
+    }
+    
+    /// Observes the status of an AVPlayerItem and notifies the delegate when the status changes.
+    /// - Parameter item: The AVPlayerItem whose status should be observed.
+    private func observeItemStatus(_ item: AVPlayerItem) {
+        
+        removeItemObserver()
+        
+        itemStatusObserver = item.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in
+            Task { @MainActor in
+                self?.delegate?.itemStatusChanged(item.status)
+            }
+            
+            switch item.status {
+            case .unknown: break
+            case .readyToPlay:
+                Task { @MainActor in
+                    self?.delegate?.duration(item.duration)
+                }
+            case .failed:
+                Task { @MainActor in
+                    self?.onError(.failedToLoad)
+                }
+            }
+        }
+    }
+    
+    /// Removes the current AVPlayerItem observer, if any, to prevent memory leaks.
+    private func removeItemObserver() {
+        itemStatusObserver?.invalidate()
+        itemStatusObserver = nil
     }
         
     /// Sets up observers on the player item and the player to track their status and error states.
@@ -234,7 +269,7 @@ internal extension ExtPlayerProtocol {
             }
         }
         
-        currentItemObserver = player.observe(\.currentItem, options: [.new, .old]) { [weak self]  player, change in
+        currentItemObserver = player.observe(\.currentItem, options: [.new, .old, .initial]) { [weak self]  player, change in
             // Detecting when the current item is changed
             if let newItem = change.newValue as? AVPlayerItem {
                 Task { @MainActor in
@@ -258,6 +293,8 @@ internal extension ExtPlayerProtocol {
     
     /// Clear observers
     func clearObservers(){
+        
+        removeItemObserver()
         
         errorObserver?.invalidate()
         errorObserver = nil
