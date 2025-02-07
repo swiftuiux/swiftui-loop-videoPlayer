@@ -157,6 +157,7 @@ Please note that using videos from URLs requires ensuring that you have the righ
   ```
 SwiftUI only registers the last assignment (`.pause`) in the same run loop cycle, ignoring `.play`.
 To ensure .play is applied before .pause, you can use `Task` to schedule the second update on the next run loop iteration:
+
 **.play → .pause**
  ```swift
     playbackCommand = .play
