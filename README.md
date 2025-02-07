@@ -194,7 +194,7 @@ In cases where you need to re-issue a command that might appear redundant but is
 ```swift  
     playbackCommand = .play
 
-    Task { @MainActor in
+    Task {
         playbackCommand = .idle
         Task { playbackCommand = .play } // This runs AFTER `.idle`
     }
