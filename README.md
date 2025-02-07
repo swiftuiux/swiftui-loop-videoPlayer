@@ -170,19 +170,10 @@ To ensure .play is applied before .pause, you can use `Task` to schedule the sec
 ```swift  
     playbackCommand = .play
 
-    Task {
+    Task { @MainActor
         playbackCommand = .pause
         Task { playbackCommand = .play } // This runs AFTER `.pause`
     }
-```
- If playbackCommand is critical for playback logic, use an ObservableObject with @Published instead of @State. This avoids SwiftUI’s state batching
-```swift 
-    @Published var playbackCommand: PlaybackCommand = .pause 
-```
-then works
-```swift
-    playbackCommand = .play
-    playbackCommand = .pause
 ```
     
 ### Handling Sequential Similar Commands
