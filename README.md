@@ -170,7 +170,7 @@ To ensure .play is applied before .pause, you can use `Task` to schedule the sec
 ```swift  
     playbackCommand = .play
 
-    Task { @MainActor
+    Task { @MainActor in
         playbackCommand = .pause
         Task { playbackCommand = .play } // This runs AFTER `.pause`
     }
@@ -178,7 +178,7 @@ To ensure .play is applied before .pause, you can use `Task` to schedule the sec
     
 ### Handling Sequential Similar Commands
 
-When using the video player controls in your SwiftUI application, it's important to understand how command processing works. Specifically, issuing two identical commands consecutively will result in the second command being ignored. This is due to the underlying implementation in SwiftUI that prevents redundant command execution to optimize performance and user experience.
+When using the video player controls in your SwiftUI application, it's important to understand how command processing works. Specifically, issuing two identical commands consecutively will result in the second command being ignored. This is due to the underlying implementation that prevents redundant command execution to optimize performance and user experience in terms of UI updates.
 
 ### Common Scenario
 
@@ -187,6 +187,16 @@ For example, if you attempt to pause the video player twice in a row, the second
 ### Handling Similar Commands
 
 In cases where you need to re-issue a command that might appear redundant but is necessary under specific conditions, you must insert an `idle` command between the two similar commands. The `idle` command resets the command state of the player, allowing subsequent commands to be processed as new actions.
+
+**.play → .idle → .play**
+    
+```swift  
+    playbackCommand = .play
+
+    Task { @MainActor in
+        playbackCommand = .idle
+        Task { playbackCommand = .play } // This runs AFTER `.idle`
+    
 
 ### Playback Commands
 
