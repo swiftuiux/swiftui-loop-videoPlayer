@@ -196,7 +196,7 @@ In cases where you need to re-issue a command that might appear redundant but is
     Task { @MainActor in
         playbackCommand = .idle
         Task { playbackCommand = .play } // This runs AFTER `.idle`
-    
+```    
 
 ### Playback Commands
 
