@@ -161,7 +161,7 @@ To ensure .play is applied before .pause, you can use `Task` to schedule the sec
 **.play → .pause**
  ```swift
     playbackCommand = .play
-    Task { @MainActor in
+    Task {
         playbackCommand = .pause
     }
 ```
@@ -170,7 +170,7 @@ To ensure .play is applied before .pause, you can use `Task` to schedule the sec
 ```swift  
     playbackCommand = .play
 
-    Task { @MainActor in
+    Task { 
         playbackCommand = .pause
         Task { playbackCommand = .play } // This runs AFTER `.pause`
     }
