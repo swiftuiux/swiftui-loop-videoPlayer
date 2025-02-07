@@ -146,6 +146,44 @@ Please note that using videos from URLs requires ensuring that you have the righ
 
 ## Commands
 
+### Handling Commands
+ ```swift
+    @State public var playbackCommand: PlaybackCommand = .idle
+ ```
+`@State` updates are asynchronous and batched in SwiftUI. When you assign:
+ ```swift
+    playbackCommand = .play
+    playbackCommand = .pause
+  ```
+SwiftUI only registers the last assignment (`.pause`) in the same run loop cycle, ignoring `.play`.
+To ensure .play is applied before .pause, you can use `Task` to schedule the second update on the next run loop iteration:
+**.play → .pause**
+ ```swift
+    playbackCommand = .play
+    Task { @MainActor in
+        playbackCommand = .pause
+    }
+    ```
+**.play → .pause → .play**
+    
+   ```swift  
+            playbackCommand = .play
+
+            Task {
+                playbackCommand = .pause
+                Task { playbackCommand = .play } // This runs AFTER `.pause`
+            }
+  ```
+ If playbackCommand is critical for playback logic, use an ObservableObject with @Published instead of @State. This avoids SwiftUI’s state batching
+```swift 
+    @Published var playbackCommand: PlaybackCommand = .pause 
+```
+then works
+```swift
+    playbackCommand = .play
+    playbackCommand = .pause
+```
+    
 ### Handling Sequential Similar Commands
 
 When using the video player controls in your SwiftUI application, it's important to understand how command processing works. Specifically, issuing two identical commands consecutively will result in the second command being ignored. This is due to the underlying implementation in SwiftUI that prevents redundant command execution to optimize performance and user experience.
