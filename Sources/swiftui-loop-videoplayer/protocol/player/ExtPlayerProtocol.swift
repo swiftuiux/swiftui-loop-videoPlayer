@@ -186,6 +186,7 @@ internal extension ExtPlayerProtocol {
         }
         
         observeItemStatus(newItem)
+        
         insert(newItem)
         
         if settings.loop{
@@ -210,7 +211,8 @@ internal extension ExtPlayerProtocol {
             self?.onError(.sourceNotFound(name))
         }
     }
-    
+        
+        
     /// Observes the status of an AVPlayerItem and notifies the delegate when the status changes.
     /// - Parameter item: The AVPlayerItem whose status should be observed.
     private func observeItemStatus(_ item: AVPlayerItem) {
@@ -235,7 +237,8 @@ internal extension ExtPlayerProtocol {
                 }
             @unknown default:
                 Task { @MainActor in
-                    self?.onError(.failedToLoad(nil))
+                    let error = self?.currentItem?.error
+                    self?.onError(.failedToLoad(error))
                 }
             }
         }

@@ -290,6 +290,24 @@ video_main.m3u8
 | `itemStatusChanged(AVPlayerItem.Status)` | Indicates that the AVPlayerItem's status has changed. Possible statuses: `.unknown`, `.readyToPlay`, `.failed`. |
 | `duration(CMTime)`                  | Provides the duration of the AVPlayerItem when it is ready to play. The duration is given in `CMTime`. |
 
+### Additional Notes on Errors
+When the URL is syntactically valid but the resource does not actually exist (e.g., a 404 response or an unreachable server), AVPlayerItem.status can remain .unknown indefinitely. It may never transition to .failed, and the .AVPlayerItemFailedToPlayToEndTime notification won’t fire if playback never starts.
+**Workarounds and Best Practices**
+*Pre-Check the URL With HEAD*
+If you want to ensure that a URL is valid before passing it to AVPlayerItem, use for example a simple HEAD request via URLSession to check for a valid 2xx response.
+
+```swift
+func checkURLExists(_ url: URL) async throws -> Bool {
+    var request = URLRequest(url: url)
+    request.httpMethod = "HEAD"
+
+    let (_, response) = try await URLSession.shared.data(for: request)
+    if let httpResponse = response as? HTTPURLResponse {
+        return (200...299).contains(httpResponse.statusCode)
+    }
+    return false
+}
+```
 
 ### Additional Notes on Adding and Removing Vector Graphics
 

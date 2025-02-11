@@ -22,10 +22,10 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
     
     /// `filters` is an array that stores CIFilter objects used to apply different image processing effects
     internal var filters: [CIFilter] = []
-
+    
     /// `brightness` represents the adjustment level for the brightness of the video content.
     internal var brightness: Float = 0
-
+    
     /// `contrast` indicates the level of contrast adjustment for the video content.
     internal var contrast: Float = 1
     
@@ -64,7 +64,7 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
     
     /// The delegate to be notified about errors encountered by the player.
     weak var delegate: PlayerDelegateProtocol?
-
+    
     /// The Picture-in-Picture (PiP) controller for managing PiP functionality.
     internal var pipController: AVPictureInPictureController?
     
@@ -81,17 +81,17 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
         
         addPlayerLayer()
         addCompositeLayer(settings)
-       
+        
         setupPlayerComponents(
             settings: settings
         )
-
+        
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     /// Lays out subviews and adjusts the frame of the player layer to match the view's bounds.
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -99,8 +99,6 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
         // Update the composite layer (and sublayers)
         layoutCompositeLayer()
     }
-    
-
     
     /// Updates the composite layer and all its sublayers' frames.
     public func layoutCompositeLayer() {
