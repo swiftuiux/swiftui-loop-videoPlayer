@@ -345,26 +345,45 @@ internal extension ExtPlayerProtocol {
     }
     
     /// Sets the playback command for the video player.
-    /// - Parameter value: The `PlaybackCommand` to set. This can be one of the following:
-    ///   - `play`: Command to play the video.
-    ///   - `pause`: Command to pause the video.
-    ///   - `seek(to:)`: Command to seek to a specific time in the video.
-    ///   - `begin`: Command to position the video at the beginning.
-    ///   - `end`: Command to position the video at the end.
-    ///   - `mute`: Command to mute the video.
-    ///   - `unmute`: Command to unmute the video.
-    ///   - `volume`: Command to adjust the volume of the video playback.
-    ///   - `subtitles`: Command to set subtitles to a specified language or turn them off.
-    ///   - `playbackSpeed`: Command to adjust the playback speed of the video.
-    ///   - `loop`: Command to enable looping of the video playback.
-    ///   - `unloop`: Command to disable looping of the video playback.
-    ///   - `brightness`: Command to adjust the brightness of the video playback.
-    ///   - `contrast`: Command to adjust the contrast of the video playback.
-    ///   - `filter`: Command to apply a specific Core Image filter to the video.
-    ///   - `removeAllFilters`: Command to remove all applied filters from the video playback.
-    ///   - `audioTrack`: Command to select a specific audio track based on language code.
-    ///   - `vector`: Sets a vector graphic operation on the video player.
-    ///   - `removeAllVectors`: Clears all vector graphics from the video player.
+    ///
+    /// - Parameter value: The `PlaybackCommand` to set. Available commands include:
+    ///
+    /// ### Playback Controls
+    /// - `play`: Starts video playback.
+    /// - `pause`: Pauses video playback.
+    /// - `seek(to:play:)`: Moves to a specified time in the video, with an option to start playing.
+    /// - `begin`: Moves the video to the beginning.
+    /// - `end`: Moves the video to the end.
+    ///
+    /// ### Audio & Volume
+    /// - `mute`: Mutes the video.
+    /// - `unmute`: Unmutes the video.
+    /// - `volume(level)`: Adjusts the volume to the specified level.
+    /// - `audioTrack(languageCode)`: Selects an audio track based on the given language code.
+    ///
+    /// ### Subtitles & Playback Speed
+    /// - `subtitles(language)`: Sets subtitles to a specified language or disables them.
+    /// - `playbackSpeed(speed)`: Adjusts the video playback speed.
+    ///
+    /// ### Looping
+    /// - `loop`: Enables video looping.
+    /// - `unloop`: Disables video looping.
+    ///
+    /// ### Video Adjustments
+    /// - `brightness(level)`: Adjusts the brightness of the video playback.
+    /// - `contrast(level)`: Adjusts the contrast of the video playback.
+    ///
+    /// ### Filters
+    /// - `filter(value, clear)`: Applies a specific Core Image filter to the video, optionally clearing previous filters.
+    /// - `removeAllFilters`: Removes all applied filters from the video playback.
+    ///
+    /// ### Vector Graphics
+    /// - `addVector(builder, clear)`: Adds a vector graphic overlay to the video player, with an option to clear previous vectors.
+    /// - `removeAllVectors`: Removes all vector graphics from the video player.
+    ///
+    /// ### Platform-Specific Features
+    /// - `startPiP` (iOS only): Starts Picture-in-Picture mode.
+    /// - `stopPiP` (iOS only): Stops Picture-in-Picture mode.
     func setCommand(_ value: PlaybackCommand) {
         switch value {
         case .play:
