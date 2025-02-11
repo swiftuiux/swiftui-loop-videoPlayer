@@ -212,7 +212,6 @@ internal extension ExtPlayerProtocol {
         }
     }
         
-        
     /// Observes the status of an AVPlayerItem and notifies the delegate when the status changes.
     /// - Parameter item: The AVPlayerItem whose status should be observed.
     private func observeItemStatus(_ item: AVPlayerItem) {
