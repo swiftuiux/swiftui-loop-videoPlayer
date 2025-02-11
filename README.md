@@ -292,8 +292,10 @@ video_main.m3u8
 
 ### Additional Notes on Errors
 When the URL is syntactically valid but the resource does not actually exist (e.g., a 404 response or an unreachable server), AVPlayerItem.status can remain .unknown indefinitely. It may never transition to .failed, and the .AVPlayerItemFailedToPlayToEndTime notification won’t fire if playback never starts.
+
 **Workarounds and Best Practices**
 *Pre-Check the URL With HEAD*
+
 If you want to ensure that a URL is valid before passing it to AVPlayerItem, use for example a simple HEAD request via URLSession to check for a valid 2xx response.
 
 ```swift
