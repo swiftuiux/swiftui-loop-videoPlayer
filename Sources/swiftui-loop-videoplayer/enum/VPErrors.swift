@@ -22,29 +22,30 @@ public enum VPErrors: Error, CustomStringConvertible, Sendable {
     /// Error case for when settings are not unique.
     case settingsNotUnique
     
-    /// Picture-in-Picture (PiP)  is not supported
+    /// Picture-in-Picture (PiP) is not supported.
     case notSupportedPiP
     
-    /// Failed to load
-    case failedToLoad
+    /// Failed to load.
+    /// - Parameter error: The error encountered during loading.
+    case failedToLoad(Error?)
     
     /// A description of the error, suitable for display.
     public var description: String {
         switch self {
-            case .sourceNotFound(let name):
-                return "Source not found: \(name)"
+        case .sourceNotFound(let name):
+            return "Source not found: \(name)"
             
-            case .notSupportedPiP:
-                return "Picture-in-Picture (PiP) is not supported on this device."
+        case .notSupportedPiP:
+            return "Picture-in-Picture (PiP) is not supported on this device."
             
-            case .settingsNotUnique:
-                return "Settings are not unique"
+        case .settingsNotUnique:
+            return "Settings are not unique."
             
-            case .remoteVideoError(let error):
-                return "Playback error: \(String(describing: error?.localizedDescription))"
+        case .remoteVideoError(let error):
+            return "Playback error: \(error?.localizedDescription ?? "Unknown error.")"
             
-            case .failedToLoad:
-                return "Failed to load the video."
+        case .failedToLoad(let error):
+            return "Failed to load the video: \(error?.localizedDescription ?? "Unknown error.")"
         }
     }
 }
@@ -57,12 +58,19 @@ extension VPErrors: Equatable {
         switch (lhs, rhs) {
         case (.remoteVideoError(let a), .remoteVideoError(let b)):
             return a?.localizedDescription == b?.localizedDescription
+            
         case (.sourceNotFound(let a), .sourceNotFound(let b)):
             return a == b
+            
         case (.settingsNotUnique, .settingsNotUnique):
             return true
-        case (.failedToLoad, .failedToLoad):
+            
+        case (.notSupportedPiP, .notSupportedPiP):
             return true
+            
+        case (.failedToLoad(let a), .failedToLoad(let b)):
+            return a?.localizedDescription == b?.localizedDescription
+            
         default:
             return false
         }

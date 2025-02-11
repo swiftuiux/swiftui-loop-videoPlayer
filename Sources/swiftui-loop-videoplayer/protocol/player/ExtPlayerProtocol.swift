@@ -230,11 +230,12 @@ internal extension ExtPlayerProtocol {
                 }
             case .failed:
                 Task { @MainActor in
-                    self?.onError(.failedToLoad)
+                    let error = self?.currentItem?.error
+                    self?.onError(.failedToLoad(error))
                 }
             @unknown default:
                 Task { @MainActor in
-                    self?.onError(.failedToLoad)
+                    self?.onError(.failedToLoad(nil))
                 }
             }
         }
