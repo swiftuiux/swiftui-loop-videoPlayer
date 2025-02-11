@@ -124,7 +124,9 @@ Please note that using videos from URLs requires ensuring that you have the righ
 
 | Name          | Description                                                                                         | Default |
 |---------------|-----------------------------------------------------------------------------------------------------|---------|
-| **SourceName** | **Direct URL String** If the name represents a valid URL ( HTTP etc). **Local File URL** If the name is a valid local file path (file:// scheme). **Bundle Resource** It tries to locate the file in the main bundle using Bundle.main.url(forResource:withExtension:)                                                             | -       |
+| **SourceName** | **Direct URL String** If the name represents a valid URL ( HTTP etc). 
+**Local File URL** If the name is a valid local file path (file:// scheme). 
+**Bundle Resource** It tries to locate the file in the main bundle using Bundle.main.url(forResource:withExtension:)                                                             | -       |
 | **Ext**        | File extension for the video, used when loading from local resources. This is optional when a URL is provided and the URL ends with the video file extension. | "mp4"  |
 | **Subtitles**  | The URL or local filename of the WebVTT (.vtt) subtitles file to be merged with the video. With a AVMutableComposition approach that is used currently in the package, you cannot directly change the position or size of subtitles. AVFoundation’s built-in handling of “text” tracks simply renders them in a default style, without allowing additional layout options. Take a look on the implementation in the example app *Video8.swift*  | -       |
 | **Gravity** | How the video content should be resized to fit the player's bounds. | .resizeAspect |
