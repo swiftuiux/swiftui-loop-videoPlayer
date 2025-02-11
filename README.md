@@ -296,7 +296,7 @@ When the URL is syntactically valid but the resource does not actually exist (e.
 **Workarounds and Best Practices**
 *Pre-Check the URL With HEAD*
 
-If you want to ensure that a URL is valid before passing it to AVPlayerItem, use for example a simple HEAD request via URLSession to check for a valid 2xx response.
+If you want to ensure that a URL is valid before passing it to the component (AVPlayerItem), use for example a simple HEAD request via URLSession to check for a valid 2xx response.
 
 ```swift
 func checkURLExists(_ url: URL) async throws -> Bool {
