@@ -264,24 +264,24 @@ internal extension ExtPlayerProtocol {
         
         timeControlObserver = player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] player, change in
             switch player.timeControlStatus {
-            case .paused:
-                // This could mean playback has stopped, but it's not specific to end of playback
-                Task { @MainActor in
-                    self?.delegate?.didPausePlayback()
+                case .paused:
+                    // This could mean playback has stopped, but it's not specific to end of playback
+                    Task { @MainActor in
+                        self?.delegate?.didPausePlayback()
+                    }
+                case .waitingToPlayAtSpecifiedRate:
+                    // Player is waiting to play (e.g., buffering)
+                    Task { @MainActor in
+                        self?.delegate?.isWaitingToPlay()
+                    }
+                case .playing:
+                    // Player is currently playing
+                    Task { @MainActor in
+                        self?.delegate?.didStartPlaying()
+                    }
+                @unknown default:
+                    break
                 }
-            case .waitingToPlayAtSpecifiedRate:
-                // Player is waiting to play (e.g., buffering)
-                Task { @MainActor in
-                    self?.delegate?.isWaitingToPlay()
-                }
-            case .playing:
-                // Player is currently playing
-                Task { @MainActor in
-                    self?.delegate?.didStartPlaying()
-                }
-            @unknown default:
-                break
-            }
         }
         
         currentItemObserver = player.observe(\.currentItem, options: [.new, .old, .initial]) { [weak self]  player, change in
