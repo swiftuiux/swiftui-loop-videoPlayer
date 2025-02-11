@@ -22,10 +22,6 @@ It is a pure package without any third-party libraries. My main focus was on per
     } 
 ``` 
 
-![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
-
-## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
-
 ## Philosophy of Player Dynamics
 
 The player's functionality is designed around a dual &#8646; interaction model:
@@ -33,6 +29,11 @@ The player's functionality is designed around a dual &#8646; interaction model:
 - **Commands and Settings**: Through these, you instruct the player on what to do and how to do it. Settings define the environment and initial state, while commands offer real-time control. As for now, you can conveniently pass command by command; perhaps later I’ll add support for batch commands
   
 - **Event Feedback**: Through event handling, the player communicates back to the application, informing it of internal changes that may need attention. Due to the nature of media players, especially in environments with dynamic content or user interactions, the flow of events can become flooded. To manage this effectively and prevent the application from being overwhelmed by the volume of incoming events, the **system collects these events every second and returns them as a batch**
+
+![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
+
+## [Documentation(API)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer/main/documentation/swiftui_loop_videoplayer)
+
 
 ## Specs
 
