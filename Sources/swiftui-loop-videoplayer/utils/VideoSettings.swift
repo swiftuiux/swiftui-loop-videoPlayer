@@ -58,14 +58,20 @@ public struct VideoSettings: Equatable{
     // MARK: - Life circle
     
     /// Initializes a new instance of `VideoSettings` with specified values for various video properties.
+    ///
     /// - Parameters:
-    ///   - name: The name of the video.
-    ///   - ext: The video file extension.
-    ///   - loop: A Boolean indicating whether the video should loop.
-    ///   - mute: A Boolean indicating whether the video should be muted.
-    ///   - notAutoPlay: A Boolean indicating whether the video should not auto-play.
-    ///   - timePublishing: A `CMTime` value representing the interval for time publishing updates, or `nil`.
-    ///   - gravity: The `AVLayerVideoGravity` value defining how the video should be displayed in its layer.
+    ///   - name: The name of the video file (excluding the extension).
+    ///   - ext: The file extension of the video (e.g., `"mp4"`, `"mov"`).
+    ///   - subtitles: The subtitle file name or identifier to be used for the video.
+    ///   - loop: A Boolean indicating whether the video should continuously loop after playback ends.
+    ///   - pictureInPicture: A Boolean indicating whether Picture-in-Picture (PiP) mode is enabled.
+    ///   - mute: A Boolean indicating whether the video should start muted.
+    ///   - notAutoPlay: A Boolean indicating whether the video should not start playing automatically.
+    ///   - timePublishing: A `CMTime` value representing the interval for time update callbacks, or `nil` if disabled.
+    ///   - gravity: The `AVLayerVideoGravity` value defining how the video should be displayed within its layer.
+    ///   - enableVector: A Boolean indicating whether vector graphics rendering should be enabled for overlays.
+    ///
+    /// All parameters must be provided, except `timePublishing`, which can be `nil`, and `enableVector`, which defaults to `false`.
     public init(name: String, ext: String, subtitles: String, loop: Bool, pictureInPicture: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, enableVector : Bool = false) {
         self.name = name
         self.ext = ext
@@ -112,11 +118,6 @@ public struct VideoSettings: Equatable{
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
 public extension VideoSettings {
    
-    /// Returns a new instance of VideoSettings with loop set to false and notAutoPlay set to true, keeping other settings unchanged.
-    var settingsWithAutoPlay : VideoSettings {
-        VideoSettings(name: self.name, ext: self.ext, subtitles: self.subtitles, loop: self.loop, pictureInPicture: self.pictureInPicture, mute: self.mute, notAutoPlay: false, timePublishing: self.timePublishing, gravity: self.gravity, enableVector: self.vector)
-    }
-    
     func getAssets()-> AVURLAsset?{
         assetFor(self)
     }
