@@ -66,7 +66,7 @@ fileprivate func assetFrom(name: String, fileExtension: String?) -> AVURLAsset? 
 /// Attempts to create a valid `URL` from a string that starts with `"file://"`.
 /// - Parameter rawString: A file URL string, e.g. `"file:///Users/igor/My Folder/File.mp4"`.
 /// - Returns: A `URL` if successfully parsed; otherwise `nil`.
-func fileURL(from rawString: String) -> URL? {
+public func fileURL(from rawString: String) -> URL? {
     guard rawString.hasPrefix("file://") else {
         // Not a file URL scheme
         return nil
@@ -110,7 +110,7 @@ fileprivate func extractExtension(from name: String) -> String? {
 ///   - contrast: A Float value representing the contrast adjustment to apply.
 ///
 /// - Returns: An array of CIFilter objects, including the original filters and the added brightness and contrast adjustments.
-internal func combineFilters(_ filters: [CIFilter],_ brightness:  Float,_ contrast: Float) -> [CIFilter] {
+func combineFilters(_ filters: [CIFilter],_ brightness:  Float,_ contrast: Float) -> [CIFilter] {
     var allFilters = filters
     if let filter = CIFilter(name: "CIColorControls", parameters: [kCIInputBrightnessKey: brightness]) {
         allFilters.append(filter)
@@ -130,7 +130,7 @@ internal func combineFilters(_ filters: [CIFilter],_ brightness:  Float,_ contra
 ///
 /// The function starts by clamping the source image to ensure coordinates remain within the image bounds,
 /// applies each filter in the provided array, and completes by returning the modified image to the composition request.
-internal func handleVideoComposition(request: AVAsynchronousCIImageFilteringRequest, filters: [CIFilter]) {
+func handleVideoComposition(request: AVAsynchronousCIImageFilteringRequest, filters: [CIFilter]) {
     // Start with the source image, ensuring it's clamped to avoid any coordinate issues
     var currentImage = request.sourceImage.clampedToExtent()
     
