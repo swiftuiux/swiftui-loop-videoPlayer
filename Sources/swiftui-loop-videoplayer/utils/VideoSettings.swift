@@ -117,11 +117,7 @@ public struct VideoSettings: Equatable{
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
 public extension VideoSettings {
-   
-    func getAssets()-> AVURLAsset?{
-        assetFor(self)
-    }
-    
+      
     /// Checks if the asset has changed based on the provided settings and current asset.
     /// - Parameters:
     ///   - asset: The current asset being played.

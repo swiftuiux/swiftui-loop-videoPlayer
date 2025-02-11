@@ -144,12 +144,27 @@ internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
 #if os(iOS)
 extension PlayerCoordinator: AVPictureInPictureControllerDelegate{
     
+    /// Called when Picture-in-Picture (PiP) mode starts.
+    ///
+    /// - Parameter pictureInPictureController: The `AVPictureInPictureController` instance managing the PiP session.
+    ///
+    /// This method is marked as `nonisolated` to avoid being tied to the actor's execution context,
+    /// allowing it to be called from any thread. It publishes a `.startedPiP` event on the `eventPublisher`
+    /// within a `Task` running on the `MainActor`, ensuring UI updates are handled on the main thread.
     nonisolated func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         Task{ @MainActor in
             eventPublisher.send(.startedPiP)
         }
     }
     
+    
+    /// Called when Picture-in-Picture (PiP) mode stops.
+    ///
+    /// - Parameter pictureInPictureController: The `AVPictureInPictureController` instance managing the PiP session.
+    ///
+    /// Like its counterpart for starting PiP, this method is `nonisolated`, allowing it to be executed from any thread.
+    /// It sends a `.stoppedPiP` event via `eventPublisher` on the `MainActor`, ensuring any UI-related handling
+    /// occurs safely on the main thread.
     nonisolated func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         Task{ @MainActor in
             eventPublisher.send(.stoppedPiP)
