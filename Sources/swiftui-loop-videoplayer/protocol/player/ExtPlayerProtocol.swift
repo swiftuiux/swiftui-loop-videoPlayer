@@ -224,22 +224,22 @@ internal extension ExtPlayerProtocol {
             }
             
             switch item.status {
-            case .unknown: break
-            case .readyToPlay:
-                Task { @MainActor in
-                    self?.delegate?.duration(item.duration)
+                case .unknown: break
+                case .readyToPlay:
+                    Task { @MainActor in
+                        self?.delegate?.duration(item.duration)
+                    }
+                case .failed:
+                    Task { @MainActor in
+                        let error = self?.currentItem?.error
+                        self?.onError(.failedToLoad(error))
+                    }
+                @unknown default:
+                    Task { @MainActor in
+                        let error = self?.currentItem?.error
+                        self?.onError(.failedToLoad(error))
+                    }
                 }
-            case .failed:
-                Task { @MainActor in
-                    let error = self?.currentItem?.error
-                    self?.onError(.failedToLoad(error))
-                }
-            @unknown default:
-                Task { @MainActor in
-                    let error = self?.currentItem?.error
-                    self?.onError(.failedToLoad(error))
-                }
-            }
         }
     }
     
