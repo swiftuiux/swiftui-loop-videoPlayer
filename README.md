@@ -299,7 +299,7 @@ This enum provides a structured way to filter `PlayerEvent` cases.
     ExtVideoPlayer{
             VideoSettings{
                 SourceName("swipe")
-                Events([.durationAny, .itemStatusChangedAny])
+                Events([.durationAny, .itemStatusChangedAny]) // *Events([PlayerEventFilter])*
             }
         } 
         .onPlayerTimeChange { newTime in
