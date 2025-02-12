@@ -293,6 +293,41 @@ video_main.m3u8
 | `itemStatusChanged(AVPlayerItem.Status)` | Indicates that the AVPlayerItem's status has changed. Possible statuses: `.unknown`, `.readyToPlay`, `.failed`. |
 | `duration(CMTime)`                  | Provides the duration of the AVPlayerItem when it is ready to play. The duration is given in `CMTime`. |
 
+## Player event filter
+This enum provides a structured way to filter `PlayerEvent` cases.
+ ```swift
+    ExtVideoPlayer{
+            VideoSettings{
+                SourceName("swipe")
+                Events([.durationAny, .itemStatusChangedAny])
+            }
+        } 
+        .onPlayerTimeChange { newTime in
+            // Hear comes only events [.durationAny, .itemStatusChangedAny] Any duration event and any itemStatus value events
+        }  
+``` 
+
+### Event filter table
+
+| **Filter**                          | **Description** |
+|------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `seekAny`                         | Matches any `.seek(...)` case, regardless of whether the seek was successful (`Bool`) or the target seek time (`currentTime: Double`). |
+| `paused`                          | Matches exactly the `.paused` event, which indicates that playback has been paused by the user or programmatically. |
+| `waitingToPlayAtSpecifiedRate`     | Matches exactly the `.waitingToPlayAtSpecifiedRate` event, which occurs when the player is buffering or waiting for sufficient data. |
+| `playing`                          | Matches exactly the `.playing` event, indicating that the player is actively playing media. |
+| `currentItemChangedAny`            | Matches any `.currentItemChanged(...)` case, triggered when the player's `currentItem` is updated to a new media item. |
+| `currentItemRemoved`               | Matches exactly the `.currentItemRemoved` event, occurring when the player's `currentItem` is set to `nil`. |
+| `errorAny`                         | Matches any `.error(...)` case, representing an error within the player, with a `VPErrors` enum indicating the specific issue. |
+| `volumeChangedAny`                 | Matches any `.volumeChanged(...)` case, triggered when the player's volume level is adjusted. |
+| `boundsChangedAny`                 | Matches any `.boundsChanged(...)` case, triggered when the bounds of the main layer change. |
+| `startedPiP`                       | Matches exactly the `.startedPiP` event, triggered when Picture-in-Picture (PiP) mode starts. |
+| `stoppedPiP`                       | Matches exactly the `.stoppedPiP` event, triggered when Picture-in-Picture (PiP) mode stops. |
+| `itemStatusChangedAny`             | Matches any `.itemStatusChanged(...)` case, indicating that the AVPlayerItem's status has changed (e.g., `.unknown`, `.readyToPlay`, `.failed`). |
+| `durationAny`                      | Matches any `.duration(...)` case, which provides the duration of the media item when ready to play. |
+| `all`                              | Matches every possible player event. |
+
+
+
 ### Additional Notes on Errors
 When the URL is syntactically valid but the resource does not actually exist (e.g., a 404 response or an unreachable server), AVPlayerItem.status can remain .unknown indefinitely. It may never transition to .failed, and the .AVPlayerItemFailedToPlayToEndTime notification won’t fire if playback never starts.
 
