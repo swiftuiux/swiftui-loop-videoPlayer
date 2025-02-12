@@ -351,6 +351,7 @@ or in a declarative way
                 Ext("mp8") // Set default extension here If not provided then mp4 is default
                 Gravity(.resizeAspectFill)
                 TimePublishing()
+                Events([.durationAny, .itemStatusChangedAny])
             }
         } 
         .onPlayerTimeChange { newTime in
