@@ -21,6 +21,8 @@ public enum Setting: Equatable, SettingsConvertible{
         [self]
     }
     
+    case events([PlayerEventFilter])
+    
     ///Enable vector layer to add overlay vector graphics
     case vector
     

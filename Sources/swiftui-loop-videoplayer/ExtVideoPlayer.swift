@@ -106,9 +106,24 @@ public struct ExtVideoPlayer: View{
            currentTime = time
        })
        .onReceive(eventPublisher.collect(.byTime(DispatchQueue.main, .seconds(1))), perform: { event in
-           playerEvent = event
+           settings.events
+           playerEvent = filterEvents(with: settings, for: event)
        })
        .preference(key: CurrentTimePreferenceKey.self, value: currentTime)
        .preference(key: PlayerEventPreferenceKey.self, value: playerEvent)
    }
+}
+
+fileprivate func filterEvents(with settings: VideoSettings, for events: [PlayerEvent]) -> [PlayerEvent] {
+    let filters = settings.events  // `[PlayerEventFilter]`
+    
+    // If no filters are provided, return an empty array (or all events—your choice).
+    guard !filters.isEmpty else {
+        return []
+    }
+    
+    // Keep each `PlayerEvent` only if it matches *at least* one filter in `filters`.
+    return events.filter { event in
+        filters.contains(event)
+    }
 }

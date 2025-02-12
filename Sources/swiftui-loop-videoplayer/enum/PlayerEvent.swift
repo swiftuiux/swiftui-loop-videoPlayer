@@ -11,7 +11,7 @@ import AVFoundation
 /// An enumeration representing various events that can occur within a media player.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
 public enum PlayerEvent: Equatable {
-    
+       
     /// Represents an end seek action within the player.
     /// - Parameters:
     ///   - Bool: Indicates whether the seek was successful.

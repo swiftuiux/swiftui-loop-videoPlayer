@@ -35,6 +35,9 @@ public struct VideoSettings: Equatable{
     /// Enable vector layer to add overlay vector graphics
     public let vector: Bool
     
+    /// Disable events
+    public let events: [PlayerEventFilter]
+    
     /// Don't auto play video after initialization
     public let notAutoPlay: Bool
     
@@ -72,7 +75,7 @@ public struct VideoSettings: Equatable{
     ///   - enableVector: A Boolean indicating whether vector graphics rendering should be enabled for overlays.
     ///
     /// All parameters must be provided, except `timePublishing`, which can be `nil`, and `enableVector`, which defaults to `false`.
-    public init(name: String, ext: String, subtitles: String, loop: Bool, pictureInPicture: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, enableVector : Bool = false) {
+    public init(name: String, ext: String, subtitles: String, loop: Bool, pictureInPicture: Bool, mute: Bool, notAutoPlay: Bool, timePublishing: CMTime?, gravity: AVLayerVideoGravity, enableVector : Bool = false, events : [PlayerEventFilter] = []) {
         self.name = name
         self.ext = ext
         self.subtitles = subtitles
@@ -83,6 +86,7 @@ public struct VideoSettings: Equatable{
         self.timePublishing = timePublishing
         self.gravity = gravity
         self.vector = enableVector
+        self.events = events
         self.unique = true
     }
         
@@ -112,6 +116,8 @@ public struct VideoSettings: Equatable{
         notAutoPlay = settings.contains(.notAutoPlay)
         
         vector = settings.contains(.vector)
+        
+        events = settings.fetch(by : "events", defaulted: [])
     }
 }
 
@@ -145,4 +151,3 @@ fileprivate func check(_ settings : [Setting]) -> Bool{
     let set = Set(cases)
     return cases.count == set.count    
 }
-

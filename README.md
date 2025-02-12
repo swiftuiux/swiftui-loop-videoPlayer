@@ -134,6 +134,8 @@ Please note that using videos from URLs requires ensuring that you have the righ
 | **NotAutoPlay** | Indicates if the video should not play after initialization. Notice that if you use `command` as a control flow for the player the start command should be `.idle` | false |
 | **EnableVector** | Use this struct to activate settings that allow the addition of vector-based overlays via commands. If it is not passed via settings, any commands to `addVector` or `removeAllVectors` will have no effect. | Not Enabled |
 |**PictureInPicture**| Enable Picture-in-Picture (PiP) support. If not passed than any command like `startPiP` or `stopPiP` have no effect. Take a look the example app *Video11.swift*. It does not work on simulator. You can observe the feature only on real devices.|
+|**Events([.durationAny, .itemStatusChangedAny])**| if `Events` is not passed then events mecanism is disabled. You can specify wich events you'd like to receave like `.itemStatusChangedAny` or simply passed `.all` and receave any avalble events. This settings added to improve performance as events emition soes via @State change that triggers view update if you don't need observe any events then disabled events improve performance significantly | - |
+| Events([.durationAny, .itemStatusChangedAny]) | If Events is not passed, the event mechanism is disabled. You can specify exactly which events you want to receive (e.g., .itemStatusChangedAny) or simply pass .all to receive all available events. This setting was added to improve performance because events are emitted via @State changes, which trigger view updates. If you don’t need to observe any events, disabling them can significantly boost performance. Take a look on the implementation in the example app *Video8.swift* | - |
 
 ### Additional Notes on Settings
 
@@ -273,6 +275,8 @@ video_main.m3u8
 ```
 
 ## Player Events
+
+ *If Events is not passed in the settings, the event mechanism is disabled. You can specify exactly which events you want to receive (e.g., .itemStatusChangedAny) or simply pass .all to receive all available events. This setting was added to improve performance because events are emitted via @State changes, which trigger view updates. If you don’t need to observe any events, disabling them can significantly boost performance.*
 
 | Event                              | Description                                                                                                                                       |
 |------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
