@@ -17,7 +17,8 @@ It is a pure package without any third-party libraries. My main focus was on per
  ```swift            
    ExtVideoPlayer{
         VideoSettings{
-            SourceName("swipe")           
+            SourceName("swipe")     
+            Events([.all])      
         }
     } 
 ``` 
