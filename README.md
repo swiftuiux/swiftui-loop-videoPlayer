@@ -303,8 +303,8 @@ This enum provides a structured way to filter `PlayerEvent` cases.
             }
         } 
         .onPlayerTimeChange { newTime in
-            // Hear comes only events [.durationAny, .itemStatusChangedAny] Any duration event and any itemStatus value events
-        }  
+            // Here come only events [.durationAny, .itemStatusChangedAny]: any duration and any item status change events.
+        } 
 ``` 
 
 ### Event filter table
