@@ -294,7 +294,7 @@ video_main.m3u8
 | `duration(CMTime)`                  | Provides the duration of the AVPlayerItem when it is ready to play. The duration is given in `CMTime`. |
 
 ## Player event filter
-`PlayerEventFilter` - this enum provides a structured way to filter `PlayerEvent` cases. I decided to introduce an additional structure that corresponds to PlayerEvent. All cases with parameters are replicated as *eventName***Any** to match any variation of that event, regardless of its associated values.
+`PlayerEventFilter` - this enum provides a structured way to filter `PlayerEvent` cases. I decided to introduce an additional structure that corresponds to `PlayerEvent`. All cases with parameters are replicated as *eventName***Any** to match any variation of that event, regardless of its associated values.
 
 ```swift
     ExtVideoPlayer{
