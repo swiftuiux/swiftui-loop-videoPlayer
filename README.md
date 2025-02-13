@@ -303,7 +303,7 @@ video_main.m3u8
                 Events([.durationAny, .itemStatusChangedAny]) // *Events([PlayerEventFilter])*
             }
         } 
-        .onPlayerTimeChange { newTime in
+        .onPlayerEventChange { events in
             // Here come only events [.durationAny, .itemStatusChangedAny]: any duration and any item status change events.
         } 
 ``` 
