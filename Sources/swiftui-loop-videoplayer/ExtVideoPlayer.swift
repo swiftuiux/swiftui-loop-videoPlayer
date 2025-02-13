@@ -113,10 +113,18 @@ public struct ExtVideoPlayer: View{
    }
 }
 
+// MARK: - Fileprivate
+
+/// Filters a list of `PlayerEvent` instances based on the provided `VideoSettings`.
+///
+/// - Parameters:
+///   - settings: The video settings containing event filters.
+///   - events: The list of events to be filtered.
+/// - Returns: A filtered list of `PlayerEvent` that match at least one filter in `settings`.
 fileprivate func filterEvents(with settings: VideoSettings, for events: [PlayerEvent]) -> [PlayerEvent] {
     let filters = settings.events  // `[PlayerEventFilter]`
     
-    // If no filters are provided, return an empty array (or all events—your choice).
+    // If no filters are provided, return an empty array.
     guard !filters.isEmpty else {
         return []
     }
