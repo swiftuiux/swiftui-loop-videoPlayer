@@ -51,9 +51,6 @@ public enum PlayerEventFilter {
     
     /// Matches any `.duration(...)` case
     case durationAny
-    
-    /// Matches every possible event
-    case all
 }
 
 extension PlayerEventFilter {
@@ -63,10 +60,6 @@ extension PlayerEventFilter {
     /// - Returns: `true` if the event belongs to this case (ignoring parameters), `false` otherwise.
     func matches(_ event: PlayerEvent) -> Bool {
         switch (self, event) {
-        /// Universal case
-        case (.all, _):
-            return true
-
         // Compare by case name only, ignoring associated values
         case (.seekAny, .seek):
             return true

@@ -125,8 +125,12 @@ fileprivate func filterEvents(with settings: VideoSettings, for events: [PlayerE
     let filters = settings.events  // `[PlayerEventFilter]`
     
     // If no filters are provided, return an empty array.
-    guard !filters.isEmpty else {
+    guard let filters else {
         return []
+    }
+    
+    guard !filters.isEmpty else{
+        return events
     }
     
     // Keep each `PlayerEvent` only if it matches *at least* one filter in `filters`.

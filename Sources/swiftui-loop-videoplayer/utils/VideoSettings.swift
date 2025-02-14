@@ -36,7 +36,7 @@ public struct VideoSettings: Equatable{
     public let vector: Bool
     
     /// Disable events
-    public let events: [PlayerEventFilter]
+    public let events: [PlayerEventFilter]?
     
     /// Don't auto play video after initialization
     public let notAutoPlay: Bool
@@ -117,7 +117,7 @@ public struct VideoSettings: Equatable{
         
         vector = settings.contains(.vector)
         
-        events = settings.fetch(by : "events", defaulted: [])
+        events = settings.fetch(by : "events", defaulted: nil)
     }
 }
 
