@@ -11,12 +11,12 @@ import Foundation
 public struct Events: SettingsConvertible{
     
     /// Holds the specific AVLayerVideoGravity setting defining how video content should align within its layer.
-    private let value : [PlayerEventFilter]
+    private let value : [PlayerEventFilter]?
     
     // MARK: - Life circle
     
     /// Initializes a new instance
-    public init(_ value : [PlayerEventFilter]) {
+    public init(_ value : [PlayerEventFilter]? = nil) {
         self.value = value
     }
     

@@ -117,7 +117,18 @@ public struct VideoSettings: Equatable{
         
         vector = settings.contains(.vector)
         
-        events = settings.fetch(by : "events", defaulted: nil)
+        let hasEvents = settings.contains {
+            if case .events = $0 {
+                return true
+            }
+            return false
+        }
+        
+        if hasEvents{
+            events = settings.fetch(by : "events", defaulted: []) ?? []
+        }else{
+            events = nil
+        }
     }
 }
 
