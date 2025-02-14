@@ -96,7 +96,10 @@ You can reach out the effect simply via mask modifier
  ```swift
     ExtVideoPlayer(
         settings : $settings,
-        command: $playbackCommand
+        command: $playbackCommand,
+        VideoSettings{
+           SourceName("swipe") 
+       }
     )
     .mask{
         RoundedRectangle(cornerRadius: 25)
