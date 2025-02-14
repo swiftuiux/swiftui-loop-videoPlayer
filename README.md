@@ -393,8 +393,7 @@ or in a declarative way
         .onPlayerEventChange { events in
             // Player events
         }
-``` 
-          
+```           
 
 ```swift
 ExtVideoPlayer{
