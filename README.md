@@ -4,10 +4,13 @@
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoplayer%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoPlayer%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoPlayer)
 
-## Why if we have Apple’s VideoPlayer ?!
-Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI but for example it doesn’t allow you to hide or customize the default video controls UI, limiting its use for custom scenarios. In contrast, this solution provides full control over playback, including the ability to disable or hide UI elements, making it suitable for background videos, tooltips, and video hints etc. Additionally, it supports advanced features like subtitles, seamless looping and real-time filter application, adding vector graphics upon the video stream etc. This package uses a declarative approach to declare parameters for the video component based on building blocks. This implementation might give some insights into how SwiftUI works under the hood. You can also pass parameters in the common way. *If you profile the package, do it on a real device.*
-
 It is a pure package without any third-party libraries. My main focus was on performance. Especially if you need to add a video in the background as a design element, in such cases, you’d want a lightweight component without a lot of unnecessary features. **I hope it serves you well**.
+
+## Why if we have Apple’s VideoPlayer ?!
+
+Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI. However, it does not allow you to hide or customize the default video controls UI, limiting its use in custom scenarios. Alternatively, you would need to use AVPlayerViewController, which includes a lot of functionality just to disable the controls. In contrast, this solution acts as a modular framework, allowing you to integrate only the functionalities you need while keeping the core component lightweight. It provides full control over playback, including the ability to add custom UI elements, making it ideal for background videos, tooltips, video hints, and other custom scenarios. Additionally, it supports advanced features like subtitles, seamless looping and real-time filter application, adding vector graphics upon the video stream etc. This package uses a declarative approach to declare parameters for the video component based on building blocks. This implementation might give some insights into how SwiftUI works under the hood. You can also pass parameters in the common way. *If you profile the package, do it on a real device.*
+
+
 
 
 
