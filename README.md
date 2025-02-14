@@ -22,6 +22,12 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI. Howeve
     } 
 ``` 
 
+or
+
+ ```swift 
+    ExtVideoPlayer(fileName: 'swipe')  
+```  
+
 ## Philosophy of Player Dynamics
 
 The player's functionality is designed around a dual &#8646; interaction model:
@@ -371,7 +377,7 @@ Integrating vector graphics into SwiftUI views, particularly during lifecycle ev
 ### 1. Create LoopPlayerView
 
 ```swift
-ExtVideoPlayer(fileName: 'swipe')    
+    ExtVideoPlayer(fileName: 'swipe')    
 ```
 
 or in a declarative way
