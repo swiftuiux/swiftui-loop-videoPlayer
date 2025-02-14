@@ -12,12 +12,7 @@ Apple’s VideoPlayer offers a quick setup for video playback in SwiftUI. Howeve
 
 *This package uses a declarative approach to declare parameters for the video component based on building blocks. This implementation might give some insights into how SwiftUI works under the hood. You can also pass parameters in the common way. If you profile the package, do it on a real device.*
 
-
-
-
-
 ## SwiftUI app example [follow the link](https://github.com/swiftuiux/swiftui-video-player-example)
-
 
  ```swift            
    ExtVideoPlayer{
