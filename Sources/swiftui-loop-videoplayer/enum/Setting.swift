@@ -11,61 +11,60 @@ import SwiftUI
 import AVKit
 #endif
 
-/// Settings for loop video player
+/// Configuration settings for a loop video player.
+/// These settings control various playback and UI behaviors.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
-public enum Setting: Equatable, SettingsConvertible{
-    
-    /// Converts the current setting to an array containing only this setting.
-    /// - Returns: An array of `Setting` containing the single instance of this setting.
+public enum Setting: Equatable, SettingsConvertible {
+
+    /// Converts the current setting into an array containing itself.
+    /// - Returns: An array with a single instance of `Setting`.
     public func asSettings() -> [Setting] {
         [self]
     }
-    
+
+    /// Event filters to monitor specific player events.
     case events([PlayerEventFilter]?)
-    
-    ///Enable vector layer to add overlay vector graphics
+
+    /// Enables a vector layer for overlaying vector graphics.
     case vector
-    
-    /// Loop video
+
+    /// Enables looping of the video playback.
     case loop
-    
-    /// Mute video
+
+    /// Mutes the video.
     case mute
-    
-    /// Don't auto play video after initialization
+
+    /// Prevents automatic playback after initialization.
     case notAutoPlay
-    
-    /// File name
+
+    /// Specifies the file name of the video.
     case name(String)
 
-    /// File extension
+    /// Specifies the file extension of the video.
     case ext(String)
-    
-    /// Subtitles
+
+    /// Sets subtitles for the video.
     case subtitles(String)
-    
-    /// Support Picture-in-Picture
+
+    /// Enables Picture-in-Picture (PiP) mode support.
     case pictureInPicture
-    
-    /// A CMTime value representing the interval at which the player's current time should be published.
-    /// If set, the player will publish periodic time updates based on this interval.
+
+    /// Defines the interval at which the player's current time should be published.
     case timePublishing(CMTime)
 
-    /// Video gravity
+    /// Sets the video gravity (e.g., aspect fit, aspect fill).
     case gravity(AVLayerVideoGravity = .resizeAspect)
 
-    /// Case name
+    /// Retrieves the name of the current case.
     var caseName: String {
         Mirror(reflecting: self).children.first?.label ?? "\(self)"
     }
-    
-    /// Associated value
+
+    /// Retrieves the associated value of the case, if any.
     var associatedValue: Any? {
-            
         guard let firstChild = Mirror(reflecting: self).children.first else {
             return nil
         }
-        
         return firstChild.value
     }
 }
