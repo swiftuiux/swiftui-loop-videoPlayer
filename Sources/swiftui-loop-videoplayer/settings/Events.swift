@@ -7,20 +7,25 @@
 
 import Foundation
 
+/// Represents a collection of event filters that can be converted into settings.
+/// This struct is used to encapsulate `PlayerEventFilter` instances and provide a method
+/// to transform them into an array of `Setting` objects.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, *)
-public struct Events: SettingsConvertible{
+public struct Events: SettingsConvertible {
     
-    /// Holds the specific AVLayerVideoGravity setting defining how video content should align within its layer.
-    private let value : [PlayerEventFilter]?
+    // An optional array of PlayerEventFilter objects representing event filters
+    private let value: [PlayerEventFilter]?
     
-    // MARK: - Life circle
+    // MARK: - Life cycle
     
-    /// Initializes a new instance
-    public init(_ value : [PlayerEventFilter]? = nil) {
+    /// Initializes a new instance of `Events`
+    /// - Parameter value: An optional array of `PlayerEventFilter` objects, defaulting to `nil`
+    public init(_ value: [PlayerEventFilter]? = nil) {
         self.value = value
     }
     
-    /// Fetch settings
+    /// Converts the event filters into an array of `Setting` objects
+    /// Used for fetching settings in the application
     @_spi(Private)
     public func asSettings() -> [Setting] {
         [.events(value)]
