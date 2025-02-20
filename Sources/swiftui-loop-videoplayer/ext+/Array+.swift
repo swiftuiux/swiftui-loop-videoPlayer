@@ -16,7 +16,6 @@ extension Array where Element == Setting{
         self.first(where: { $0.caseName == name })
     }
     
-    
     /// Fetch associated value
     /// - Parameters:
     ///   - name: Case name

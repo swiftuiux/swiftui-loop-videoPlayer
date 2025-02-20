@@ -8,10 +8,6 @@
 import SwiftUI
 import Combine
 
-#if canImport(AVKit)
-import AVKit
-#endif
-
 #if canImport(UIKit)
 import UIKit
 #endif
