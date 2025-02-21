@@ -15,8 +15,10 @@ import AVKit
 @MainActor
 internal class PlayerCoordinator: NSObject, PlayerDelegateProtocol {
            
+    /// Publisher that emits player events, allowing observers to react to changes in playback state
     let eventPublisher: PassthroughSubject<PlayerEvent, Never>
     
+    /// Publisher that emits the current playback time as a Double, allowing real-time tracking of progress
     let timePublisher: PassthroughSubject<Double, Never>
     
     /// Stores the last command applied to the player.
