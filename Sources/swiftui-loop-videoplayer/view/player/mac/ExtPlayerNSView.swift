@@ -77,7 +77,6 @@ internal class ExtPlayerNSView: NSView, ExtPlayerProtocol {
         player = AVQueuePlayer(items: [])
         
         super.init(frame: .zero)
-        self.wantsLayer = true
         
         addPlayerLayer()
         addCompositeLayer(settings)

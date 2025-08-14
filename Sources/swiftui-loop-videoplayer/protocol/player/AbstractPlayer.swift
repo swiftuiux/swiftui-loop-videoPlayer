@@ -137,8 +137,7 @@ public protocol AbstractPlayer: AnyObject {
     func update(settings: VideoSettings)
 }
 
-@MainActor
-public extension AbstractPlayer{
+extension AbstractPlayer{
 
     /// Retrieves the current item being played.
     ///

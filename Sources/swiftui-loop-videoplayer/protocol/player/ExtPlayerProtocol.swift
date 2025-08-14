@@ -71,7 +71,6 @@ public protocol ExtPlayerProtocol: AbstractPlayer, LayerMakerProtocol{
     func onError(_ error : VPErrors)
 }
 
-@MainActor
 internal extension ExtPlayerProtocol {
     
     /// Initializes a new player view with a video asset and custom settings.
@@ -134,13 +133,11 @@ internal extension ExtPlayerProtocol {
     ///   - player: The `AVQueuePlayer` instance to which the time observer will be added.
     ///   - settings: A `VideoSettings` object containing the time publishing interval and related configuration.
     func configureTimePublishing(_ player: AVQueuePlayer, _ settings: VideoSettings) {
-        if let timePublishing = settings.timePublishing {
-            timeObserver = player.addPeriodicTimeObserver(
-                forInterval: timePublishing,
-                queue: .main
-            ) { [weak self] time in
+        if let timePublishing = settings.timePublishing{
+            timeObserver = player.addPeriodicTimeObserver(forInterval: timePublishing, queue: .global()) { [weak self] time in
+                guard let self = self else{ return }
                 Task { @MainActor in
-                    self?.delegate?.didPassedTime(seconds: time.seconds)
+                    self.delegate?.didPassedTime(seconds: time.seconds)
                 }
             }
         }
