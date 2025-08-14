@@ -243,27 +243,22 @@ func mergeAssetWithSubtitles(videoAsset: AVURLAsset, subtitleAsset: AVURLAsset) 
 ///   - duration: A `CMTime` value representing the total duration of the media.
 ///               This value must be valid for the calculation to work correctly.
 /// - Returns: A `CMTime` value representing the resolved seek position within the media.
-func getSeekTime(for time: Double, duration : CMTime) -> CMTime?{
-    
-    guard duration.value != 0 else{  return nil }
-    
-    let endTime = CMTimeGetSeconds(duration)
-    let seekTime : CMTime
-    
-    if time < 0 {
-        // If the time is negative, seek to the start of the video
-        seekTime = .zero
-    } else if time >= endTime {
-        // If the time exceeds the video duration, seek to the end of the video
-        let endCMTime = CMTime(seconds: endTime, preferredTimescale: duration.timescale)
-        seekTime = endCMTime
-    } else {
-        // Otherwise, seek to the specified time
-        let seekCMTime = CMTime(seconds: time, preferredTimescale: duration.timescale)
-        seekTime = seekCMTime
-    }
-    
-    return seekTime
+func getSeekTime(for time: Double, duration: CMTime) -> CMTime? {
+    guard duration.isValid,
+          duration.isNumeric,
+          duration.timescale != 0
+    else { return nil }
+
+    let endSeconds = CMTimeGetSeconds(duration)
+    guard endSeconds.isFinite, endSeconds >= 0 else { return nil }
+
+    if time <= 0 { return .zero }
+    if time >= endSeconds { return duration }
+
+    let clamped = max(0, min(time, endSeconds))
+
+    let scale = max(Int32(600), duration.timescale)
+    return CMTime(seconds: clamped, preferredTimescale: scale)
 }
 
 /// Creates an `AVPlayerItem` with optional subtitle merging.
