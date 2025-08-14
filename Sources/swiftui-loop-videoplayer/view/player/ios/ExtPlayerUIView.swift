@@ -141,8 +141,9 @@ internal class ExtPlayerUIView: UIView, ExtPlayerProtocol{
     func setupPiP(delegate: AVPictureInPictureControllerDelegate) {
         // Check if PiP is supported
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [weak self] in
-                self?.onError(.notSupportedPiP)
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                self.onError(.notSupportedPiP)
             }
             return
         }
