@@ -7,7 +7,7 @@
 
 It is a pure package without any third-party libraries. My main focus was on performance. Especially if you need to add a video in the background as a design element, in such cases, you’d want a lightweight component without a lot of unnecessary features. **I hope it serves you well**.
 
-### SwiftUI app example [follow the link](https://github.com/swiftuiux/swiftui-video-player-example)
+### 🟩 SwiftUI app example [follow the link](https://github.com/swiftuiux/swiftui-video-player-example)
 
 ## Why if we have Apple’s VideoPlayer ?!
 
