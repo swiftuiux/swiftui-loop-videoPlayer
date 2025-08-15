@@ -106,7 +106,6 @@ public struct ExtVideoPlayer: View{
            currentTime = time
        })
        .onReceive(eventPublisher
-        .delay(for: .seconds(2), scheduler: DispatchQueue.main)
         .collect(.byTime(DispatchQueue.main, .seconds(1))), perform: { event in
            playerEvent = filterEvents(with: settings, for: event)
        })
