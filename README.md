@@ -453,27 +453,6 @@ ExtVideoPlayer{
 | HLS Streams | Yes | HLS streams are supported and can be used for live streaming purposes. |
 
 
-## New Functionality: Playback Commands
-
-The package now supports playback commands, allowing you to control video playback actions such as play, pause, and seek to specific times. 
-
-```swift
-struct VideoView: View {
-    @State private var playbackCommand: PlaybackCommand = .play
-
-    var body: some View {
-        ExtVideoPlayer(
-            {
-                VideoSettings {
-                    SourceName("swipe")
-                }
-            },
-            command: $playbackCommand
-        )
-    }
-}
-```
-
 ## Practical ideas for the package
 You can introduce video hints about some functionality into the app, for example how to add positions to favorites. Put loop video hint into background or open as popup.
 
