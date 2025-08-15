@@ -284,7 +284,7 @@ internal extension ExtPlayerProtocol {
                 }
         }
         
-        currentItemObserver = player.observe(\.currentItem, options: [.new, .old, .initial]) { [weak self]  player, change in
+        currentItemObserver = player.observe(\.currentItem, options: [.new]) { [weak self]  player, change in
             // Detecting when the current item is changed
             if let newItem = change.newValue as? AVPlayerItem {
                 Task { @MainActor in
