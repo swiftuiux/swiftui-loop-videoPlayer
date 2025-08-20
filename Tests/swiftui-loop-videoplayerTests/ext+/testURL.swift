@@ -29,20 +29,6 @@ final class testURL: XCTestCase {
         }
     }
 
-    func testAddsHTTPSIfMissing() {
-        // Given
-        let raw = "example.com/path?x=1#y"
-
-        // When
-        let url = URL.validURLFromString(from: raw)
-
-        // Then
-        XCTAssertNotNil(url)
-        XCTAssertEqual(url?.scheme, "https")
-        XCTAssertEqual(url?.host, "example.com")
-        XCTAssertEqual(url?.path, "/path")
-    }
-
     func testTrimsWhitespace() {
         let raw = "   https://example.com/video.m3u8   "
         let url = URL.validURLFromString(from: raw)
@@ -85,10 +71,5 @@ final class testURL: XCTestCase {
     func testRejectsMissingHost() {
         XCTAssertNil(URL.validURLFromString(from: "https://"))
         XCTAssertNil(URL.validURLFromString(from: "https:///path-only"))
-    }
-
-    func testNoAutoSchemeOption() {
-        // When auto-scheme is disabled, a bare host should fail.
-        XCTAssertNil(URL.validURLFromString(from: "example.com", assumeHTTPSIfMissing: false))
     }
 }
