@@ -44,7 +44,7 @@ func subtitlesAssetFor(_ settings: VideoSettings) -> AVURLAsset? {
 /// - Returns: An optional `AVURLAsset`, or `nil` if neither a valid URL nor a local resource file is found.
 fileprivate func assetFrom(name: String, fileExtension: String?) -> AVURLAsset? {
     // Attempt to create a valid URL from the provided string.
-    if let url = URL.validURLFromString(name) {
+    if let url = URL.validURLFromString(from: name) {
         return AVURLAsset(url: url)
     }
     
