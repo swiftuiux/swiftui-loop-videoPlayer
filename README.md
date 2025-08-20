@@ -42,7 +42,7 @@ The player's functionality is designed around a dual &#8646; interaction model:
 ![The concept](https://github.com/swiftuiux/swiftui-video-player-example/blob/main/swiftui-loop-videoplayer-example/img/swiftui_video_player.gif) 
 
 ## Implemented Specs
-### The sample app demonstrates the majority of the specs implemented in the component
+*The sample app demonstrates the majority of the specs implemented in the component*
 
 | **Feature Category**      | **Feature Name**                            | **Description**                                                                                          |
 |----------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------------|
