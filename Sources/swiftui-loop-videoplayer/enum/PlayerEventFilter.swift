@@ -2,7 +2,7 @@
 //  PlayerEventFilter.swift
 //  swiftui-loop-videoplayer
 //
-//  Created by Igor  on 12.02.25.
+//  Created by Igor Shelopaev on 12.02.25.
 //
 
 import Foundation
