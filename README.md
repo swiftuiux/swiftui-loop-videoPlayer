@@ -1,5 +1,5 @@
 # SwiftUI video player iOS 14+, macOS 11+, tvOS 14+
-## ![GitHub Repo stars](https://img.shields.io/github/stars/swiftuiux/swiftui-loop-videoPlayer?style=social) ⭐ Star it — so I know it’s worth my time to keep improving it.
+## ⭐ Star it — so I know it’s worth my time to keep improving it.
 
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoplayer%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoPlayer%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoPlayer)
@@ -111,6 +111,8 @@ You can reach out the effect simply via mask modifier
 
 ### By the way
 [Perhaps that might be enough for your needs](https://github.com/swiftuiux/swiftui-loop-videoPlayer/issues/7#issuecomment-2341268743)
+
+
 
 
 ## Testing
