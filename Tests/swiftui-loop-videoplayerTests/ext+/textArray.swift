@@ -2,7 +2,7 @@
 //  textArray.swift
 //  swiftui-loop-videoplayer
 //
-//  Created by Igor  on 21.08.25.
+//  Created by Igor Shelopaev on 21.08.25.
 //
 
 import XCTest
