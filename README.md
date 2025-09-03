@@ -1,7 +1,7 @@
 # Coming soon: Metal shaders for video 
 iOS 14+, macOS 11+, tvOS 14+
 
-## ⭐ Star it — so I know it’s worth my time to keep improving it.
+## ⭐ Star it — so I know it’s worth to keep improving it.
 
 Support for applying **Metal shaders** directly to **video frames**.  
 Real-time effects on the timeline, no extra copies or heavy post-processing.
