@@ -8,7 +8,7 @@
 import Foundation
 
 
-extension URL {
+public extension URL {
     
     /// Validates and returns an HTTP/HTTPS URL or nil.
     /// Strategy:
