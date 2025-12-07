@@ -17,17 +17,19 @@ public extension URL {
     static func validURLFromString(from raw: String) -> URL? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // First parse to detect an existing scheme.
         if let pre = URLComponents(string: trimmed), let scheme = pre.scheme?.lowercased() {
-            // Reject anything that is not http/https.
-            guard scheme == "http" || scheme == "https" else { return nil }
-            
-            let comps = pre
-            // Require a host
-            guard let host = comps.host, !host.isEmpty else { return nil }
-            // Validate port range
-            if let port = comps.port, !(1...65535).contains(port) { return nil }
-            return comps.url
+            switch scheme {
+            case "http", "https":
+                guard let host = pre.host, !host.isEmpty else { return nil }
+                if let port = pre.port, !(1...65535).contains(port) { return nil }
+                return pre.url
+
+            case "file":
+                return pre.url
+
+            default:
+                return nil
+            }
         }
         
         return nil
