@@ -2,9 +2,9 @@
 iOS 14+, macOS 11+, tvOS 14+
 
 
-## Coming soon: Metal shaders for video 
+## Added support for Metal shaders
 Support for applying **Metal shaders** directly to **video frames**.  
-Real-time effects on the timeline, no extra copies or heavy post-processing.
+Real-time effects on the timeline, no extra copies or heavy post-processing. Take a look on "Demo project"
 
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoplayer%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoplayer)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fswiftuiux%2Fswiftui-loop-videoPlayer%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/swiftuiux/swiftui-loop-videoPlayer)
